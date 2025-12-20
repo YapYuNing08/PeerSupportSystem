@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 
 function App() {
   return (
-    <h1>Welcome to Peer Support System</h1>
+    <h1>Welcome to Peer Support System~</h1>
   )
 }
 
