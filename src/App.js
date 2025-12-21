@@ -7,10 +7,16 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import Login from "./components/login";
-import SignUp from "./components/register";
-import Home from "./components/home";
-import AdminDashboard from "./components/AdminDashboard";
+import Login from "./pages/login";
+import SignUp from "./pages/register";
+import Home from "./pages/home";
+import StudentPage from "./pages/studentpage";
+import CounselorPage from "./pages/counselorpage";
+import AdminDashboard from "./pages/AdminDashboard";
+import ModeratorDashboard from "./pages/moderatorpage";
+import ApproveCounselorPage from "./components/admin/approvecounselors";
+
+
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,18 +27,27 @@ function App() {
   return (
     <Router>
       <div className="App">
-        <div className="auth-wrapper">
-          <div className="auth-inner">
-            <Routes>
-              <Route path="/" element={<Login />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<SignUp />} />
-              <Route path="/home" element={<Home />} />
-              <Route path="/admin-dashboard" element={<AdminDashboard />} />
-            </Routes>
-            <ToastContainer />
-          </div>
-        </div>
+        <Routes>
+          {/* LOGIN & REGISTER (Wrapped in auth-wrapper) */}
+          <Route path="/" element={
+            <div className="auth-wrapper"><div className="auth-inner"><Login /></div></div>
+          } />
+          <Route path="/login" element={
+            <div className="auth-wrapper"><div className="auth-inner"><Login /></div></div>
+          } />
+          <Route path="/register" element={
+            <div className="auth-wrapper"><div className="auth-inner"><SignUp /></div></div>
+          } />
+
+          {/* DASHBOARDS (Full Screen - No auth-inner wrapper) */}
+          <Route path="/home" element={<Home />} />
+          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/student-page" element={<StudentPage />} />
+          <Route path="/counselor-page" element={<CounselorPage />} />
+          <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
+          <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
+        </Routes>
+        <ToastContainer />
       </div>
     </Router>
   );
