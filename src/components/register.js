@@ -43,76 +43,107 @@ function Register() {
   };
 
   return (
-    <form onSubmit={handleRegister}>
-      <h3>Sign Up</h3>
+    <div className="auth-wrapper">
+      <div className="auth-inner">
+        <form onSubmit={handleRegister}>
+          <h3>Create Account</h3>
+          <p className="auth-subtitle">Join the peer support system</p>
 
-      <div className="mb-3">
-        <label>I am a:</label>
-        <select className="form-control" value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="student">Student</option>
-          <option value="counselor">Counselor</option>
-        </select>
+          <div className="mb-4">
+            <label className="form-label">I am a:</label>
+            <div className="role-toggle-container">
+              <div 
+                className="selection-slider" 
+                style={{ 
+                  transform: role === "counselor" ? "translateX(100%)" : "translateX(0%)" 
+                }}
+              ></div>
+              
+              <label className={`role-option ${role === "student" ? "active" : ""}`}>
+                <input
+                  type="radio"
+                  name="regRole"
+                  value="student"
+                  checked={role === "student"}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                Student
+              </label>
+
+              <label className={`role-option ${role === "counselor" ? "active" : ""}`}>
+                <input
+                  type="radio"
+                  name="regRole"
+                  value="counselor"
+                  checked={role === "counselor"}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                Counselor
+              </label>
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <label>Full Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="name"
+              onChange={(e) => setFullName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label>username</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="username"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label>Email address</label>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {role === "counselor" && (
+            <div className="mb-3">
+              <label>Certificate Link</label>
+              <input type="url" className="form-control" placeholder="https://..." onChange={(e) => setCertLink(e.target.value)} required />
+            </div>
+          )}
+
+          <div className="d-grid">
+            <button type="submit" className="btn btn-primary">
+              Sign Up
+            </button>
+          </div>
+          <p className="auth-switch">
+            Already registered? <a href="/login">Login</a>
+          </p>
+        </form>
       </div>
-
-      <div className="mb-3">
-        <label>Full Name</label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="name"
-          onChange={(e) => setFullName(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>username</label>
-        <input
-          type="text"
-          className="form-control"
-          placeholder="username"
-          onChange={(e) => setUsername(e.target.value)}
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>Email address</label>
-        <input
-          type="email"
-          className="form-control"
-          placeholder="Enter email"
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>Password</label>
-        <input
-          type="password"
-          className="form-control"
-          placeholder="Enter password"
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-      </div>
-
-      {role === "counselor" && (
-        <div className="mb-3">
-          <label>Certificate Link (Google Drive/LinkedIn)</label>
-          <input type="url" className="form-control" placeholder="https://..." onChange={(e) => setCertLink(e.target.value)} required />
-        </div>
-      )}
-
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">
-          Sign Up
-        </button>
-      </div>
-      <p className="forgot-password text-right">
-        Already registered <a href="/login">Login</a>
-      </p>
-    </form>
+    </div>
   );
 }
 export default Register;

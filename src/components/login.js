@@ -50,53 +50,77 @@ function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Login</h3>
+    <div className="auth-wrapper">
+      <div className="auth-inner">
+        <form onSubmit={handleSubmit}>
+          <h3>Welcome Back</h3>
+          <p className="auth-subtitle">Login to continue</p>
 
-      <div className="mb-3">
-        <label>Login as:</label>
-        <select 
-          className="form-control" 
-          value={selectedRole} 
-          onChange={(e) => setSelectedRole(e.target.value)}
-        >
-          <option value="student">Student</option>
-          <option value="counselor">Counselor</option>
+          <div className="mb-4">
+            <label>Login as</label>
+            <div className="role-toggle-container">
+              <div 
+                className="selection-slider" 
+                style={{ 
+                  transform: selectedRole === "counselor" ? "translateX(100%)" : "translateX(0%)" 
+                }}
+              ></div>
+              
+              <label className={`role-option ${selectedRole === "student" ? "active" : ""}`}>
+                <input
+                  type="radio"
+                  value="student"
+                  checked={selectedRole === "student"}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                />
+                Student
+              </label>
 
-        </select>
+              <label className={`role-option ${selectedRole === "counselor" ? "active" : ""}`}>
+                <input
+                  type="radio"
+                  value="counselor"
+                  checked={selectedRole === "counselor"}
+                  onChange={(e) => setSelectedRole(e.target.value)}
+                />
+                Counselor
+              </label>
+            </div>
+          </div>
+
+          <div className="mb-3">
+            <label>Email address</label>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="mb-3">
+            <label>Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="d-grid">
+            <button type="submit" className="btn btn-primary">
+              Login
+            </button>
+          </div>
+          <p className="auth-switch">
+            Don't have an account? <a href="/register">Register Here</a>
+          </p>
+        </form>
       </div>
-
-      <div className="mb-3">
-        <label>Email address</label>
-        <input
-          type="email"
-          className="form-control"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </div>
-
-      <div className="mb-3">
-        <label>Password</label>
-        <input
-          type="password"
-          className="form-control"
-          placeholder="Enter password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-      </div>
-
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">
-          Login
-        </button>
-      </div>
-      <p className="forgot-password text-right">
-        New user <a href="/register">Register Here</a>
-      </p>
-    </form>
+    </div>    
   );
 }
 
