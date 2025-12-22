@@ -1,0 +1,149 @@
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import React, { useState } from "react";
+import { auth, db } from "../firebase-config";
+import { doc, setDoc } from "firebase/firestore";
+import { toast } from "react-toastify";
+
+
+function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setFullName] = useState("");
+  const [username, setUsername] = useState("");
+  const [role, setRole] = useState("student"); // Default to student
+  const [certLink, setCertLink] = useState("");
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const userData = {
+        name,
+        username,
+        email,
+        role,
+        status: role === "counselor" ? "pending" : "approved",
+        certLink: role === "counselor" ? certLink : null,
+        uid: user.uid,
+        createdAt: new Date(),
+      };
+
+      // 3. Save to "users" collection in Firestore
+      await setDoc(doc(db, "users", user.uid), userData);
+
+      console.log("User Registered in Firestore!");
+      toast.success(role === "counselor" ? "Registered! Awaiting Admin Approval." : "Registered Successfully!", {
+        position: "top-center",
+      });
+    } catch (error) {
+      toast.error(error.message, { position: "bottom-center" });
+    }
+  };
+
+  return (
+    <div className="auth-wrapper">
+      <div className="auth-inner">
+        <form onSubmit={handleRegister}>
+          <h3>Create Account</h3>
+          <p className="auth-subtitle">Join the peer support system</p>
+
+          <div className="mb-4">
+            <label className="form-label">I am a:</label>
+            <div className="role-toggle-container">
+              <div 
+                className="selection-slider" 
+                style={{ 
+                  transform: role === "counselor" ? "translateX(100%)" : "translateX(0%)" 
+                }}
+              ></div>
+              
+              <label className={`role-option ${role === "student" ? "active" : ""}`}>
+                <input
+                  type="radio"
+                  name="regRole"
+                  value="student"
+                  checked={role === "student"}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                Student
+              </label>
+
+              <label className={`role-option ${role === "counselor" ? "active" : ""}`}>
+                <input
+                  type="radio"
+                  name="regRole"
+                  value="counselor"
+                  checked={role === "counselor"}
+                  onChange={(e) => setRole(e.target.value)}
+                />
+                Counselor
+              </label>
+            </div>
+          </div>
+
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Full Name</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="name"
+              onChange={(e) => setFullName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Username</label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="username"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Email address</label>
+            <input
+              type="email"
+              className="form-control"
+              placeholder="Enter email"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Password</label>
+            <input
+              type="password"
+              className="form-control"
+              placeholder="Enter password"
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          {role === "counselor" && (
+            <div className="form-row mb-3">
+              <label className="form-label-fixed">Certificate Link</label>
+              <input type="url" className="form-control" placeholder="https://..." onChange={(e) => setCertLink(e.target.value)} required />
+            </div>
+          )}
+
+          <div className="d-grid">
+            <button type="submit" className="btn btn-primary">
+              Sign Up
+            </button>
+          </div>
+          <p className="auth-switch">
+            Already registered? <a href="/login">Login</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  );
+}
+export default Register;
