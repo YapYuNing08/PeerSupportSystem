@@ -83,8 +83,8 @@ function Register() {
             </div>
           </div>
 
-          <div className="mb-3">
-            <label>Full Name</label>
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Full Name</label>
             <input
               type="text"
               className="form-control"
@@ -94,8 +94,8 @@ function Register() {
             />
           </div>
 
-          <div className="mb-3">
-            <label>username</label>
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Username</label>
             <input
               type="text"
               className="form-control"
@@ -104,8 +104,8 @@ function Register() {
             />
           </div>
 
-          <div className="mb-3">
-            <label>Email address</label>
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Email address</label>
             <input
               type="email"
               className="form-control"
@@ -115,8 +115,8 @@ function Register() {
             />
           </div>
 
-          <div className="mb-3">
-            <label>Password</label>
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Password</label>
             <input
               type="password"
               className="form-control"
@@ -127,8 +127,8 @@ function Register() {
           </div>
 
           {role === "counselor" && (
-            <div className="mb-3">
-              <label>Certificate Link</label>
+            <div className="form-row mb-3">
+              <label className="form-label-fixed">Certificate Link</label>
               <input type="url" className="form-control" placeholder="https://..." onChange={(e) => setCertLink(e.target.value)} required />
             </div>
           )}
