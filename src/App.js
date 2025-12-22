@@ -12,10 +12,9 @@ import SignUp from "./pages/register";
 import Home from "./pages/home";
 import StudentPage from "./pages/studentpage";
 import CounselorPage from "./pages/counselorpage";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
-import ApproveCounselorPage from "./components/admin/approvecounselors";
-
+import ApproveCounselorPage from "./pages/admin/approvecounselors";
 
 
 import { ToastContainer } from "react-toastify";
@@ -41,7 +40,7 @@ function App() {
 
           {/* DASHBOARDS (Full Screen - No auth-inner wrapper) */}
           <Route path="/home" element={<Home />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/student-page" element={<StudentPage />} />
           <Route path="/counselor-page" element={<CounselorPage />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />

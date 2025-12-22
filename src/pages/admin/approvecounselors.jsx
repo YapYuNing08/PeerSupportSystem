@@ -60,7 +60,7 @@ function ApproveCounselorPage() {
       <div className="d-flex align-items-center mb-4">
         <button 
           className="btn btn-outline-secondary me-3" 
-          onClick={() => navigate("/admin-dashboard")}
+          onClick={() => navigate("/admin/admin-dashboard")}
         >
           ← Back to Dashboard
         </button>

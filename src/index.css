@@ -9,38 +9,25 @@ body {
   min-height: 100vh;
   font-family: "Fira Sans", sans-serif;
   margin: 0;
-  /* Removed flex and centering from here */
 }
 
-/* Wrapper - Now this handles the centering for Login/Register */
 .auth-wrapper {
   display: flex;
-  justify-content: center; /* Keeps the card centered horizontally */
-  align-items: flex-start; /* Aligns the card to the top instead of the center */
+  justify-content: center; 
+  align-items: flex-start; 
   width: 100%;
   padding: 60px 0;
   min-height: auto;
 }
 
-/* Card - Your fixed width box */
 .auth-inner {
   width: 520px;
   background: #ffffff;
   box-shadow: 0px 20px 60px rgba(0, 0, 0, 0.15);
-  padding: 25px 50px;
+  padding: 20px 50px;
   border-radius: 18px;
 }
 
-/* Card - Your fixed width box */
-.auth-inner {
-  width: 520px;
-  background: #ffffff;
-  box-shadow: 0px 20px 60px rgba(0, 0, 0, 0.15);
-  padding: 25px 50px;
-  border-radius: 18px;
-}
-
-/* Titles */
 .auth-inner h3 {
   text-align: center;
   font-weight: 700;
@@ -54,20 +41,35 @@ body {
   margin-bottom: 25px;
 }
 
-/* Labels */
 label {
   font-weight: 500;
   margin-bottom: 6px;
 }
 
-/* Inputs */
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-label-fixed {
+  width: 110px;       
+  text-align: right;  
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.form-row .form-control {
+  flex: 1;
+}
+
 .form-control {
   height: 45px;
   border-radius: 10px;
-  margin-left: 8px;
+  margin-left: 6px;
   border: 1px solid #ddd;
   transition: all 0.2s ease;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   padding-left: 10px;
 }
 
@@ -75,12 +77,10 @@ label {
   border-color: #3CB371;
 }
 
-/* Select */
 select.form-control {
   cursor: pointer;
 }
 
-/* Button */
 .btn-primary {
   background: #A9EB97;
   border: none;
@@ -97,8 +97,6 @@ select.form-control {
   box-shadow: 0px 10px 25px #256F46;
 }
 
-
-/* Auth switch (Login ↔ Register) */
 .auth-switch {
   text-align: center;
   font-size: 13px;
@@ -116,12 +114,9 @@ select.form-control {
   text-decoration: underline;
 }
 
-
-
-/* Container for the toggle */
 .role-toggle-container {
   display: flex;
-  background: #eee; /* Light grey track */
+  background: #eee; 
   border-radius: 12px;
   padding: 4px;
   margin-top: 10px;
@@ -132,14 +127,13 @@ select.form-control {
   align-items: center;
 }
 
-/* The individual options */
 .role-option {
   flex: 1;
   text-align: center;
   cursor: pointer;
   font-weight: 600;
   font-size: 14px;
-  z-index: 2; /* Sits above the slider */
+  z-index: 2; 
   transition: color 0.3s ease;
   margin: 0;
   display: flex;
@@ -148,29 +142,26 @@ select.form-control {
   height: 100%;
 }
 
-/* Hide the actual radio circle */
 .role-option input[type="radio"] {
   display: none;
 }
 
-/* Text color change when active */
 .role-option.active {
-  color: #343e39; /* Deep green */
+  color: #343e39; 
 }
 
-/* Inactive text */
 .role-option:not(.active) {
-  color: #799a9a; /* Muted mint-gray */
+  color: #799a9a; 
 }
 
-/* Sliding background */
+
 .selection-slider {
   position: absolute;
   top: 4px;
   left: 4px;
   width: calc(50% - 4px);
   height: calc(100% - 8px);
-  background: #FFF6CC; /* Soft yellow */
+  background: #FFF6CC; 
   border-radius: 10px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1;
@@ -181,10 +172,10 @@ select.form-control {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 8px;           /* Space between text and button */
-  margin-top: 35px;   /* Space above the line */
-  padding-top: 15px;  /* Space below the line */
-  border-top: 1px solid #eee; /* Subtle divider */
+  gap: 8px;           
+  margin-top: 35px;   
+  padding-top: 15px;  
+  border-top: 1px solid #eee; 
 }
 
 .staff-text {
@@ -196,7 +187,7 @@ select.form-control {
 .staff-toggle-btn {
   background: none;
   border: none;
-  color: #764ba2; /* Your primary purple color */
+  color: #764ba2; 
   font-weight: 600;
   text-decoration: underline;
   font-size: 11px;
@@ -206,7 +197,7 @@ select.form-control {
 }
 
 .staff-toggle-btn:hover {
-  color: #3CB371; /* Your green hover color */
+  color: #3CB371; 
 }
 
 .btn-outline-secondary {
@@ -220,21 +211,19 @@ select.form-control {
   color: #c2185b;
 }
 
-/* Full-width container for the dashboard */
 .admin-dashboard-container {
   width: 100%;
   padding: 40px;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Centers the row of cards */
+  align-items: center; 
 }
 
-/* Horizontal Title Bar */
 .admin-main-header {
   background-color: #90cdf4;
   color: #2a4365;
   width: 100%;
-  max-width: 1200px; /* Limits width slightly so it doesn't look stretched on giant monitors */
+  max-width: 1200px; 
   padding: 20px;
   border-radius: 8px;
   text-align: center;
@@ -242,21 +231,19 @@ select.form-control {
   margin-bottom: 30px;
 }
 
-/* Row wrapper to make cards sit side-by-side */
 .admin-cards-row {
   display: flex;
-  flex-direction: row; /* Force horizontal */
+  flex-direction: row; 
   justify-content: center;
   gap: 20px;
   width: 100%;
   max-width: 1200px;
-  flex-wrap: wrap; /* Allows cards to wrap on mobile */
+  flex-wrap: wrap; 
 }
 
-/* Individual Card Styling */
 .admin-card {
-  flex: 1; /* Makes all cards take equal width */
-  min-width: 300px; /* Prevents cards from getting too skinny */
+  flex: 1; 
+  min-width: 300px; 
   background-color: #cae7f7;
   border: 1px solid #bee3f8;
   border-radius: 12px;
@@ -292,3 +279,4 @@ select.form-control {
   font-size: 45px;
   margin-bottom: 10px;
 }
+

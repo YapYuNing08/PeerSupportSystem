@@ -107,8 +107,8 @@ function Login() {
             </div>
           )}
 
-          <div className="mb-3">
-            <label className="form-label">{isStaffMode ? "Staff ID" : "Email address"}</label>
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">{isStaffMode ? "Staff ID" : "Email address"}</label>
             <input
               type={isStaffMode ? "text" : "email"}
               className="form-control"
@@ -119,8 +119,8 @@ function Login() {
             />
           </div>
 
-          <div className="mb-3">
-            <label className="form-label">Password</label>
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Password</label>
             <input
               type="password"
               className="form-control"
