@@ -1,0 +1,97 @@
+/* DESKTOP SIDEBAR */
+.side-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 270px;    
+  height: 100vh;
+  background-color: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  z-index: 1000;
+}
+
+.nav-header { padding: 0 25px; margin-bottom: 30px; }
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  flex: 1; /* Pushes footer to the bottom */
+}
+
+.nav-links li a {
+  display: block;
+  padding: 12px 25px;
+  color: #4a5568;
+  text-decoration: none;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.nav-links li.active a, .nav-links li a:hover {
+  background-color: #E4FFEE;
+  color: #256F46;
+  border-right: 4px solid #3CB371;
+}
+
+.nav-footer { padding: 20px; border-top: 1px solid #eee; }
+
+/* The Logout Button */
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #ffeded; /* Very light red background */
+  color: #e53e3e;          /* Bold red text for the action */
+  border: 1px solid #fed7d7;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Hover State */
+.logout-btn:hover {
+  background-color: #e53e3e;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Active/Press State */
+.logout-btn:active {
+  transform: translateY(0);
+}
+
+/* MOBILE BOTTOM BAR */
+@media (max-width: 768px) {
+  .side-nav {
+    width: 100%;
+    height: 70px;
+    top: auto;
+    bottom: 0;       /* Move to bottom */
+    flex-direction: row;
+    padding: 0;
+    border-right: none;
+    border-top: 1px solid #ddd;
+  }
+
+  .nav-header, .nav-footer { display: none; } /* Hide logo & logout button on mobile bar */
+
+  .nav-links {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .nav-links li { flex: 1; text-align: center; }
+  
+  .nav-links li.active a { border-right: none; border-top: 4px solid #3CB371; }
+}

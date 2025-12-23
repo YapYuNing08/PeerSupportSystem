@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { auth, db } from "../firebase-config";
 import { doc, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import "./auth.css";
 
 function Login() {
   const [isStaffMode, setIsStaffMode] = useState(false);

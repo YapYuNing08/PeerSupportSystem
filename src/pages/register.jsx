@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { auth, db } from "../firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
-
+import "./auth.css";
 
 function Register() {
   const [email, setEmail] = useState("");
