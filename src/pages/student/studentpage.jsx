@@ -1,4 +1,4 @@
-import { db, auth } from "../firebase-config";
+import { db, auth } from "../../firebase-config";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
 

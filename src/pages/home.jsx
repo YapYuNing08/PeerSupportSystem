@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 // Import your separate page components
 // Ensure these files exist in your src/pages folder
-import StudentPage from "./studentpage";
+import StudentPage from "./student/studentpage";
 import CounselorPage from "./counselorpage";
 import AdminDashboard from "./admin/AdminDashboard";
 import ModeratorDashboard from "./moderatorpage";

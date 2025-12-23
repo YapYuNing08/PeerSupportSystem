@@ -55,7 +55,23 @@ function Login() {
         }
 
         toast.success("Login Successful!");
-        window.location.href = "/home";
+        // window.location.href = "/home";
+        if (userData.role === "student") {
+          window.location.href = "/student-page"; // <--- Student goes to Mood Tracker
+        } 
+        else if (userData.role === "counselor") {
+          window.location.href = "/counselor-page";
+        } 
+        else if (userData.role === "admin") {
+          window.location.href = "/admin/admin-dashboard";
+        } 
+        else if (userData.role === "moderator") {
+          window.location.href = "/moderator-dashboard";
+        } 
+        else {
+          window.location.href = "/home"; // Fallback
+        }
+        
       } else {
         await auth.signOut();
         toast.error("User profile not found.");
