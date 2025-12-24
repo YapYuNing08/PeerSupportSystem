@@ -82,7 +82,7 @@ select.form-control {
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0px 10px 25px #256F46;
+  box-shadow: 0px 8px 10px #256F46;
 }
 
 .auth-switch {
