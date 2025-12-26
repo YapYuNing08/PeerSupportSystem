@@ -10,17 +10,21 @@ import {
 import Login from "./pages/login";
 import SignUp from "./pages/register";
 import Home from "./pages/home";
-import StudentPage from "./pages/studentpage";
+// import StudentPage from "./pages/student/studentpage";
 import CounselorPage from "./pages/counselorpage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
 import ApproveCounselorPage from "./pages/admin/approvecounselors";
+import MoodTracker from './components/student/MoodTracker'
 
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from "react";
-import { auth } from "./firebase-config";
+// import { auth } from "./firebase-config";
+import { db, auth } from "./firebase-config";
+
+
 
 function App() {
   return (
@@ -41,7 +45,8 @@ function App() {
           {/* DASHBOARDS (Full Screen - No auth-inner wrapper) */}
           <Route path="/home" element={<Home />} />
           <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/student-page" element={<StudentPage />} />
+          {/* <Route path="/student-page" element={<StudentPage />} /> */}
+          <Route path="/student-page" element={<MoodTracker/>} />
           <Route path="/counselor-page" element={<CounselorPage />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
