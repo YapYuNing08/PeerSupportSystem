@@ -9,13 +9,13 @@ const MoodTracker = () => {
   const [view, setView] = useState("calendar"); 
   const [loading, setLoading] = useState(false);
   
-  // --- CALENDAR STATE ---
+  // calender state
   const [currentDate, setCurrentDate] = useState(new Date()); 
   const [moodHistory, setMoodHistory] = useState({}); 
   const [targetDate, setTargetDate] = useState(null); 
   const [isReadOnly, setIsReadOnly] = useState(false);
 
-  // --- FORM STATE ---
+  // form state
   const [selectedMood, setSelectedMood] = useState(null);
   const [selectedEmotions, setSelectedEmotions] = useState([]);
   const [note, setNote] = useState("");
@@ -76,7 +76,7 @@ const MoodTracker = () => {
     };
   }, []);
 
-  // --- CALENDAR LOGIC ---
+  // calendaer logic
   const daysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
 
@@ -86,22 +86,19 @@ const MoodTracker = () => {
     setCurrentDate(newDate);
   };
 
-  // --- HANDLE DAY CLICK (UPDATED LOGIC) ---
-  const handleDayClick = (day) => {
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const dayString = String(day).padStart(2, '0');
-    const clickedDateStr = `${year}-${month}-${dayString}`;
+
+  // open the form, regardless of where the click came from
+  const openFormForDate = (dateStr) => {
     const todayStr = getLocalTodayString();
 
     // 1. Prevent future dates
-    if (clickedDateStr > todayStr) {
+    if (dateStr > todayStr) {
       alert("You cannot record mood for the future!");
       return;
     }
 
-    setTargetDate(clickedDateStr);
-    const existingData = moodHistory[clickedDateStr];
+    setTargetDate(dateStr);
+    const existingData = moodHistory[dateStr];
 
     if (existingData) {
         // PRE-FILL DATA
@@ -109,18 +106,19 @@ const MoodTracker = () => {
         setSelectedEmotions(existingData.emotions || []);
         setNote(existingData.note || "");
         
-        // LOGIC CHECK:
-        // If it is TODAY -> Allow Edit (update Mode)
-        // If it is PAST(recorded) -> Read Only (view Mode)
-        if (clickedDateStr === todayStr) {
+        // logic check:
+        // if it is TODAY -> allow Edit (update Mode)
+        // if it is PAST(recorded) -> read Only (view Mode)
+        // if it is PAST (not recorded yet) -> allow edit (new entry)
+        if (dateStr === todayStr) {
             setIsReadOnly(false);
-            setExistingDocId(existingData.id); // set ID for update
+            setExistingDocId(existingData.id); // Update mode
         } else {
             setIsReadOnly(true);
-            setExistingDocId(null);
+            setExistingDocId(null); // View mode
         }
     } else {
-        // new entry: Backfill or Today
+        // new entry
         setSelectedMood(null);
         setSelectedEmotions([]);
         setNote("");
@@ -131,11 +129,21 @@ const MoodTracker = () => {
     setView("input");
   };
 
-  // Quick "Log Today" handler
+  // get date based on the CURRENTLY VIEWED MONTH
+  const handleDayClick = (day) => {
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+    const dayString = String(day).padStart(2, '0');
+    const clickedDateStr = `${year}-${month}-${dayString}`;
+    
+    openFormForDate(clickedDateStr);
+  };
+
+  // record for today button
+  // get date based on REAL TIME (ignoring the calendar view)
   const handleLogToday = () => {
-    const today = new Date();
-    // pass the correct 'day' number to the handler
-    handleDayClick(today.getDate()); 
+    const todayStr = getLocalTodayString(); // always returns actual today
+    openFormForDate(todayStr); 
   };
 
   const toggleEmotion = (emotion) => {
