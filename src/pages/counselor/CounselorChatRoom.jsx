@@ -1,0 +1,175 @@
+import React, { useState, useEffect, useRef } from "react";
+import { db, auth } from "../../firebase-config";
+import { 
+  collection, query, where, onSnapshot, orderBy, 
+  addDoc, serverTimestamp, doc, updateDoc 
+} from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom"; // Added useParams
+import "./counselorchatroom.css";
+
+function CounselorChatRoom() {
+  const { requestId } = useParams(); // Get ID from URL (/chat/:requestId)
+  const [ongoingStudents, setOngoingStudents] = useState([]);
+  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState("");
+  const scrollRef = useRef();
+  const navigate = useNavigate();
+
+  // 1. Fetch all ongoing students (Sidebar)
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (!user) return;
+
+    const q = query(
+      collection(db, "chatRequests"),
+      where("status", "==", "ongoing"),
+      where("counselorId", "==", user.uid)
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const students = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setOngoingStudents(students);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // 2. Sync selectedRequest with the URL requestId
+  useEffect(() => {
+    if (ongoingStudents.length > 0) {
+      if (requestId) {
+        // Find the specific student from the URL
+        const current = ongoingStudents.find(s => s.id === requestId);
+        if (current) {
+          setSelectedRequest(current);
+        }
+      } else {
+        // Default to the first student if no ID in URL
+        setSelectedRequest(ongoingStudents[0]);
+        navigate(`/chat/${ongoingStudents[0].id}`, { replace: true });
+      }
+    }
+  }, [requestId, ongoingStudents, navigate]);
+
+  // 3. Fetch messages for the SELECTED student
+  useEffect(() => {
+    if (!selectedRequest?.id) return;
+
+    const messagesRef = collection(db, "chatRequests", selectedRequest.id, "messages");
+    const q = query(messagesRef, orderBy("createdAt", "asc"));
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let msgs = [];
+      snapshot.forEach((doc) => {
+        msgs.push({ ...doc.data(), id: doc.id });
+      });
+      setMessages(msgs);
+    });
+
+    return () => unsubscribe();
+  }, [selectedRequest]);
+
+  // 4. Auto-scroll
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (newMessage.trim() === "" || !selectedRequest) return;
+
+    const messagesRef = collection(db, "chatRequests", selectedRequest.id, "messages");
+    await addDoc(messagesRef, {
+      text: newMessage,
+      createdAt: serverTimestamp(),
+      senderId: auth.currentUser.uid,
+      senderName: "Counselor",
+    });
+    setNewMessage("");
+  };
+
+  // Navigate when clicking a sidebar item
+  const handleSelectStudent = (id) => {
+    navigate(`/chat/${id}`);
+  };
+
+  const endSession = async () => {
+    if (!selectedRequest) return;
+    const confirmEnd = window.confirm("Are you sure you want to end this session?");
+    if (confirmEnd) {
+      await updateDoc(doc(db, "chatRequests", selectedRequest.id), {
+        status: "completed",
+        endedAt: serverTimestamp()
+      });
+      setSelectedRequest(null);
+    }
+  };
+
+  return (
+    <div className="chat-dashboard-wrapper">
+      <aside className="chat-sidebar">
+        <div className="sidebar-header">
+          <h3>Chat Room</h3>
+          <button className="btn-back" onClick={() => navigate("/counselor/chat-dashboard")}>Dashboard</button>
+        </div>
+        <div className="student-list">
+          {ongoingStudents.map((student) => (
+            <div 
+              key={student.id} 
+              className={`student-item ${requestId === student.id ? "active" : ""}`}
+              onClick={() => handleSelectStudent(student.id)}
+            >
+              <div className="student-avatar">
+                {student.studentName?.charAt(0).toUpperCase()}
+              </div>
+              <div className="student-info">
+                <span className="student-name">{student.studentName}</span>
+                <span className="last-reason">{student.reasonTag}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </aside>
+
+      <main className="chat-main-area">
+        {selectedRequest ? (
+          <>
+            <header className="chat-header">
+              <div className="header-user">
+                <h2>{selectedRequest.studentName}</h2>
+                <span className="online-status">Online</span>
+              </div>
+              <button className="btn-end-chat" onClick={endSession}>End Session</button>
+            </header>
+
+            <div className="messages-display">
+              {messages.map((m) => (
+                <div key={m.id} className={`message-bubble ${m.senderId === auth.currentUser.uid ? "me" : "them"}`}>
+                  <p>{m.text}</p>
+                </div>
+              ))}
+              <div ref={scrollRef} />
+            </div>
+
+            <form onSubmit={handleSendMessage} className="message-input-form">
+              <input 
+                type="text"
+                placeholder="Write something..."
+                value={newMessage}
+                onChange={(e) => setNewMessage(e.target.value)}
+              />
+              <button type="submit" className="send-btn">➤</button>
+            </form>
+          </>
+        ) : (
+          <div className="empty-state">
+            <p>Select a student to start chatting</p>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+export default CounselorChatRoom;

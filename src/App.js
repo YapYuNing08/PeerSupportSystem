@@ -11,11 +11,13 @@ import Login from "./pages/login";
 import SignUp from "./pages/register";
 import Home from "./pages/home";
 import StudentPage from "./pages/student/studentpage";
-import CounselorChat from "./pages/counselor/counselorchat";
+import ChatDashboard from "./pages/counselor/chatDashboard";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
 import ApproveCounselorPage from "./pages/admin/approvecounselors";
 import CounselorSupport from "./pages/student/CounselorSupport";
+import CounselorChatRoom from "./pages/counselor/CounselorChatRoom";
+import StudentChatRoom from "./pages/student/StudentChat";
 
 
 import { ToastContainer } from "react-toastify";
@@ -44,7 +46,9 @@ function App() {
           <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/student-page" element={<StudentPage />} />
           <Route path="/student/counselor-support" element={<CounselorSupport />} />
-          <Route path="/counselor/chat" element={<CounselorChat />} />
+          <Route path="/student/chat/:requestId" element={<StudentChatRoom />} />.
+          <Route path="/counselor/chat-dashboard" element={<ChatDashboard />} />
+          <Route path="/chat/:requestId" element={<CounselorChatRoom />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
         </Routes>

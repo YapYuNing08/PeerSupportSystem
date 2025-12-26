@@ -3,15 +3,17 @@ import { db, auth } from "../../firebase-config";
 import { collection, query, where, onSnapshot, doc, updateDoc, serverTimestamp, orderBy } from "firebase/firestore";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 import WaitingList from "../../components/counselor/waitingList";
 import CounselorNavbar from "../../components/counselor/counselorNavbar";
-import "./counselorchat.css";
+import "./chatdashboard.css";
 
-function CounselorChat() {
-  const [isListOpen, setIsListOpen] = useState(false); // Controls the popup
+function ChatDashboard() {
+  const [isListOpen, setIsListOpen] = useState(false); 
   const [waitingRequests, setWaitingRequests] = useState([]);
-  const [waitingCount, setWaitingCount] = useState(0);
+  const [ongoingChats, setOngoingChats] = useState([]);
+  const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
@@ -23,6 +25,7 @@ function CounselorChat() {
     }
   };
 
+// 1. Listen for Waiting Requests
   useEffect(() => {
     const q = query(
       collection(db, "chatRequests"), 
@@ -30,14 +33,22 @@ function CounselorChat() {
       orderBy("priority", "desc"),
       orderBy("createdAt", "asc")
     );
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const requests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      setWaitingRequests(requests);
-      setWaitingCount(snapshot.size); 
+    return onSnapshot(q, (snapshot) => {
+      setWaitingRequests(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
     });
+  }, []);
 
-    return () => unsubscribe();
+  // 2. Listen for Ongoing Chats for THIS counselor
+  useEffect(() => {
+    if (!auth.currentUser) return;
+    const q = query(
+      collection(db, "chatRequests"),
+      where("status", "==", "ongoing"),
+      where("counselorId", "==", auth.currentUser.uid)
+    );
+    return onSnapshot(q, (snapshot) => {
+      setOngoingChats(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    });
   }, []);
 
   const handleAccept = async (requestId) => {
@@ -49,7 +60,8 @@ function CounselorChat() {
         acceptedAt: serverTimestamp()
       });
       toast.success("Student accepted!");
-      setIsListOpen(false); // Close popup after accepting
+      setIsListOpen(false);
+      navigate(`/chat/${requestId}`);
     } catch (error) {
       toast.error("Error accepting chat.");
     }
@@ -62,11 +74,11 @@ function CounselorChat() {
       <main className="counselor-main-content">
         <div className="status-overview">
           <div className="status-card waiting" onClick={() => setIsListOpen(true)}>
-            <h3>{waitingCount}</h3>
+            <h3>{waitingRequests.length}</h3>
             <p>Waiting</p>
           </div>
-          <div className="status-card ongoing">
-            <h3>0</h3>
+          <div className="status-card ongoing" onClick={() => navigate(`/chat/${ongoingChats[0]?.id}`)}>
+            <h3>{ongoingChats.length}</h3>
             <p>Ongoing</p>
           </div>
           <div className="status-card completed">
@@ -98,4 +110,4 @@ function CounselorChat() {
     </div>
   );
 }
-export default CounselorChat;
+export default ChatDashboard;
