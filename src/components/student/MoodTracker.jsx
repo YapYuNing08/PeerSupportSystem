@@ -4,6 +4,7 @@ import {
   collection, query, where, doc, setDoc, addDoc, serverTimestamp, onSnapshot 
 } from "firebase/firestore";
 import "./MoodTracker.css"; 
+import ReportIssueButton from './ReportIssueButton';
 
 const MoodTracker = () => {
   const [view, setView] = useState("calendar"); 
@@ -330,8 +331,10 @@ const MoodTracker = () => {
   return (
     <div className="app-wrapper">
       {view === "calendar" ? renderCalendarView() : renderInputView()}
+      <ReportIssueButton /> 
     </div>
   );
+
 };
 
 export default MoodTracker;

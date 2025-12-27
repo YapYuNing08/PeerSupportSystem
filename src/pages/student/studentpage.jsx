@@ -1,6 +1,8 @@
 import { db, auth } from "../../firebase-config";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
+import React, { useEffect } from 'react';
+import { getStudentData } from '../../models/Student';
 
 function StudentPage(){
       const handleLogout = async () => {
@@ -21,6 +23,6 @@ function StudentPage(){
       </button>
     </div>
 
-    )
+    );
 }
 export default StudentPage;

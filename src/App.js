@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import "./App.css";
 import {
   BrowserRouter as Router,
@@ -16,13 +16,15 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
 import ApproveCounselorPage from "./pages/admin/approvecounselors";
 import MoodTracker from './components/student/MoodTracker'
-
+import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useState } from "react";
+//import { useState } from "react";
 // import { auth } from "./firebase-config";
 import { db, auth } from "./firebase-config";
+import { onAuthStateChanged } from 'firebase/auth';
+
 
 
 
@@ -50,6 +52,7 @@ function App() {
           <Route path="/counselor-page" element={<CounselorPage />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
+          <Route path="/admin/technical-issues" element={<TechnicalIssuesPage />} />
         </Routes>
         <ToastContainer />
       </div>
