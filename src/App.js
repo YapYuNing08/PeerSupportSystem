@@ -15,6 +15,11 @@ import CounselorPage from "./pages/counselorpage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
 import ApproveCounselorPage from "./pages/admin/approvecounselors";
+import FlaggedContentPage from "./pages/moderator/FlaggedContentPage";
+import WarningMessagePage from "./pages/moderator/WarningMessagePage";
+import AutoModerationPage from "./pages/moderator/AutoModerationPage";
+
+
 import MoodTracker from './components/student/MoodTracker'
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
 
@@ -52,6 +57,11 @@ function App() {
           <Route path="/counselor-page" element={<CounselorPage />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
+          <Route path="/moderator" element={<ModeratorDashboard />} />
+          <Route path="/moderator/flagged" element={<FlaggedContentPage />} />
+          <Route path="/moderator/warnings" element={<WarningMessagePage />} />
+          <Route path="/moderator/auto-moderation" element={<AutoModerationPage />} />
+
           <Route path="/admin/technical-issues" element={<TechnicalIssuesPage />} />
         </Routes>
         <ToastContainer />
