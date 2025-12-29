@@ -9,8 +9,12 @@ import {
   serverTimestamp
 } from "firebase/firestore";
 import { toast } from "react-toastify";
+import "./AutoModeration.css";
+import { useNavigate } from "react-router-dom";
 
 function AutoModerationPage() {
+  const navigate = useNavigate();
+
   const [keyword, setKeyword] = useState("");
   const [keywords, setKeywords] = useState([]);
 
@@ -57,8 +61,16 @@ function AutoModerationPage() {
           <p className="text-muted mb-0">
             Manage banned words and phrases for automatic content filtering
           </p>
+          <button
+    className="btn btn-outline-secondary mb-3"
+    onClick={() => navigate("/moderator-dashboard")}
+  >
+    ← Back to Moderator Dashboard
+  </button>
         </div>
       </div>
+
+      
 
       <div className="row g-4">
 
@@ -66,7 +78,7 @@ function AutoModerationPage() {
         <div className="col-md-5">
           <div className="card shadow-sm border-0">
             <div className="card-body">
-              <h5 className="card-title fw-semibold mb-3">
+              <h5 className="card-title fw-semibold mb-3 text-primary">
                 ➕ Add New Keyword
               </h5>
 

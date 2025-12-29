@@ -1,0 +1,132 @@
+/* ---------- Page Layout ---------- */
+.container {
+  min-height: 100vh;
+  max-width: 1000px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ---------- Header ---------- */
+h2 {
+  font-size: 1.9rem;
+  letter-spacing: -0.4px;
+  text-align: center;
+}
+
+.text-muted {
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+/* ---------- Grid ---------- */
+.row {
+  justify-content: center;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+
+/* ---------- Cards ---------- */
+.card {
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.08);
+}
+
+.card-body {
+  padding: 28px;
+  text-align: center;
+}
+
+/* ---------- Card Titles ---------- */
+.card-title {
+  font-size: 1.15rem;
+  color: #1f2937;
+}
+
+/* ---------- Input ---------- */
+.form-control {
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 0.95rem;
+  text-align: center;
+  border: 1px solid #e5e7eb;
+}
+
+.form-control:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+}
+
+/* ---------- Primary Button ---------- */
+.btn-primary {
+  border-radius: 14px;
+  font-weight: 600;
+  padding: 12px 0;
+  background: linear-gradient(135deg, #6366f1, #4f46e5);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+}
+
+/* ---------- Keyword List ---------- */
+.list-group {
+  margin-top: 10px;
+}
+
+.list-group-item {
+  border: none;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  transition: background 0.2s ease;
+}
+
+.list-group-item:hover {
+  background: #f1f5f9;
+}
+
+/* ---------- Keyword Text ---------- */
+.list-group-item span {
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+/* ---------- Remove Button ---------- */
+.btn-outline-danger {
+  border-radius: 10px;
+  font-size: 0.75rem;
+  padding: 6px 12px;
+}
+
+.btn-outline-danger:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+/* ---------- Empty State ---------- */
+.list-group:empty::after {
+  content: "No moderation keywords added.";
+  color: #9ca3af;
+  display: block;
+  text-align: center;
+  padding: 20px;
+}
