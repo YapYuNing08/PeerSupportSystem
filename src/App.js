@@ -15,8 +15,10 @@ import CounselorPage from "./pages/counselorpage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
 import ApproveCounselorPage from "./pages/admin/approvecounselors";
-import MoodTracker from './components/student/MoodTracker'
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
+import MoodTracker from './components/student/MoodTracker';
+import MoodAnalysis from "./components/student/MoodAnalysis";
+
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -49,6 +51,8 @@ function App() {
           <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
           {/* <Route path="/student-page" element={<StudentPage />} /> */}
           <Route path="/student-page" element={<MoodTracker/>} />
+          
+          <Route path="/student/analysis" element={<MoodAnalysis/>} />
           <Route path="/counselor-page" element={<CounselorPage />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
