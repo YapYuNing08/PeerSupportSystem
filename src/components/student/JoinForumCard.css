@@ -1,0 +1,10 @@
+.join-forum-card {
+  border: 2px dashed #4d96ff;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.join-forum-card:hover {
+  transform: translateY(-3px);
+  background: #f3f7ff;
+}
