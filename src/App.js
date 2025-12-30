@@ -4,13 +4,12 @@ import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Navigate,
+  useLocation,
 } from "react-router-dom";
 
 import Login from "./pages/login";
 import SignUp from "./pages/register";
 import Home from "./pages/home";
-// import StudentPage from "./pages/student/studentpage";
 import CounselorPage from "./pages/counselorpage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
@@ -18,6 +17,7 @@ import ApproveCounselorPage from "./pages/admin/approvecounselors";
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
 import MoodTracker from './components/student/MoodTracker';
 import MoodAnalysis from "./components/student/MoodAnalysis";
+import StudentNavbar from "./components/student/StudentNavbar";
 
 
 import { ToastContainer } from "react-toastify";
@@ -28,38 +28,66 @@ import { db, auth } from "./firebase-config";
 import { onAuthStateChanged } from 'firebase/auth';
 
 
+function AppContent() {
+  const location = useLocation();
+  const [user, setUser] = useState(null);
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
-function App() {
+  const handleLogout = () => {
+    auth.signOut();
+    window.location.href = "/";
+  };
+
+  // Define paths where the Navbar should NOT appear
+  const hideNavbarPaths = ["/", "/login", "/register", "/home"];
+  
+  // Show Navbar if user is logged in AND we are not on a public page
+  const showNavbar = user && !hideNavbarPaths.includes(location.pathname);
+
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          {/* LOGIN & REGISTER (Wrapped in auth-wrapper) */}
-          <Route path="/" element={
-            <div className="auth-wrapper"><div className="auth-inner"><Login /></div></div>
-          } />
-          <Route path="/login" element={
-            <div className="auth-wrapper"><div className="auth-inner"><Login /></div></div>
-          } />
-          <Route path="/register" element={
-            <div className="auth-wrapper"><div className="auth-inner"><SignUp /></div></div>
-          } />
+    <div className="App">
+      {/* 2. RENDER NAVBAR CONDITIONALLY */}
+      {showNavbar && <StudentNavbar handleLogout={handleLogout} />}
 
-          {/* DASHBOARDS (Full Screen - No auth-inner wrapper) */}
+      {/* 3. ADD MARGIN IF NAVBAR IS VISIBLE */}
+      <div className={showNavbar ? "main-content-with-nav" : "auth-wrapper"}>
+        <Routes>
+          {/* AUTH ROUTES */}
+          <Route path="/" element={<div className="auth-inner"><Login /></div>} />
+          <Route path="/login" element={<div className="auth-inner"><Login /></div>} />
+          <Route path="/register" element={<div className="auth-inner"><SignUp /></div>} />
+
+          {/* DASHBOARD ROUTES */}
           <Route path="/home" element={<Home />} />
           <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
-          {/* <Route path="/student-page" element={<StudentPage />} /> */}
-          <Route path="/student-page" element={<MoodTracker/>} />
           
+          {/* STUDENT ROUTES */}
+          <Route path="/student-page" element={<MoodTracker/>} />
           <Route path="/student/analysis" element={<MoodAnalysis/>} />
+          
+          {/* OTHER ROUTES */}
           <Route path="/counselor-page" element={<CounselorPage />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
           <Route path="/admin/technical-issues" element={<TechnicalIssuesPage />} />
         </Routes>
-        <ToastContainer />
       </div>
+      <ToastContainer />
+    </div>
+  );
+}
+
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   );
 }
