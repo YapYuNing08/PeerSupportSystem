@@ -8,7 +8,7 @@ function StudentNavbar({ handleLogout }) {
   return (
     <nav className="side-nav">
       <div className="nav-header">
-        <h2>PeerSupportSystem</h2>
+        <h3>Peer Support System</h3>
       </div>
       
       <ul className="nav-links">

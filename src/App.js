@@ -22,19 +22,30 @@ import StudentNavbar from "./components/student/StudentNavbar";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-//import { useState } from "react";
-// import { auth } from "./firebase-config";
 import { db, auth } from "./firebase-config";
 import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from "firebase/firestore";
 
 
 function AppContent() {
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        // Fetch the role from Firestore when user logs in
+        const docRef = doc(db, "users", currentUser.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setUserRole(docSnap.data().role);
+        }
+      } else {
+        setUserRole(null);
+      }
     });
     return () => unsubscribe();
   }, []);
@@ -47,16 +58,16 @@ function AppContent() {
   // Define paths where the Navbar should NOT appear
   const hideNavbarPaths = ["/", "/login", "/register", "/home"];
   
-  // Show Navbar if user is logged in AND we are not on a public page
-  const showNavbar = user && !hideNavbarPaths.includes(location.pathname);
+  // Show student navbar if user is logged in AND we are not on a public page AND role is student
+  const showStudentNavbar = user && !hideNavbarPaths.includes(location.pathname) && userRole === "student";
 
   return (
     <div className="App">
       {/* 2. RENDER NAVBAR CONDITIONALLY */}
-      {showNavbar && <StudentNavbar handleLogout={handleLogout} />}
+      {showStudentNavbar && <StudentNavbar handleLogout={handleLogout} />}
 
       {/* 3. ADD MARGIN IF NAVBAR IS VISIBLE */}
-      <div className={showNavbar ? "main-content-with-nav" : "auth-wrapper"}>
+      <div className={showStudentNavbar ? "main-content-with-nav" : "auth-wrapper"}>
         <Routes>
           {/* AUTH ROUTES */}
           <Route path="/" element={<div className="auth-inner"><Login /></div>} />
