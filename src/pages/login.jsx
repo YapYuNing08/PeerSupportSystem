@@ -84,7 +84,9 @@ function Login() {
   return (
     <div className="auth-wrapper">
       <div className="auth-inner">
+        {/* FORM WRAPPER: Handles "Enter" Key automatically */}
         <form onSubmit={handleSubmit}>
+          
           <h3>{isStaffMode ? "Staff Portal" : "Welcome Back"}</h3>
           <p className="auth-subtitle">
             {isStaffMode ? "Management Login" : "Login to continue"}
@@ -148,6 +150,7 @@ function Login() {
           </div>
 
           <div className="d-grid">
+            {/* type="submit" fires the form's onSubmit event */}
             <button type="submit" className="btn btn-primary">
               Login
             </button>
@@ -163,6 +166,7 @@ function Login() {
             <p className="staff-text">
               {isStaffMode ? "Not a staff member?" : "Are you an Admin or Moderator?"}
             </p>
+            {/* type="button" prevents this specific button from submitting the form */}
             <button 
               type="button" 
               className="staff-toggle-btn" 
