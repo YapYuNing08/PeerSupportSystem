@@ -16,20 +16,46 @@ function JoinForumPage() {
   const [joinedForumIds, setJoinedForumIds] = useState([]);
   const navigate = useNavigate();
 
-  // 🔹 Load forums + joined forums
+  // 🔹 Load forums + joined forums + member count
   useEffect(() => {
     const fetchData = async () => {
-      const forumSnap = await getDocs(collection(db, "forums"));
-      setForums(
-        forumSnap.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-      );
+      try {
+        // 1️⃣ Load all forums
+        const forumSnap = await getDocs(collection(db, "forums"));
 
-      const memberQuery = query(
-        collection(db, "forumMembers"),
-        where("userId", "==", auth.currentUser.uid)
-      );
-      const memberSnap = await getDocs(memberQuery);
-      setJoinedForumIds(memberSnap.docs.map((d) => d.data().forumId));
+        // 2️⃣ Load joined forums for current user
+        const memberQuery = query(
+          collection(db, "forumMembers"),
+          where("userId", "==", auth.currentUser.uid)
+        );
+        const memberSnap = await getDocs(memberQuery);
+        const joinedIds = memberSnap.docs.map((d) => d.data().forumId);
+        setJoinedForumIds(joinedIds);
+
+        // 3️⃣ Attach member count to each forum
+        const forumsWithCount = await Promise.all(
+          forumSnap.docs.map(async (docSnap) => {
+            const forumId = docSnap.id;
+
+            const countQuery = query(
+              collection(db, "forumMembers"),
+              where("forumId", "==", forumId)
+            );
+            const countSnap = await getDocs(countQuery);
+
+            return {
+              id: forumId,
+              ...docSnap.data(),
+              memberCount: countSnap.size,
+            };
+          })
+        );
+
+        setForums(forumsWithCount);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to load forums");
+      }
     };
 
     fetchData();
@@ -51,7 +77,16 @@ function JoinForumPage() {
       });
 
       toast.success(`Joined ${forum.name}`);
+
+      // update UI immediately
       setJoinedForumIds((prev) => [...prev, forum.id]);
+      setForums((prev) =>
+        prev.map((f) =>
+          f.id === forum.id
+            ? { ...f, memberCount: f.memberCount + 1 }
+            : f
+        )
+      );
     } catch (error) {
       toast.error("Failed to join forum");
     }
@@ -78,6 +113,12 @@ function JoinForumPage() {
           <div key={forum.id} className="forum-card">
             <h4>{forum.name}</h4>
             <p>{forum.description}</p>
+
+            {/* 🔹 Member count */}
+            <small style={{ color: "#666" }}>
+              👥 {forum.memberCount} member
+              {forum.memberCount !== 1 && "s"}
+            </small>
 
             {joinedForumIds.includes(forum.id) ? (
               <button className="btn joined" disabled>
