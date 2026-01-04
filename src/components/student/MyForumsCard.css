@@ -1,0 +1,31 @@
+.my-forums-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.my-forums-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+.card-icon {
+  font-size: 28px;
+}
+
+.card-content h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.card-content p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+}

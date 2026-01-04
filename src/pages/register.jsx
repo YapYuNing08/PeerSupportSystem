@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { auth, db } from "../firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 
 function Register() {
@@ -12,6 +13,7 @@ function Register() {
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("student"); // Default to student
   const [certLink, setCertLink] = useState("");
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -37,6 +39,11 @@ function Register() {
       toast.success(role === "counselor" ? "Registered! Awaiting Admin Approval." : "Registered Successfully!", {
         position: "top-center",
       });
+      if (role === "student") {
+        navigate("/join-forum"); // student must join forum
+      } else {
+        navigate("/login"); // counselor waits for approval
+      }
     } catch (error) {
       toast.error(error.message, { position: "bottom-center" });
     }

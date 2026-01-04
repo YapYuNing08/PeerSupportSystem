@@ -61,6 +61,18 @@ function AdminDashboard() {
             <p>TECHNICAL ISSUES</p>
           </div>
         </div>
+
+        <div
+          className="admin-card"
+          onClick={() => navigate("/admin/create-forum")}
+          style={{ cursor: "pointer" }}
+        >
+          <div className="card-icon">📢</div>
+          <div className="card-info text-center">
+            <h3>+</h3>
+            <p>CREATE FORUM</p>
+          </div>
+        </div>
       </div>
 
     </div>

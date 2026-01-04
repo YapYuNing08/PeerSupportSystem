@@ -18,10 +18,15 @@ import ApproveCounselorPage from "./pages/admin/approvecounselors";
 import FlaggedContentPage from "./pages/moderator/FlaggedContentPage";
 import WarningMessagePage from "./pages/moderator/WarningMessagePage";
 import AutoModerationPage from "./pages/moderator/AutoModerationPage";
-
+import CreateForumPage from "./pages/admin/CreateForumPage";
 
 import MoodTracker from './components/student/MoodTracker'
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
+import JoinForumPage from "./pages/student/JoinForumPage";
+import MyForumsPage from "./pages/student/MyForumsPage";
+import ForumDetailsPage from "./pages/student/ForumDetailsPage";
+import CreatePostPage from "./pages/student/CreatePostPage";
+import PostDetailsPage from "./pages/student/PostDetailsPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -30,6 +35,16 @@ import "react-toastify/dist/ReactToastify.css";
 import { db, auth } from "./firebase-config";
 import { onAuthStateChanged } from 'firebase/auth';
 
+import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+
+const checkJoinedForum = async (uid) => {
+  const q = query(
+    collection(db, "forumMembers"),
+    where("userId", "==", uid)
+  );
+  const snap = await getDocs(q);
+  return !snap.empty;
+};
 
 
 
@@ -61,8 +76,14 @@ function App() {
           <Route path="/moderator/flagged" element={<FlaggedContentPage />} />
           <Route path="/moderator/warnings" element={<WarningMessagePage />} />
           <Route path="/moderator/auto-moderation" element={<AutoModerationPage />} />
-
+          <Route path="/admin/create-forum" element={<CreateForumPage />} />
           <Route path="/admin/technical-issues" element={<TechnicalIssuesPage />} />
+          <Route path="/join-forum" element={<JoinForumPage />} />
+          <Route path="/my-forums" element={<MyForumsPage />} />
+          <Route path="/forum/:forumId" element={<ForumDetailsPage />} />
+          <Route path="/forum/:forumId/new-post" element={<CreatePostPage />} />
+          <Route path="/post/:postId" element={<PostDetailsPage />} />
+
         </Routes>
         <ToastContainer />
       </div>
