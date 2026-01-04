@@ -24,6 +24,9 @@ import MoodTracker from './components/student/MoodTracker'
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
 import JoinForumPage from "./pages/student/JoinForumPage";
 import MyForumsPage from "./pages/student/MyForumsPage";
+import ForumDetailsPage from "./pages/student/ForumDetailsPage";
+import CreatePostPage from "./pages/student/CreatePostPage";
+import PostDetailsPage from "./pages/student/PostDetailsPage";
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -77,7 +80,10 @@ function App() {
           <Route path="/admin/technical-issues" element={<TechnicalIssuesPage />} />
           <Route path="/join-forum" element={<JoinForumPage />} />
           <Route path="/my-forums" element={<MyForumsPage />} />
-          <Route path="/my-forums" element={<MyForumsPage />} />
+          <Route path="/forum/:forumId" element={<ForumDetailsPage />} />
+          <Route path="/forum/:forumId/new-post" element={<CreatePostPage />} />
+          <Route path="/post/:postId" element={<PostDetailsPage />} />
+
         </Routes>
         <ToastContainer />
       </div>

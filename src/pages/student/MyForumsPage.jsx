@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase-config";
 import { collection, query, where, getDocs, doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 import JoinForumCard from "../../components/student/JoinForumCard";
 
 const MyForumsPage = () => {
   const [forums, setForums] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchMyForums = async () => {
@@ -37,15 +39,19 @@ const MyForumsPage = () => {
     <div style={{ padding: "20px" }}>
       <h2>My Forums</h2>
 
-      {/* 🔹 Join Forum Card */}
+      {/* Join Forum Card */}
       <JoinForumCard />
 
-      {/* 🔹 Joined Forums */}
+      {/* Joined Forums */}
       {forums.length === 0 ? (
         <p>You haven’t joined any forums yet.</p>
       ) : (
         forums.map((forum) => (
-          <div key={forum.id} className="forum-card">
+          <div
+            key={forum.id}
+            className="forum-card"
+            onClick={() => navigate(`/forum/${forum.id}`)}
+          >
             <h3>{forum.name}</h3>
             <p>{forum.description}</p>
           </div>
