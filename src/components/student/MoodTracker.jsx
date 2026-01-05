@@ -5,6 +5,7 @@ import {
 } from "firebase/firestore";
 import "./MoodTracker.css"; 
 import ReportIssueButton from './ReportIssueButton';
+import StudentLayout from "../layout/StudentLayout";
 
 const MoodTracker = () => {
   const [view, setView] = useState("calendar"); 
@@ -329,10 +330,12 @@ const MoodTracker = () => {
   );
 
   return (
+    <StudentLayout>
     <div className="app-wrapper">
       {view === "calendar" ? renderCalendarView() : renderInputView()}
       <ReportIssueButton /> 
     </div>
+    </StudentLayout>
   );
 
 };

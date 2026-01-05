@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { auth, db } from "../firebase-config";
 import { doc, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import "./auth.css";
 
 function Login() {
   const [isStaffMode, setIsStaffMode] = useState(false);
@@ -60,7 +61,7 @@ function Login() {
           window.location.href = "/student-page"; // <--- Student goes to Mood Tracker
         } 
         else if (userData.role === "counselor") {
-          window.location.href = "/counselor-page";
+          window.location.href = "/counselor/chat-dashboard";
         } 
         else if (userData.role === "admin") {
           window.location.href = "/admin/admin-dashboard";

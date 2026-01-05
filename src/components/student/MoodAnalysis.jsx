@@ -5,6 +5,9 @@ import { onAuthStateChanged } from "firebase/auth";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { format, startOfMonth, endOfMonth, addMonths, getDate, isAfter, getDaysInMonth } from "date-fns";
 import "./MoodAnalysis.css"; 
+import StudentLayout from "../layout/StudentLayout";
+import { useNavigate } from "react-router-dom";
+
 
 
 const moodConfig = {
@@ -21,6 +24,8 @@ const MoodAnalysis = () => {
   const [stats, setStats] = useState({});
   const [showIntervention, setShowIntervention] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
 
   // store the user in state so React knows when they are ready
   const [user, setUser] = useState(null);
@@ -122,6 +127,7 @@ const MoodAnalysis = () => {
   // renderers
 
   return (
+    <StudentLayout>
     <div className="analysis-container">
       {/* header */}
       <header className="analysis-header">
@@ -222,7 +228,7 @@ const MoodAnalysis = () => {
           <div className="speech-bubble">
             <p>We've noticed you've been having a tough week. Would you like to request a <b>counseling session</b>?</p>
             <div className="bubble-actions">
-              <button className="btn-yes">Yes</button>
+              <button className="btn-yes" onClick={() => navigate("/student/counselor-support")}>Yes</button>
               <button className="btn-no" onClick={() => setShowIntervention(false)}>No, I'm fine ~</button>
             </div>
           </div>
@@ -234,6 +240,7 @@ const MoodAnalysis = () => {
 
       
     </div>
+    </StudentLayout>
   );
 };
 
