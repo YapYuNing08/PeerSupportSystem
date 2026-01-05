@@ -2,6 +2,8 @@ import { db, auth } from "../../firebase-config";
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react';
+import { getStudentData } from '../../models/Student';
 
 function StudentPage(){
     const navigate = useNavigate();
@@ -29,6 +31,6 @@ function StudentPage(){
       </button>
     </div>
 
-    )
+    );
 }
 export default StudentPage;
