@@ -12,6 +12,7 @@ import SignUp from "./pages/register";
 import Home from "./pages/home";
 import StudentPage from "./pages/student/studentpage";
 import ChatDashboard from "./pages/counselor/chatDashboard";
+import Notes from "./pages/counselor/notes";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ModeratorDashboard from "./pages/moderatorpage";
 import ApproveCounselorPage from "./pages/admin/approvecounselors";
@@ -48,6 +49,7 @@ function App() {
           <Route path="/student/counselor-support" element={<CounselorSupport />} />
           <Route path="/student/chat/:requestId" element={<StudentChatRoom />} />.
           <Route path="/counselor/chat-dashboard" element={<ChatDashboard />} />
+          <Route path="/counselor/notes" element={<Notes />} />
           <Route path="/chat/:requestId" element={<CounselorChatRoom />} />
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />

@@ -13,10 +13,10 @@ function CounselorNavbar({ handleLogout }) {
       
       <ul className="nav-links">
         <li className={location.pathname === "/chat" ? "active" : ""}>
-          <Link to="/chat">💬 Chat</Link>
+          <Link to="/counselor/chat-dashboard">💬 Chat</Link>
         </li>
         <li className={location.pathname === "/notes" ? "active" : ""}>
-          <Link to="/notes">✨ Notes</Link>
+          <Link to="/counselor/notes">✨ Notes</Link>
         </li>
         <li className={location.pathname === "/profile" ? "active" : ""}>
           <Link to="/profile">👤 Profile</Link>

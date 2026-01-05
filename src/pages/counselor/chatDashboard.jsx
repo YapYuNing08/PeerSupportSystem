@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 import WaitingList from "../../components/counselor/waitingList";
-import CounselorNavbar from "../../components/counselor/counselorNavbar";
+import CounselorLayout from "../../components/layout/counselorLayout";
 import "./chatdashboard.css";
 
 function ChatDashboard() {
@@ -14,16 +14,6 @@ function ChatDashboard() {
   const [waitingRequests, setWaitingRequests] = useState([]);
   const [ongoingChats, setOngoingChats] = useState([]);
   const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth); // Properly sign out from Firebase
-      toast.success("Logged out successfully");
-      window.location.href = "/login";
-    } catch (error) {
-      toast.error("Logout failed");
-    }
-  };
 
 // 1. Listen for Waiting Requests
   useEffect(() => {
@@ -51,6 +41,22 @@ function ChatDashboard() {
     });
   }, []);
 
+  const [completedCount, setCompletedCount] = useState(0);
+
+  // 3. Listen for Completed Chats for THIS counselor
+  useEffect(() => {
+    if (!auth.currentUser) return;
+    const q = query(
+      collection(db, "chatRequests"),
+      where("status", "==", "completed"), // or "resolved"
+      where("counselorId", "==", auth.currentUser.uid)
+    );
+    
+    return onSnapshot(q, (snapshot) => {
+      setCompletedCount(snapshot.size); // .size gives you the total number of docs
+    });
+  }, []);
+
   const handleAccept = async (requestId) => {
     try {
       const requestRef = doc(db, "chatRequests", requestId);
@@ -68,9 +74,7 @@ function ChatDashboard() {
   };
   
   return (
-    <div className="counselor-layout">
-      <CounselorNavbar handleLogout={handleLogout} />
-      
+    <CounselorLayout>   
       <main className="counselor-main-content">
         <div className="status-overview">
           <div className="status-card waiting" onClick={() => setIsListOpen(true)}>
@@ -82,7 +86,7 @@ function ChatDashboard() {
             <p>Ongoing</p>
           </div>
           <div className="status-card completed">
-            <h3>0</h3>
+            <h3>{completedCount}</h3>
             <p>Completed</p>
           </div>
         </div>
@@ -94,20 +98,19 @@ function ChatDashboard() {
           onAccept={handleAccept}
         />
 
-        {/* BOTTOM SECTION: URGENCY LIST */}
-        <section className="urgency-container">
+        
+        {/* <section className="urgency-container">
           <div className="section-header">
             <h2>Urgent Chat Requests</h2>
             <p>Priority based on student mood alerts</p>
           </div>
 
           <div className="urgency-list-placeholder">
-            {/* We will map Firebase data here later */}
             <p className="empty-msg">No active requests at the moment.</p>
           </div>
-        </section>
+        </section> */}
       </main>
-    </div>
+    </CounselorLayout>
   );
 }
 export default ChatDashboard;
