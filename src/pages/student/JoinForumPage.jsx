@@ -85,7 +85,7 @@ function JoinForumPage() {
       toast.error("Please join at least one forum to continue");
       return;
     }
-    navigate("/student-page");
+    navigate("/my-forums");
   };
 
   const getIconStyle = (name) => {
