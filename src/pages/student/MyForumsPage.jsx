@@ -10,6 +10,7 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import JoinForumCard from "../../components/student/JoinForumCard";
+import StudentLayout from "../../components/layout/StudentLayout";
 
 const MyForumsPage = () => {
   const [forums, setForums] = useState([]);
@@ -57,6 +58,7 @@ const MyForumsPage = () => {
   }, []);
 
   return (
+    <StudentLayout>
     <div style={s.pageWrapper}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
@@ -136,6 +138,7 @@ const MyForumsPage = () => {
         )}
       </div>
     </div>
+    </StudentLayout>
   );
 };
 

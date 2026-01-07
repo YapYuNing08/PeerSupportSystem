@@ -5,6 +5,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
+import "./auth.css";
 
 function Register() {
   const [email, setEmail] = useState("");

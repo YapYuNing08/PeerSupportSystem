@@ -6,7 +6,8 @@ import { onAuthStateChanged } from "firebase/auth";
 // Import your separate page components
 // Ensure these files exist in your src/pages folder
 import StudentPage from "./student/studentpage";
-import CounselorPage from "./counselorpage";
+import ChatDashboard from "./counselor/chatDashboard";
+// import CounselorPage from "./counselorpage";
 import AdminDashboard from "./admin/AdminDashboard";
 import ModeratorDashboard from "./moderatorpage";
 
@@ -54,7 +55,7 @@ function Home() {
     case "student":
       return <StudentPage />;
     case "counselor":
-      return <CounselorPage />;
+      return <ChatDashboard />;
     case "admin":
       return <AdminDashboard />;
     case "moderator":

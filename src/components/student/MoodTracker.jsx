@@ -7,6 +7,7 @@ import "./MoodTracker.css";
 import ReportIssueButton from './ReportIssueButton';
 import MyForumsCard from "./MyForumsCard";
 
+import StudentLayout from "../layout/StudentLayout";
 
 const MoodTracker = () => {
   const [view, setView] = useState("calendar"); 
@@ -27,10 +28,10 @@ const MoodTracker = () => {
   // mood options
   const moodOptions = [
     { value: 1, label: "Awful", color: "#FF6B6B", icon: "😡" },
-    { value: 2, label: "Bad", color: "#FFD93D", icon: "😞" },
+    { value: 2, label: "Bad", color: "#6A9CFF", icon: "😞" },
     { value: 3, label: "Neutral", color: "#A8A8A8", icon: "😐" },
-    { value: 4, label: "Good", color: "#6BCB77", icon: "🙂" },
-    { value: 5, label: "Great", color: "#4D96FF", icon: "🤩" },
+    { value: 4, label: "Good", color: "#FF9F43", icon: "🙂" },
+    { value: 5, label: "Great", color: "#6BCB77", icon: "🤩" },
   ];
 
   const emotionTags = [
@@ -110,8 +111,8 @@ const MoodTracker = () => {
         setNote(existingData.note || "");
         
         // logic check:
-        // if it is TODAY -> allow Edit (update Mode)
-        // if it is PAST(recorded) -> read Only (view Mode)
+        // if it is TODAY -> allow edit (update mode)
+        // if it is PAST(recorded) -> read only (view mode)
         // if it is PAST (not recorded yet) -> allow edit (new entry)
         if (dateStr === todayStr) {
             setIsReadOnly(false);
@@ -335,10 +336,12 @@ const MoodTracker = () => {
   );
 
   return (
+    <StudentLayout>
     <div className="app-wrapper">
       {view === "calendar" ? renderCalendarView() : renderInputView()}
       <ReportIssueButton /> 
     </div>
+    </StudentLayout>
   );
 
 };

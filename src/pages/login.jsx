@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { auth, db } from "../firebase-config";
 import { doc, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
+import "./auth.css";
 
 function Login() {
   const [isStaffMode, setIsStaffMode] = useState(false);
@@ -60,7 +61,7 @@ function Login() {
           window.location.href = "/student-page"; // <--- Student goes to Mood Tracker
         } 
         else if (userData.role === "counselor") {
-          window.location.href = "/counselor-page";
+          window.location.href = "/counselor/chat-dashboard";
         } 
         else if (userData.role === "admin") {
           window.location.href = "/admin/admin-dashboard";
@@ -84,7 +85,9 @@ function Login() {
   return (
     <div className="auth-wrapper">
       <div className="auth-inner">
+        {/* FORM WRAPPER: Handles "Enter" Key automatically */}
         <form onSubmit={handleSubmit}>
+          
           <h3>{isStaffMode ? "Staff Portal" : "Welcome Back"}</h3>
           <p className="auth-subtitle">
             {isStaffMode ? "Management Login" : "Login to continue"}
@@ -148,6 +151,7 @@ function Login() {
           </div>
 
           <div className="d-grid">
+            {/* type="submit" fires the form's onSubmit event */}
             <button type="submit" className="btn btn-primary">
               Login
             </button>
@@ -163,6 +167,7 @@ function Login() {
             <p className="staff-text">
               {isStaffMode ? "Not a staff member?" : "Are you an Admin or Moderator?"}
             </p>
+            {/* type="button" prevents this specific button from submitting the form */}
             <button 
               type="button" 
               className="staff-toggle-btn" 
