@@ -5,6 +5,8 @@ import {
 } from "firebase/firestore";
 import "./MoodTracker.css"; 
 import ReportIssueButton from './ReportIssueButton';
+import MyForumsCard from "./MyForumsCard";
+
 import StudentLayout from "../layout/StudentLayout";
 
 const MoodTracker = () => {
@@ -239,6 +241,10 @@ const MoodTracker = () => {
 
   const renderCalendarView = () => (
     <div className="screen-container">
+
+      {/* QUICK ACCESS CARD */}
+      <MyForumsCard />
+
       <header className="calendar-header">
         <button className="nav-btn" onClick={() => changeMonth(-1)}>←</button>
         <h2>{getMonthYearString(currentDate)}</h2>

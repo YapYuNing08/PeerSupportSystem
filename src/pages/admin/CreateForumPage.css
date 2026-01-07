@@ -1,0 +1,46 @@
+.form-card {
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  margin-bottom: 32px;
+  max-width: 600px;
+}
+
+.form-card h2 {
+  margin-bottom: 16px;
+}
+
+.form-card input,
+.form-card textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 14px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.forum-list {
+  max-width: 900px;
+}
+
+.forum-card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  margin-bottom: 16px;
+}
+
+.forum-card h4 {
+  margin-bottom: 6px;
+}
+
+.forum-status {
+  font-size: 12px;
+  color: green;
+}
+
+.empty-text {
+  color: #888;
+}

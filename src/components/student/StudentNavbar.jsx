@@ -22,7 +22,7 @@ function StudentNavbar({ handleLogout }) {
           <Link to="/student/counselor-support">💬 Counselor</Link>
         </li>
         <li className={location.pathname === "/forum" ? "active" : ""}>
-          <Link to="/forum">📢 Forum</Link>
+          <Link to="/my-forums">📢 Forum</Link>
         </li>
         <li className={location.pathname === "/profile" ? "active" : ""}>
           <Link to="/profile">👤 Profile</Link>

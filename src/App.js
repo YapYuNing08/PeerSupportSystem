@@ -23,7 +23,17 @@ import CounselorChatRoom from "./pages/counselor/CounselorChatRoom";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import ApproveCounselorPage from "./pages/admin/approvecounselors";
+import FlaggedContentPage from "./pages/moderator/FlaggedContentPage";
+import WarningMessagePage from "./pages/moderator/WarningMessagePage";
+import AutoModerationPage from "./pages/moderator/AutoModerationPage";
+import CreateForumPage from "./pages/admin/CreateForumPage";
+
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
+import JoinForumPage from "./pages/student/JoinForumPage";
+import MyForumsPage from "./pages/student/MyForumsPage";
+import ForumDetailsPage from "./pages/student/ForumDetailsPage";
+import CreatePostPage from "./pages/student/CreatePostPage";
+import PostDetailsPage from "./pages/student/PostDetailsPage";
 
 import ModeratorDashboard from "./pages/moderatorpage";
 // import CounselorPage from "./pages/counselorpage";
@@ -63,7 +73,17 @@ function App() {
 
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
           <Route path="/admin/approve-counselors" element={<ApproveCounselorPage />} />
+          <Route path="/moderator" element={<ModeratorDashboard />} />
+          <Route path="/moderator/flagged" element={<FlaggedContentPage />} />
+          <Route path="/moderator/warnings" element={<WarningMessagePage />} />
+          <Route path="/moderator/auto-moderation" element={<AutoModerationPage />} />
+          <Route path="/admin/create-forum" element={<CreateForumPage />} />
           <Route path="/admin/technical-issues" element={<TechnicalIssuesPage />} />
+          <Route path="/join-forum" element={<JoinForumPage />} />
+          <Route path="/my-forums" element={<MyForumsPage />} />
+          <Route path="/forum/:forumId" element={<ForumDetailsPage />} />
+          <Route path="/forum/:forumId/new-post" element={<CreatePostPage />} />
+          <Route path="/post/:postId" element={<PostDetailsPage />} />
 
         </Routes>
         <ToastContainer />
