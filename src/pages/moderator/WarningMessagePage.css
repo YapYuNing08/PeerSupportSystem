@@ -1,0 +1,133 @@
+/* WarningMessagePage.css */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+.warning-page-container {
+  padding: 40px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  color: #1e293b;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.warning-main-title {
+  font-size: 28px;
+  font-weight: 800;
+  margin-bottom: 32px;
+  color: #0f172a;
+}
+
+.warning-layout {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+/* Left Column: Lists */
+.warning-list-column {
+  flex: 1;
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.warning-list-column h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #334155;
+}
+
+.warning-item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.warning-item-list li {
+  margin-bottom: 8px;
+}
+
+.warning-select-btn {
+  width: 100%;
+  text-align: left;
+  padding: 12px 16px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  transition: all 0.2s;
+  color: #475569;
+}
+
+.warning-select-btn:hover {
+  border-color: #6366f1;
+  background-color: #f5f3ff;
+}
+
+/* Right Column: Details */
+.warning-details-column {
+  flex: 2;
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.warning-details-column h3 {
+  margin-top: 0;
+  font-size: 20px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 16px;
+  margin-bottom: 20px;
+}
+
+.warning-detail-row {
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.warning-textarea {
+  width: 100%;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-family: inherit;
+  resize: vertical;
+  margin: 16px 0;
+  outline: none;
+}
+
+.warning-textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.warning-send-btn {
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: opacity 0.2s;
+}
+
+.warning-close-btn {
+  background-color: #f1f5f9;
+  color: #64748b;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.warning-send-btn:hover { opacity: 0.9; }
+.warning-close-btn:hover { background-color: #e2e8f0; }

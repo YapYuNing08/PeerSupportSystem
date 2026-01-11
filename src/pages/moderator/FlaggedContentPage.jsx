@@ -6,20 +6,26 @@ import {
   deleteDoc,
   doc,
   getDoc,
-  updateDoc
+  updateDoc,
+  addDoc,
+  serverTimestamp
 } from "firebase/firestore";
-import "./FlaggedContentPage.css"; // 🔹 Import CSS file
+import { useNavigate } from "react-router-dom";
+import "./FlaggedContentPage.css";
 
 const FlaggedContentPage = () => {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
+  // Fetch username by UID
   const fetchUserName = async (uid) => {
     if (!uid) return "Unknown";
     const userSnap = await getDoc(doc(db, "users", uid));
     return userSnap.exists() ? userSnap.data().username : "Unknown";
   };
 
+  // Fetch content data for post/comment
   const fetchContentData = async (report) => {
     let contentText = report.content || "";
     let contentTitle = "";
@@ -37,7 +43,7 @@ const FlaggedContentPage = () => {
       }
 
       if (report.type === "comment") {
-        let commentSnap = report.commentId ? await getDoc(doc(db, "comments", report.commentId)) : null;
+        const commentSnap = report.commentId ? await getDoc(doc(db, "comments", report.commentId)) : null;
         if (commentSnap && commentSnap.exists()) {
           contentText = commentSnap.data().content || contentText;
           const postSnap = await getDoc(doc(db, "posts", commentSnap.data().postId));
@@ -49,9 +55,11 @@ const FlaggedContentPage = () => {
     } catch (err) {
       console.error("Error fetching content data:", err);
     }
+
     return { contentText, contentTitle, forumName };
   };
 
+  // Load reports in real-time
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "userReports"), async (snapshot) => {
       const list = await Promise.all(
@@ -72,37 +80,58 @@ const FlaggedContentPage = () => {
           };
         })
       );
+
       setReports(list);
       setLoading(false);
     });
+
     return () => unsub();
   }, []);
 
+  // Approve content
   const handleApprove = async (report) => {
     if (window.confirm("Approve this content? It will be visible to students.")) {
       try {
-        const ref = report.type === "post" 
-          ? doc(db, "posts", report.postId) 
+        const ref = report.type === "post"
+          ? doc(db, "posts", report.postId)
           : doc(db, "comments", report.commentId);
-        
+
         await updateDoc(ref, { isHidden: false, approved: true, isFlagged: false });
         await deleteDoc(doc(db, "userReports", report.id));
-      } catch (err) { console.error(err); }
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
+  // Reject content → create warning + navigate to warning page
   const handleReject = async (report) => {
-    if (window.confirm("Reject this content? It will remain hidden.")) {
-      try {
-        const ref = report.type === "post" 
-          ? doc(db, "posts", report.postId) 
-          : doc(db, "comments", report.commentId);
-        
-        await updateDoc(ref, { isHidden: true, approved: false });
-        await deleteDoc(doc(db, "userReports", report.id));
-      } catch (err) { console.error(err); }
+    if (!window.confirm("Reject this content and move it to warning queue?")) return;
+
+    try {
+      // 1️⃣ Add to warnings collection
+      await addDoc(collection(db, "warnings"), {
+        type: report.type,
+        reason: report.reason,
+        contentText: report.contentText,
+        authorId: report.authorId,
+        postId: report.postId || null,
+        commentId: report.commentId || null,
+        forumId: report.forumId || null,
+        createdAt: serverTimestamp(),
+        sent: false, // moderator has not sent warning yet
+      });
+
+      // 2️⃣ Delete from userReports collection
+      await deleteDoc(doc(db, "userReports", report.id));
+
+      alert("Content moved to warning queue.");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to move content to warnings.");
     }
   };
+
 
   return (
     <div className="page-wrapper">
