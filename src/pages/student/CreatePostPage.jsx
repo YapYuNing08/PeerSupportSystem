@@ -8,7 +8,9 @@ import {
   doc,
   getDoc
 } from "firebase/firestore";
-import "./CreatePostPage.css"; // 🔹 Import external CSS
+import { checkAutoModeration } from "../../utils/checkAutoModeration";
+import { reportContent } from "../../utils/reportContent";
+import "./CreatePostPage.css";
 
 const CreatePostPage = () => {
   const { forumId } = useParams();
@@ -34,15 +36,38 @@ const CreatePostPage = () => {
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) return;
 
-    await addDoc(collection(db, "posts"), {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+
+    // 🔍 AUTO MODERATION CHECK
+    const isHarmful = await checkAutoModeration(`${title} ${content}`);
+
+    // 📝 CREATE POST
+    const postRef = await addDoc(collection(db, "posts"), {
       forumId,
       title,
       content,
       isAnonymous,
-      authorId: auth.currentUser.uid,
+      authorId: currentUser.uid,
       authorName: isAnonymous ? "Anonymous" : username,
       createdAt: serverTimestamp(),
+      isHidden: isHarmful,
+      isFlagged: isHarmful,
+      approved: isHarmful ? null : true
     });
+
+    // 🚩 AUTO REPORT IF HARMFUL
+    if (isHarmful) {
+      await reportContent({
+        type: "post",
+        content,
+        reason: "Auto moderation keyword detected",
+        reporterId: "SYSTEM",
+        authorId: currentUser.uid,
+        postId: postRef.id,
+        forumId
+      });
+    }
 
     navigate(`/forum/${forumId}`);
   };
@@ -53,11 +78,20 @@ const CreatePostPage = () => {
     <div className="page-wrapper">
       {/* 🔹 Back Button */}
       <div className="nav-row">
-        <button 
-          className="back-circle" 
+        <button
+          className="back-circle"
           onClick={() => navigate(`/forum/${forumId}`)}
         >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <polyline points="15 18 9 12 15 6"></polyline>
           </svg>
         </button>
@@ -69,7 +103,7 @@ const CreatePostPage = () => {
         <p className="subtitle">Share your thoughts with the community</p>
       </div>
 
-      {/* 🔹 Form Big Box */}
+      {/* 🔹 Form */}
       <div className="form-box">
         <input
           placeholder="Give your post a title..."
@@ -98,9 +132,9 @@ const CreatePostPage = () => {
             Post anonymously
           </label>
 
-          <button 
-            className="post-btn" 
-            style={{ opacity: isFormValid ? 1 : 0.6 }} 
+          <button
+            className="post-btn"
+            style={{ opacity: isFormValid ? 1 : 0.6 }}
             onClick={handleSubmit}
             disabled={!isFormValid}
           >

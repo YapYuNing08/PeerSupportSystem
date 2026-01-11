@@ -10,7 +10,7 @@ import {
   doc,
   getDoc
 } from "firebase/firestore";
-import "./ForumDetailsPage.css"; // 🔹 Import external CSS
+import "./ForumDetailsPage.css"; 
 
 const ForumDetailsPage = () => {
   const { forumId } = useParams();
@@ -38,23 +38,37 @@ const ForumDetailsPage = () => {
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const postList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      // 1️⃣ Get only visible posts
+      const postList = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((p) => !p.isHidden);
+
       setPosts(postList);
       setLoading(false);
 
+      // 2️⃣ For each post, count only visible comments
       postList.forEach((post) => {
-        const commentQuery = query(collection(db, "comments"), where("postId", "==", post.id));
+        const commentQuery = query(
+          collection(db, "comments"),
+          where("postId", "==", post.id),
+          orderBy("createdAt", "asc")
+        );
         onSnapshot(commentQuery, (snap) => {
-          setCommentCounts(prev => ({ ...prev, [post.id]: snap.size }));
+          const visibleComments = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .filter(c => !c.isHidden); // <-- hide flagged comments
+
+          setCommentCounts(prev => ({ ...prev, [post.id]: visibleComments.length }));
         });
       });
     });
+
     return () => unsubscribe();
   }, [forumId]);
 
   return (
     <div className="forum-page-wrapper">
-      {/* 🔹 Minimal Top Nav */}
+      {/* Top Nav */}
       <nav className="forum-nav">
         <button className="back-btn" onClick={() => navigate("/my-forums")}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -65,7 +79,7 @@ const ForumDetailsPage = () => {
         <div style={{ width: 40 }} /> 
       </nav>
 
-      {/* 🔹 Forum Header */}
+      {/* Forum Header */}
       <div className="forum-header">
         <h1 className="forum-title">{forum?.name}</h1>
         <p className="forum-description">{forum?.description || "A space for thoughtful discussion and sharing."}</p>
@@ -75,7 +89,7 @@ const ForumDetailsPage = () => {
         </div>
       </div>
 
-      {/* 🔹 Grid Feed */}
+      {/* Grid Feed */}
       <div className="masonry-grid">
         {posts.map((post) => (
           <div
@@ -106,7 +120,7 @@ const ForumDetailsPage = () => {
         ))}
       </div>
 
-      {/* 🔹 Floating Action Button */}
+      {/* Floating Action Button */}
       <button 
         className="fab-button"
         onClick={() => navigate(`/forum/${forumId}/new-post`)}

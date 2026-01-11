@@ -13,7 +13,9 @@ import {
   serverTimestamp,
   onSnapshot
 } from "firebase/firestore";
-import "./PostDetailsPage.css"; // 🔹 Import external styles
+import { reportContent } from "../../utils/reportContent";
+import { checkAutoModeration } from "../../utils/checkAutoModeration";
+import "./PostDetailsPage.css"; // 🔹 Standard CSS Import
 
 const PostDetailsPage = () => {
   const { postId } = useParams();
@@ -27,45 +29,6 @@ const PostDetailsPage = () => {
 
   const currentUser = auth.currentUser;
 
-  useEffect(() => {
-    const postRef = doc(db, "posts", postId);
-    const unsub = onSnapshot(postRef, (snap) => {
-      if (snap.exists()) setPost({ id: snap.id, ...snap.data() });
-    });
-    return () => unsub();
-  }, [postId]);
-
-  useEffect(() => {
-    const q = query(
-      collection(db, "comments"),
-      where("postId", "==", postId),
-      orderBy("createdAt", "asc")
-    );
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-      setComments(list);
-    });
-    return () => unsubscribe();
-  }, [postId]);
-
-  const handleAddComment = async () => {
-    if (!commentText.trim() || !currentUser) return;
-    let authorName = "Anonymous";
-    if (!isAnonymous) {
-      const userSnap = await getDoc(doc(db, "users", currentUser.uid));
-      if (userSnap.exists()) authorName = userSnap.data().username;
-    }
-    await addDoc(collection(db, "comments"), {
-      postId, content: commentText, parentCommentId: replyTo,
-      isAnonymous, authorId: currentUser.uid, authorName, createdAt: serverTimestamp(),
-    });
-    setCommentText(""); setReplyTo(null);
-  };
-
-  const handleDelete = async (id) => {
-    if (window.confirm("Delete this comment?")) await deleteDoc(doc(db, "comments", id));
-  };
-
   const getAvatarStyle = (name) => {
     const gradients = [
       'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
@@ -76,21 +39,116 @@ const PostDetailsPage = () => {
     return { background: gradients[index] };
   };
 
-  const parentComments = comments.filter((c) => !c.parentCommentId);
-  const getReplies = (id) => comments.filter((c) => c.parentCommentId === id);
+  useEffect(() => {
+    const unsub = onSnapshot(doc(db, "posts", postId), (snap) => {
+      if (snap.exists()) setPost({ id: snap.id, ...snap.data() });
+    });
+    return () => unsub();
+  }, [postId]);
+
+  useEffect(() => {
+    if (post?.isHidden) {
+      alert("This post is under moderation.");
+      navigate(`/forum/${post.forumId}`);
+    }
+  }, [post, navigate]);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "comments"),
+      where("postId", "==", postId),
+      orderBy("createdAt", "asc")
+    );
+
+    const unsub = onSnapshot(q, (snapshot) => {
+      const list = snapshot.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(c => !c.isHidden);
+      setComments(list);
+    });
+
+    return () => unsub();
+  }, [postId]);
+
+  const handleAddComment = async () => {
+    if (!commentText.trim() || !currentUser || !post) return;
+
+    let authorName = "Anonymous";
+    if (!isAnonymous) {
+      const userSnap = await getDoc(doc(db, "users", currentUser.uid));
+      if (userSnap.exists()) authorName = userSnap.data().username;
+    }
+
+    let isHarmful = await checkAutoModeration(commentText);
+    if (post.approved === true) isHarmful = false;
+
+    const commentRef = await addDoc(collection(db, "comments"), {
+      postId,
+      forumId: post.forumId,
+      content: commentText,
+      parentCommentId: replyTo || null,
+      isAnonymous,
+      authorId: currentUser.uid,
+      authorName,
+      createdAt: serverTimestamp(),
+      isHidden: isHarmful,
+      isFlagged: isHarmful,
+      approved: isHarmful ? null : true
+    });
+
+    if (isHarmful) {
+      await reportContent({
+        type: "comment",
+        content: commentText,
+        reason: "Auto moderation detected harmful content",
+        reporterId: "SYSTEM",
+        authorId: currentUser.uid,
+        postId,
+        forumId: post.forumId,
+        commentId: commentRef.id
+      });
+      alert("Your comment is under moderation.");
+    }
+
+    setCommentText("");
+    setReplyTo(null);
+  };
+
+  const handleDelete = async (id) => {
+    if (window.confirm("Delete this comment?")) {
+      await deleteDoc(doc(db, "comments", id));
+    }
+  };
+
+  const handleReport = (type, content, targetAuthorId, commentId = null) => {
+    if (!currentUser) return alert("Please login");
+    const reason = prompt(`Why are you reporting this ${type}?`);
+    if (!reason) return;
+
+    reportContent({
+      type,
+      content,
+      reason,
+      reporterId: currentUser.uid,
+      authorId: targetAuthorId,
+      postId: post.id,
+      forumId: post.forumId,
+      commentId
+    });
+    alert(`${type.charAt(0).toUpperCase() + type.slice(1)} reported.`);
+  };
+
+  const parentComments = comments.filter(c => !c.parentCommentId);
+  const getReplies = (id) => comments.filter(c => c.parentCommentId === id);
 
   if (!post) return <div className="loader">Loading conversation...</div>;
 
   return (
     <div className="page-wrapper">
-      {/* 🔹 Left-aligned Back Button */}
       <div className="nav-row">
-        <button 
-          className="back-circle" 
-          onClick={() => navigate(`/forum/${post.forumId}`)}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
+        <button className="back-circle" onClick={() => navigate(`/forum/${post.forumId}`)}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M15 18l-6-6 6-6"/>
           </svg>
         </button>
       </div>
@@ -98,10 +156,11 @@ const PostDetailsPage = () => {
       <div className="post-header">
         <h1 className="post-title">{post.title}</h1>
         <div className="post-author-row">
-           <div className="avatar" style={{ ...getAvatarStyle(post.authorName), width: '26px', height: '26px', fontSize: '11px' }}>
-              {post.authorName?.[0]}
-           </div>
-           <span className="post-author-name">{post.isAnonymous ? "Anonymous" : post.authorName}</span>
+          <div className="avatar" style={{ ...getAvatarStyle(post.authorName), width: '26px', height: '26px', fontSize: '11px' }}>
+            {post.authorName?.[0]}
+          </div>
+          <span className="post-author-name">{post.isAnonymous ? "Anonymous" : post.authorName}</span>
+          <span className="action-link" style={{marginLeft: 'auto', color: '#f87171'}} onClick={() => handleReport('post', post.content, post.authorId)}>🚩 Report</span>
         </div>
         <p className="post-content">{post.content}</p>
       </div>
@@ -111,16 +170,14 @@ const PostDetailsPage = () => {
           <span>Discussion</span>
           <span className="comment-count-badge">{comments.length}</span>
         </div>
-        
+
         <div className="comments-list">
-          {parentComments.length === 0 && (
-            <p style={{ textAlign: "center", color: "#94a3b8", fontSize: "14px", padding: '20px' }}>No comments yet.</p>
-          )}
+          {parentComments.length === 0 && <p style={{ textAlign: "center", color: "#94a3b8", fontSize: "14px" }}>No comments yet.</p>}
 
           {parentComments.map((c) => (
             <div key={c.id} className="thread">
               <div className="comment-line">
-                <div className="avatar" style={getAvatarStyle(c.authorName)}>{c.authorName?.[0] || "A"}</div>
+                <div className="avatar" style={getAvatarStyle(c.authorName)}>{c.authorName?.[0]}</div>
                 <div className="bubble-container">
                   <div className="bubble">
                     <span className="author-name">{c.isAnonymous ? "Anonymous" : c.authorName}</span>
@@ -128,6 +185,7 @@ const PostDetailsPage = () => {
                   </div>
                   <div className="actions">
                     <span className="action-link" onClick={() => setReplyTo(c.id)}>Reply</span>
+                    <span className="action-link" onClick={() => handleReport('comment', c.content, c.authorId, c.id)}>Report</span>
                     {currentUser?.uid === c.authorId && (
                       <span className="action-link" style={{ color: "#f87171" }} onClick={() => handleDelete(c.id)}>Delete</span>
                     )}
@@ -137,15 +195,18 @@ const PostDetailsPage = () => {
 
               {getReplies(c.id).map((r) => (
                 <div key={r.id} className="reply-line">
-                  <div className="avatar" style={{ width: "24px", height: "24px", fontSize: "10px", ...getAvatarStyle(r.authorName) }}>{r.authorName?.[0] || "A"}</div>
+                  <div className="avatar" style={{ ...getAvatarStyle(r.authorName), width: "24px", height: "24px", fontSize: "10px" }}>{r.authorName?.[0]}</div>
                   <div className="bubble-container">
                     <div className="bubble" style={{ backgroundColor: "#f8fafc" }}>
                       <span className="author-name">{r.isAnonymous ? "Anonymous" : r.authorName}</span>
                       <span className="text">{r.content}</span>
                     </div>
-                    {currentUser?.uid === r.authorId && (
-                      <span className="action-link" style={{ color: "#f87171", marginLeft: "12px", marginTop: '4px' }} onClick={() => handleDelete(r.id)}>Delete</span>
-                    )}
+                    <div className="actions">
+                        <span className="action-link" onClick={() => handleReport('comment', r.content, r.authorId, r.id)}>Report</span>
+                        {currentUser?.uid === r.authorId && (
+                            <span className="action-link" style={{ color: "#f87171" }} onClick={() => handleDelete(r.id)}>Delete</span>
+                        )}
+                    </div>
                   </div>
                 </div>
               ))}
