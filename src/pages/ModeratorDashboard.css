@@ -1,0 +1,91 @@
+/* ModeratorDashboard.css */
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700");
+
+.admin-dashboard-container {
+  width: 100%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  background-color: #E4FFEE; /* Same light mint background */
+  min-height: 100vh;
+}
+
+.admin-main-header {
+  background-color: #90cdf4; /* Blue header */
+  color: #2a4365;
+  width: 100%;
+  max-width: 1200px; 
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #bee3f8;
+  margin-bottom: 40px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.admin-main-header h1 {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 800;
+}
+
+.admin-main-header p {
+  margin-top: 8px;
+  opacity: 0.8;
+  font-weight: 500;
+}
+
+.admin-cards-row {
+  display: flex;
+  flex-direction: row; 
+  justify-content: center;
+  gap: 24px;
+  width: 100%;
+  max-width: 1200px;
+  flex-wrap: wrap; 
+}
+
+/* 🔹 Card style reused for Moderator Items */
+.admin-card {
+  flex: 1; 
+  min-width: 320px; 
+  background-color: #cae7f7;
+  border: 1px solid #bee3f8;
+  border-radius: 16px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.admin-card:hover {
+  transform: translateY(-8px);
+  background-color: #9ac3d9;
+  box-shadow: 0 15px 30px rgba(42, 67, 101, 0.1);
+}
+
+/* Logout Button Style */
+.btn-outline-secondary {
+  border: 1px solid #f8bbd0;
+  color: #ad1457;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #fce4ec !important;
+  border-color: #c2185b;
+  color: #c2185b;
+}
+
+/* Ensure child components match the text style */
+.admin-card h3 {
+  color: #2a4365;
+  font-size: 24px;
+  font-weight: bold;
+}

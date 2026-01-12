@@ -1,4 +1,4 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase-config";
 
@@ -6,9 +6,15 @@ function FlaggedContentCard() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "flaggedContent"), (snap) => {
-      setCount(snap.docs.length);
+    const q = query(
+      collection(db, "userReports"),
+      where("approved", "==", null)
+    );
+
+    const unsub = onSnapshot(q, (snap) => {
+      setCount(snap.size);
     });
+
     return () => unsub();
   }, []);
 

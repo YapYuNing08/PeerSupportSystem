@@ -1,132 +1,171 @@
-/* ---------- Page Layout ---------- */
-.container {
-  min-height: 100vh;
-  max-width: 1000px;
+/* AutoModerationPage.css */
+@import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700");
 
-  margin-left: auto;
-  margin-right: auto;
-
+.auto-mod-container {
+  width: 100%;
+  padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  background-color: #e4ffee;
+  min-height: 100vh;
+  font-family: "Fira Sans", sans-serif;
 }
 
-/* ---------- Header ---------- */
-h2 {
-  font-size: 1.9rem;
-  letter-spacing: -0.4px;
-  text-align: center;
-}
-
-.text-muted {
-  font-size: 0.95rem;
-  text-align: center;
-}
-
-/* ---------- Grid ---------- */
-.row {
-  justify-content: center;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-
-/* ---------- Cards ---------- */
-.card {
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
-  transition: all 0.25s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.08);
-}
-
-.card-body {
-  padding: 28px;
-  text-align: center;
-}
-
-/* ---------- Card Titles ---------- */
-.card-title {
-  font-size: 1.15rem;
-  color: #1f2937;
-}
-
-/* ---------- Input ---------- */
-.form-control {
-  border-radius: 14px;
-  padding: 14px;
-  font-size: 0.95rem;
-  text-align: center;
-  border: 1px solid #e5e7eb;
-}
-
-.form-control:focus {
-  border-color: #6366f1;
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
-}
-
-/* ---------- Primary Button ---------- */
-.btn-primary {
-  border-radius: 14px;
-  font-weight: 600;
-  padding: 12px 0;
-  background: linear-gradient(135deg, #6366f1, #4f46e5);
-  border: none;
-}
-
-.btn-primary:hover {
-  background: linear-gradient(135deg, #4f46e5, #4338ca);
-}
-
-/* ---------- Keyword List ---------- */
-.list-group {
-  margin-top: 10px;
-}
-
-.list-group-item {
-  border: none;
+/* Header Section */
+.mod-header {
+  background-color: #90cdf4;
+  color: #2a4365;
+  width: 100%;
+  max-width: 1200px;
+  padding: 30px;
   border-radius: 12px;
-  margin-bottom: 10px;
-  padding: 14px 16px;
+  text-align: center;
+  border: 1px solid #bee3f8;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.mod-header h2 {
+  font-weight: 800;
+  margin: 0;
+  font-size: 2rem;
+}
+
+.mod-header p {
+  margin: 10px 0 20px 0;
+  font-weight: 500;
+  opacity: 0.9;
+}
+
+/* Back Button Style */
+.btn-back {
+  border: 1px solid #f8bbd0;
+  color: #ad1457;
+  background: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-back:hover {
+  background-color: #fce4ec;
+  border-color: #c2185b;
+}
+
+/* Grid Layout */
+.mod-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+  max-width: 1200px;
+  flex-wrap: wrap;
+}
+
+/* Card Styling */
+.mod-card {
+  flex: 1;
+  min-width: 320px;
+  background-color: #cae7f7;
+  border: 1px solid #bee3f8;
+  border-radius: 16px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+}
+
+.mod-card:hover {
+  transform: translateY(-5px);
+}
+
+.mod-card h5 {
+  color: #2a4365;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Input Fields */
+.mod-input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #bee3f8;
+  margin-bottom: 15px;
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.mod-input:focus {
+  outline: none;
+  border-color: #2b6cb0;
+}
+
+/* Action Buttons */
+.btn-submit {
+  background-color: #2b6cb0;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-submit:hover {
+  background-color: #2a4365;
+}
+
+/* Banned List Styling */
+.keyword-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.keyword-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #f9fafb;
-  transition: background 0.2s ease;
+  background: rgba(255, 255, 255, 0.6);
+  padding: 12px 18px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(190, 227, 248, 0.5);
 }
 
-.list-group-item:hover {
-  background: #f1f5f9;
+.keyword-item span {
+  color: #2a4365;
+  font-weight: 600;
 }
 
-/* ---------- Keyword Text ---------- */
-.list-group-item span {
-  font-size: 0.9rem;
-  color: #374151;
+.btn-delete {
+  background: #fff;
+  border: 1px solid #feb2b2;
+  color: #c53030;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-/* ---------- Remove Button ---------- */
-.btn-outline-danger {
-  border-radius: 10px;
-  font-size: 0.75rem;
-  padding: 6px 12px;
+.btn-delete:hover {
+  background: #fff5f5;
+  border-color: #fc8181;
 }
 
-.btn-outline-danger:hover {
-  background: #ef4444;
-  border-color: #ef4444;
-  color: white;
-}
-
-/* ---------- Empty State ---------- */
-.list-group:empty::after {
-  content: "No moderation keywords added.";
-  color: #9ca3af;
-  display: block;
+.empty-text {
+  color: #2b6cb0;
+  font-weight: 600;
   text-align: center;
-  padding: 20px;
 }
