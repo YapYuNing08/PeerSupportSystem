@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db, auth } from "../../firebase-config";
-import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import "./StudentNotificationsPage.css"; // 🔹 Import CSS file
 
 function StudentNotificationsPage() {
@@ -12,13 +12,14 @@ function StudentNotificationsPage() {
 
     const q = query(
       collection(db, "userWarnings"),
-      where("userId", "==", currentUser.uid),
-      orderBy("createdAt", "desc")
+      where("userId", "==", currentUser.uid)
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-      setWarnings(list);
+    const unsubscribe = onSnapshot(q, snapshot => {
+      const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      // Sort by date (newest first)
+      const sorted = list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+      setWarnings(sorted);
     });
 
     return () => unsubscribe();
@@ -29,48 +30,46 @@ function StudentNotificationsPage() {
   return (
     <div className="page-wrapper">
       <div className="header">
-        <h1 className="title">📢 Notifications</h1>
-        <p className="subtitle">Important updates regarding your account and community activity.</p>
+        <h2 className="title">📢 Notifications</h2>
+        <p className="subtitle">Important updates regarding your posts and community conduct.</p>
       </div>
 
       <div className="list-container">
         {warnings.length === 0 ? (
           <div className="empty-state">
-            <div className="icon-circle">✨</div>
-            <p className="empty-text">All clear! You don't have any warnings.</p>
-            <span className="empty-sub">Keep contributing positively to the community.</span>
+            <div className="empty-icon">✨</div>
+            <p>No warnings yet. Your account is in good standing!</p>
           </div>
         ) : (
-          warnings.map((w) => (
-            <div key={w.id} className="notification-card">
+          warnings.map(w => (
+            <div key={w.id} className="notif-card">
               <div className="card-header">
                 <div className="badge-row">
-                  <span className="warning-badge">COMMUNITY NOTICE</span>
-                  <span className="date-text">
-                    {w.createdAt?.toDate?.().toLocaleDateString(undefined, { 
-                      month: 'short', 
-                      day: 'numeric', 
-                      year: 'numeric' 
-                    })}
-                  </span>
+                  <span className="type-badge">{w.type?.toUpperCase() || "NOTICE"}</span>
+                  {!w.read && <span className="new-dot">NEW</span>}
                 </div>
+                <span className="timestamp">
+                  {w.createdAt?.toDate?.().toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) || ""}
+                </span>
               </div>
 
-              <div className="message-box">
-                <h3 className="msg-title">Action required: {w.type || "Content Update"}</h3>
-                <p className="moderator-text">{w.moderatorMessage}</p>
+              <div className="reason-row">
+                <strong className="reason-label">Issue:</strong> {w.reason || "Under Review"}
               </div>
 
-              <div className="context-box">
-                <span className="context-label">REFERENCED CONTENT</span>
-                <p className="content-excerpt">"{w.content || w.contentText || "Content removed"}"</p>
-                <div className="reason-row">
-                  <strong>Reason:</strong> {w.reason || "Policy violation"}
-                </div>
+              <div className="moderator-box">
+                <p className="message-text">{w.moderatorMessage || "Your content has been flagged for a community guidelines violation."}</p>
               </div>
-              
+
+              {(w.content || w.contentText) && (
+                <div className="content-review">
+                  <span className="small-label">AFFECTED CONTENT</span>
+                  <p className="flagged-text">"{w.content || w.contentText}"</p>
+                </div>
+              )}
+
               <div className="card-footer">
-                If you have questions, please contact the support team.
+                <span className="footer-note">Please review our Community Guidelines for more info.</span>
               </div>
             </div>
           ))

@@ -11,11 +11,12 @@ import {
 import { useNavigate } from "react-router-dom";
 import JoinForumCard from "../../components/student/JoinForumCard";
 import StudentLayout from "../../components/layout/StudentLayout";
-import "./MyForumsPage.css"; // 🔹 Import external CSS
+import "./MyForumsPage.css"; 
 
 const MyForumsPage = () => {
   const [forums, setForums] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showRules, setShowRules] = useState(false); // 🔹 Toggle state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -63,11 +64,40 @@ const MyForumsPage = () => {
       <div className="my-forums-page-wrapper">
         <div className="page-container">
           
-          {/* 🔹 Header Section */}
-          <div className="header-section">
-            <h1 className="title-text">My Forums</h1>
-            <p className="subtitle-text">Explore and manage the communities you've joined</p>
+          {/* 🔹 Header Section with Toggle */}
+          <div className="header-row">
+            <div className="header-section">
+              <h1 className="title-text">My Forums</h1>
+              <p className="subtitle-text">Explore and manage the communities you've joined</p>
+            </div>
+
+            <button 
+              className={`guidelines-toggle-btn ${showRules ? 'active' : ''}`}
+              onClick={() => setShowRules(!showRules)}
+              title="Community Guidelines"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="1"></circle>
+                <circle cx="19" cy="12" r="1"></circle>
+                <circle cx="5" cy="12" r="1"></circle>
+              </svg>
+            </button>
           </div>
+
+          {/* 🔹 Guidelines Dropdown (Appears on Toggle) */}
+          {showRules && (
+            <div className="guidelines-dropdown">
+              <h3>Community Standards</h3>
+              <div className="guidelines-grid">
+                <li>✅ Be respectful & constructive</li>
+                <li>✅ Helpful discussions only</li>
+                <li>🚫 No hate speech or bullying</li>
+                <li>🚫 No sharing private info</li>
+                <li>🚫 No spam or ads</li>
+                <li>⚠️ Violations go to moderation</li>
+              </div>
+            </div>
+          )}
 
           {/* 🔹 Join Forum Action Area */}
           <div className="action-section">
