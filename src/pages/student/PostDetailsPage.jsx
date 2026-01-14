@@ -13,6 +13,7 @@ import {
   serverTimestamp,
   onSnapshot
 } from "firebase/firestore";
+import StudentLayout from "../../components/layout/StudentLayout"; 
 
 const PostDetailsPage = () => {
   const { postId } = useParams();
@@ -81,6 +82,7 @@ const PostDetailsPage = () => {
   if (!post) return <div style={s.loader}>Loading conversation...</div>;
 
   return (
+    <StudentLayout>
     <div style={s.pageWrapper}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
@@ -182,11 +184,12 @@ const PostDetailsPage = () => {
         </div>
       </div>
     </div>
+    </StudentLayout>
   );
 };
 
 const s = {
-  pageWrapper: { backgroundColor: "#f8fafc", minHeight: "100vh", padding: "20px 24px 80px 24px", fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#1e293b" },
+  pageWrapper: { backgroundColor: "#f8fafc", minHeight: "100vh", padding: "20px 24px 80px 24px", fontFamily: "'Plus Jakarta Sans', sans-serif", color: "#1e293b", boxSizing: "border-box" },
   loader: { textAlign: "center", padding: "100px", color: "#64748b" },
   
   // 🔹 New Navigation Row

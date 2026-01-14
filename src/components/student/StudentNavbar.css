@@ -37,37 +37,6 @@
   border-right: 4px solid #3CB371;
 }
 
-.nav-footer { padding: 20px; border-top: 1px solid #eee; }
-
-/* The Logout Button */
-.logout-btn {
-  width: 100%;
-  padding: 12px;
-  background-color: #ffeded;
-  color: #e53e3e;          
-  border: 1px solid #fed7d7;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.logout-btn:hover {
-  background-color: #e53e3e;
-  color: #ffffff;
-  box-shadow: 0 4px 12px rgba(229, 62, 62, 0.2);
-  transform: translateY(-1px);
-}
-
-.logout-btn:active {
-  transform: translateY(0);
-}
-
 /* MOBILE BOTTOM BAR */
 @media (max-width: 768px) {
   .side-nav {

@@ -8,6 +8,7 @@ import {
   doc,
   getDoc
 } from "firebase/firestore";
+import StudentLayout from "../../components/layout/StudentLayout"; 
 
 const CreatePostPage = () => {
   const { forumId } = useParams();

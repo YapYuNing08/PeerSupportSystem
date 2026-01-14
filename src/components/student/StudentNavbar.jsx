@@ -28,10 +28,6 @@ function StudentNavbar({ handleLogout }) {
           <Link to="/profile">👤 Profile</Link>
         </li>
       </ul>
-
-      <div className="nav-footer">
-        <button className="logout-btn" onClick={handleLogout}>Logout</button>
-      </div>
     </nav>
   );
 }

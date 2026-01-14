@@ -10,6 +10,7 @@ import {
   doc,
   getDoc
 } from "firebase/firestore";
+import StudentLayout from "../../components/layout/StudentLayout"; 
 
 const ForumDetailsPage = () => {
   const { forumId } = useParams();
@@ -52,6 +53,7 @@ const ForumDetailsPage = () => {
   }, [forumId]);
 
   return (
+    <StudentLayout>
     <div style={s.pageWrapper}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
@@ -127,6 +129,7 @@ const ForumDetailsPage = () => {
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
       </button>
     </div>
+    </StudentLayout>
   );
 };
 

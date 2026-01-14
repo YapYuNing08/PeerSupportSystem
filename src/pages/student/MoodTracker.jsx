@@ -4,10 +4,8 @@ import {
   collection, query, where, doc, setDoc, addDoc, serverTimestamp, onSnapshot 
 } from "firebase/firestore";
 import "./MoodTracker.css"; 
-import ReportIssueButton from './ReportIssueButton';
-import MyForumsCard from "./MyForumsCard";
-
-import StudentLayout from "../layout/StudentLayout";
+import MyForumsCard from "../../components/student/MyForumsCard";
+import StudentLayout from "../../components/layout/StudentLayout";
 
 const MoodTracker = () => {
   const [view, setView] = useState("calendar"); 
@@ -339,7 +337,6 @@ const MoodTracker = () => {
     <StudentLayout>
     <div className="app-wrapper">
       {view === "calendar" ? renderCalendarView() : renderInputView()}
-      <ReportIssueButton /> 
     </div>
     </StudentLayout>
   );

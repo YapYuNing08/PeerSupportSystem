@@ -9,12 +9,11 @@ import {
 
 import Login from "./pages/login";
 import SignUp from "./pages/register";
-import Home from "./pages/home";
 
-// import StudentPage from "./pages/student/studentpage";
+import StudentProfile from "./pages/student/StudentProfile";
 import CounselorSupport from "./pages/student/CounselorSupport";
-import MoodTracker from './components/student/MoodTracker';
-import MoodAnalysis from "./components/student/MoodAnalysis";
+import MoodTracker from './pages/student/MoodTracker';
+import MoodAnalysis from "./pages/student/MoodAnalysis";
 import StudentChatRoom from "./pages/student/StudentChat";
 
 import ChatDashboard from "./pages/counselor/chatDashboard";
@@ -59,9 +58,9 @@ function App() {
           } />
 
           {/* DASHBOARDS (Full Screen - No auth-inner wrapper) */}
-          <Route path="/home" element={<Home />} />
           <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
 
+          <Route path="/profile" element={<StudentProfile />} />
           <Route path="/student-page" element={<MoodTracker/>} />
           <Route path="/student/analysis" element={<MoodAnalysis/>} />
           <Route path="/student/counselor-support" element={<CounselorSupport />} />
