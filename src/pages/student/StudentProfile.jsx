@@ -38,7 +38,7 @@ const StudentProfile = () => {
 
       setLoading(true);
 
-      // --- 1. FETCH USER PROFILE ---
+      // fetch user profile info
       try {
         const userDocRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userDocRef);
@@ -55,10 +55,10 @@ const StudentProfile = () => {
             }
         }
       } catch (error) {
-        console.error("❌ Error fetching User Profile:", error);
+        console.error("Error fetching User Profile:", error);
       }
 
-      // --- 2. FETCH POSTS ---
+      // fetch forum posts
       try {
         const postsQuery = query(
           collection(db, "posts"),
@@ -68,14 +68,13 @@ const StudentProfile = () => {
         const postsSnap = await getDocs(postsQuery);
         
         if (isMounted) {
-            // --- 2a. ENRICH POSTS (Fetch Forum Name & Reply Count) ---
-            // We map through the posts and fetch extra details for each one
+            // fetch forum name and reply count
             const enrichedPosts = await Promise.all(postsSnap.docs.map(async (postDoc) => {
                 const postData = postDoc.data();
                 let forumName = "General"; // Default
                 let replyCount = 0;
 
-                // A. Fetch Forum Name
+                // fetch forum name
                 if (postData.forumId) {
                     try {
                         const forumDoc = await getDoc(doc(db, "forums", postData.forumId));
@@ -88,7 +87,7 @@ const StudentProfile = () => {
                     }
                 }
 
-                // B. Fetch Reply Count (Count documents in 'comments' collection)
+                // fetch reply count
                 try {
                     const commentsQuery = query(
                         collection(db, "comments"), 
@@ -111,7 +110,7 @@ const StudentProfile = () => {
             setPosts(enrichedPosts);
         }
       } catch (error) {
-        console.error("❌ Error fetching Posts:", error);
+        console.error("Error fetching Posts:", error);
       }
 
       if (isMounted) setLoading(false);
@@ -135,7 +134,7 @@ const StudentProfile = () => {
     }
   };
 
-  // Helper function for Date Format dd/mm/yyyy
+  // Helper function for date format dd/mm/yyyy
   const formatDate = (timestamp) => {
     if (!timestamp) return "Just now";
     const date = new Date(timestamp.seconds * 1000);
@@ -194,18 +193,18 @@ const StudentProfile = () => {
                   className="post-card" 
                   onClick={() => navigate(`/post/${post.id}`)}
                 >
-                  {/* Post Title */}
+                  {/* post title */}
                   <p className="post-title-text">
                     {post.title.length > 50 ? post.title.substring(0, 50) + "..." : post.title}
                   </p>
 
-                  {/* Post Details Badges */}
+                  {/* Post details badges */}
                   <div className="post-meta-badges">
-                    {/* 1. Forum Name Badge */}
+                    {/* 1. Forum name badge */}
                     <span className="meta-badge forum-badge">
                         <p>📢</p>{post.forumName}
                     </span>
-                    {/* 2. Anonymous Badge (Only if true) */}
+                    {/* 2. Anonymous badge (only if true) */}
                     {post.isAnonymous ? (
                         <span className="meta-badge anon-badge">
                             <FaUserSecret className="badge-icon" /> Anonymous
@@ -218,7 +217,7 @@ const StudentProfile = () => {
 
                   </div>
 
-                  {/*Date and Replies */}
+                  {/*date and replies */}
                   <div className="post-footer">
                     <div className="footer-left">
                         <FaComment className="footer-icon" /> 
