@@ -11,6 +11,7 @@ import {
   getDoc
 } from "firebase/firestore";
 import StudentLayout from "../../components/layout/StudentLayout"; 
+import "./ForumDetailsPage.css"; 
 
 const ForumDetailsPage = () => {
   const { forumId } = useParams();
@@ -38,17 +39,31 @@ const ForumDetailsPage = () => {
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const postList = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+      // 1️⃣ Get only visible posts
+      const postList = snapshot.docs
+        .map((doc) => ({ id: doc.id, ...doc.data() }))
+        .filter((p) => !p.isHidden);
+
       setPosts(postList);
       setLoading(false);
 
+      // 2️⃣ For each post, count only visible comments
       postList.forEach((post) => {
-        const commentQuery = query(collection(db, "comments"), where("postId", "==", post.id));
+        const commentQuery = query(
+          collection(db, "comments"),
+          where("postId", "==", post.id),
+          orderBy("createdAt", "asc")
+        );
         onSnapshot(commentQuery, (snap) => {
-          setCommentCounts(prev => ({ ...prev, [post.id]: snap.size }));
+          const visibleComments = snap.docs
+            .map((d) => ({ id: d.id, ...d.data() }))
+            .filter(c => !c.isHidden); // <-- hide flagged comments
+
+          setCommentCounts(prev => ({ ...prev, [post.id]: visibleComments.length }));
         });
       });
     });
+
     return () => unsubscribe();
   }, [forumId]);
 
@@ -76,44 +91,52 @@ const ForumDetailsPage = () => {
       <nav style={s.nav}>
         <button style={s.backBtn} onClick={() => navigate("/my-forums")}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    <div className="forum-page-wrapper">
+      {/* Top Nav */}
+      <nav className="forum-nav">
+        <button className="back-btn" onClick={() => navigate("/my-forums")}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
         </button>
-        <div style={s.navTitle}>{forum?.name || "Community"}</div>
+        <div className="nav-title">{forum?.name || "Forum"}</div>
         <div style={{ width: 40 }} /> 
       </nav>
 
-      {/* 🔹 Forum Header */}
-      <div style={s.header}>
-        <h1 style={s.forumTitle}>{forum?.name}</h1>
-        <p style={s.description}>{forum?.description || "A space for thoughtful discussion and sharing."}</p>
-        <div style={s.badgeRow}>
-          <span style={s.pillBadge}>{posts.length} Posts</span>
-          <span style={s.pillBadge}>Active Community</span>
+      {/* Forum Header */}
+      <div className="forum-header">
+        <h1 className="forum-title">{forum?.name}</h1>
+        <p className="forum-description">{forum?.description || "A space for thoughtful discussion and sharing."}</p>
+        <div className="badge-row">
+          <span className="pill-badge">{posts.length} Posts</span>
+          <span className="pill-badge">Active Community</span>
         </div>
       </div>
 
-      {/* 🔹 Grid Feed with Bigger Boxes */}
+      {/* Grid Feed */}
       <div className="masonry-grid">
         {posts.map((post) => (
           <div
             key={post.id}
             className="post-card"
-            style={s.card}
             onClick={() => navigate(`/post/${post.id}`)}
           >
-            <div style={s.cardBody}>
-              <h3 style={s.cardTitle}>{post.title}</h3>
-              <p style={s.cardContent}>
+            <div className="card-body">
+              <h3 className="card-title">{post.title}</h3>
+              <p className="card-content">
                 {post.content.length > 120 ? post.content.substring(0, 120) + "..." : post.content}
               </p>
             </div>
             
-            <div style={s.cardFooter}>
-              <div style={s.userInfo}>
-                <div style={s.avatar}>{post.authorName?.[0] || "U"}</div>
-                <span style={s.userName}>{post.isAnonymous ? "Anonymous" : post.authorName}</span>
+            <div className="card-footer">
+              <div className="user-info">
+                <div className="user-avatar">{post.authorName?.[0] || "U"}</div>
+                <span className="user-name">{post.isAnonymous ? "Anonymous" : post.authorName}</span>
               </div>
-              <div style={s.commentTag}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: 6}}><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+              <div className="comment-tag">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{marginRight: 6}}>
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
                 {commentCounts[post.id] || 0}
               </div>
             </div>
@@ -121,98 +144,19 @@ const ForumDetailsPage = () => {
         ))}
       </div>
 
-      {/* 🔹 Floating Action Button (Indigo instead of Red) */}
+      {/* Floating Action Button */}
       <button 
-        style={s.fab} 
+        className="fab-button"
         onClick={() => navigate(`/forum/${forumId}/new-post`)}
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
       </button>
     </div>
     </StudentLayout>
   );
-};
-
-const s = {
-  pageWrapper: {
-    backgroundColor: "#f8fafc", // Very soft slate tint
-    minHeight: "100vh",
-    padding: "0 24px 120px 24px",
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-  },
-  nav: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "20px 0",
-    position: "sticky",
-    top: 0,
-    backgroundColor: "rgba(248, 250, 252, 0.8)",
-    backdropFilter: "blur(10px)",
-    zIndex: 10
-  },
-  backBtn: { background: "none", border: "none", cursor: "pointer", color: "#64748b" },
-  navTitle: { fontSize: "16px", fontWeight: "700", color: "#1e293b" },
-  header: { textAlign: "left", padding: "20px 0 40px 0" },
-  forumTitle: { fontSize: "36px", fontWeight: "800", color: "#0f172a", marginBottom: "12px", letterSpacing: "-0.03em" },
-  description: { color: "#64748b", fontSize: "16px", marginBottom: "18px", maxWidth: "600px", lineHeight: "1.6" },
-  badgeRow: { display: "flex", gap: "10px" },
-  pillBadge: { 
-    backgroundColor: "#f1f5f9", color: "#475569", 
-    padding: "6px 14px", borderRadius: "20px", fontSize: "12px", fontWeight: "600" 
-  },
-  card: {
-    backgroundColor: "#ffffff",
-    borderRadius: "20px",
-    padding: "24px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    cursor: "pointer",
-    height: "220px", // Consistent larger box height
-  },
-  cardBody: { flex: 1 },
-  cardTitle: { 
-    fontSize: "20px", 
-    fontWeight: "700", 
-    color: "#1e293b", 
-    margin: "0 0 12px 0",
-    lineHeight: "1.3",
-  },
-  cardContent: { fontSize: "14px", color: "#64748b", lineHeight: "1.6", margin: 0 },
-  cardFooter: { 
-    display: "flex", 
-    justifyContent: "space-between", 
-    alignItems: "center", 
-    marginTop: "20px",
-    paddingTop: "16px",
-    borderTop: "1px solid #f1f5f9"
-  },
-  userInfo: { display: "flex", alignItems: "center", gap: "10px" },
-  avatar: { 
-    width: "28px", height: "28px", borderRadius: "8px", backgroundColor: "#6366f1", 
-    color: "#FFF", fontSize: "12px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold"
-  },
-  userName: { fontSize: "13px", color: "#334155", fontWeight: "600" },
-  commentTag: { fontSize: "13px", color: "#6366f1", fontWeight: "700", display: "flex", alignItems: "center" },
-  fab: {
-    position: "fixed",
-    bottom: "40px",
-    right: "40px",
-    width: "60px",
-    height: "60px",
-    borderRadius: "20px",
-    backgroundColor: "#6366f1", // Indigo
-    color: "white",
-    border: "none",
-    boxShadow: "0 15px 30px rgba(99, 102, 241, 0.3)",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 100,
-    transition: "transform 0.2s ease"
-  }
 };
 
 export default ForumDetailsPage;
