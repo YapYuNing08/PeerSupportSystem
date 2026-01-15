@@ -75,7 +75,7 @@ const ForumDetailsPage = () => {
             <path d="M15 18l-6-6 6-6"/>
           </svg>
         </button>
-        <div className="nav-title">{forum?.name || "Community"}</div>
+        <div className="nav-title">{forum?.name || "Forum"}</div>
         <div style={{ width: 40 }} /> 
       </nav>
 
