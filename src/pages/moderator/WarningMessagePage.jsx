@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { db } from "../../firebase-config";
 import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
 import "./WarningMessagePage.css"; // 🔹 Import external styles
+import { useNavigate } from "react-router-dom";
+
 
 function WarningMessagePage() {
   const [warnings, setWarnings] = useState([]);
   const [selected, setSelected] = useState(null);
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const fetchAuthorName = async (uid) => {
     if (!uid) return "Unknown";
@@ -71,6 +74,9 @@ function WarningMessagePage() {
 
   return (
     <div className="warning-page-container">
+      <button className="btn-back" onClick={() => navigate("/moderator-dashboard")}>
+          ← Back to Moderator Dashboard
+        </button>
       <h2 className="warning-main-title">⚠️ Warning Queue</h2>
 
       <div className="warning-layout">

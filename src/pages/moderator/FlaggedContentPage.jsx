@@ -6,9 +6,12 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   updateDoc,
   addDoc,
-  serverTimestamp
+  serverTimestamp,
+  query,
+  where
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import "./FlaggedContentPage.css";
@@ -20,9 +23,9 @@ const FlaggedContentPage = () => {
 
   // Fetch username by UID
   const fetchUserName = async (uid) => {
-    if (!uid) return "Unknown";
+    if (!uid) return "Auto-flagged";
     const userSnap = await getDoc(doc(db, "users", uid));
-    return userSnap.exists() ? userSnap.data().username : "Unknown";
+    return userSnap.exists() ? userSnap.data().username : "Auto-flagged";
   };
 
   // Fetch content data for post/comment
@@ -90,26 +93,46 @@ const FlaggedContentPage = () => {
 
   // Approve content
   const handleApprove = async (report) => {
-    if (window.confirm("Approve this content? It will be visible to students.")) {
-      try {
-        const ref = report.type === "post"
-          ? doc(db, "posts", report.postId)
-          : doc(db, "comments", report.commentId);
+    if (!window.confirm("Approve this content? It will be visible to students.")) return;
 
-        await updateDoc(ref, { isHidden: false, approved: true, isFlagged: false });
-        await deleteDoc(doc(db, "userReports", report.id));
-      } catch (err) {
-        console.error(err);
-      }
+    try {
+      // 1️⃣ Unhide content
+      const ref = report.type === "post"
+        ? doc(db, "posts", report.postId)
+        : doc(db, "comments", report.commentId);
+
+      await updateDoc(ref, {
+        isHidden: false,
+        approved: true,
+        isFlagged: false,
+        reportCount: 0 // 🔥 reset count
+      });
+
+      // 2️⃣ Delete ALL reports for this content
+      const q = query(
+        collection(db, "userReports"),
+        where("type", "==", report.type),
+        report.type === "post"
+          ? where("postId", "==", report.postId)
+          : where("commentId", "==", report.commentId)
+      );
+
+      const snap = await getDocs(q);
+      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+
+      alert("Content approved and all reports cleared.");
+    } catch (err) {
+      console.error(err);
     }
   };
+
 
   // Reject content → create warning + navigate to warning page
   const handleReject = async (report) => {
     if (!window.confirm("Reject this content and move it to warning queue?")) return;
 
     try {
-      // 1️⃣ Add to warnings collection
+      // 1️⃣ Create ONE warning
       await addDoc(collection(db, "warnings"), {
         type: report.type,
         reason: report.reason,
@@ -119,23 +142,36 @@ const FlaggedContentPage = () => {
         commentId: report.commentId || null,
         forumId: report.forumId || null,
         createdAt: serverTimestamp(),
-        sent: false, // moderator has not sent warning yet
+        sent: false
       });
 
-      // 2️⃣ Delete from userReports collection
-      await deleteDoc(doc(db, "userReports", report.id));
+      // 2️⃣ Delete ALL reports for this content
+      const q = query(
+        collection(db, "userReports"),
+        where("type", "==", report.type),
+        report.type === "post"
+          ? where("postId", "==", report.postId)
+          : where("commentId", "==", report.commentId)
+      );
 
-      alert("Content moved to warning queue.");
+      const snap = await getDocs(q);
+      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+
+      alert("Content rejected and all reports resolved.");
     } catch (err) {
       console.error(err);
-      alert("Failed to move content to warnings.");
+      alert("Failed to reject content.");
     }
   };
+
 
 
   return (
     <div className="page-wrapper">
       <div className="header">
+        <button className="btn-back" onClick={() => navigate("/moderator-dashboard")}>
+          ← Back to Moderator Dashboard
+        </button>
         <h1 className="title">🚩 Reported Content</h1>
         <p className="subtitle">Moderation Queue: Review items flagged by students or the system.</p>
       </div>

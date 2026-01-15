@@ -4,7 +4,8 @@ import {
   collection,
   addDoc,
   serverTimestamp,
-  getDoc
+  getDoc,
+  increment
 } from "firebase/firestore";
 import { db } from "../firebase-config";
 
@@ -18,69 +19,43 @@ export async function reportContent({
   forumId,
   commentId
 }) {
-  // 🔹 Fetch reporter & author names
-  const reporterSnap = reporterId
-    ? await getDoc(doc(db, "users", reporterId))
-    : null;
 
-  const authorSnap = authorId
-    ? await getDoc(doc(db, "users", authorId))
-    : null;
+  const targetRef =
+    type === "post"
+      ? doc(db, "posts", postId)
+      : doc(db, "comments", commentId);
 
-  const reporterName = reporterSnap?.exists()
-    ? reporterSnap.data().username
-    : "Anonymous";
+  const targetSnap = await getDoc(targetRef);
+  if (!targetSnap.exists()) return;
 
-  const authorName = authorSnap?.exists()
-    ? authorSnap.data().username
-    : "Anonymous";
+  const currentCount = targetSnap.data().reportCount || 0;
+  const newCount = currentCount + 1;
 
-  // 🔹 Fetch post & forum info
-  let postTitle = "";
-  let forumName = "";
-
-  if (postId) {
-    const postSnap = await getDoc(doc(db, "posts", postId));
-    if (postSnap.exists()) {
-      postTitle = postSnap.data().title || "";
-      const fId = postSnap.data().forumId;
-      if (fId) {
-        const forumSnap = await getDoc(doc(db, "forums", fId));
-        forumName = forumSnap.exists() ? forumSnap.data().name : "";
-      }
-    }
-  }
-
-  // 🔹 Save report with SNAPSHOT data
+  //Always save the report
   await addDoc(collection(db, "userReports"), {
     type,
     content,
     reason,
     reporterId,
-    reporterName,
     authorId,
-    authorName,
     postId: postId || null,
-    postTitle,
     forumId: forumId || null,
-    forumName,
     commentId: commentId || null,
     createdAt: serverTimestamp(),
-    approved: null
+    reportNumber: newCount
   });
 
-  // 🔹 Hide content SAFELY
-  if (type === "post" && postId) {
-    await updateDoc(doc(db, "posts", postId), {
-      isHidden: true,
-      isFlagged: true
-    });
-  }
+  //Update report count
+  await updateDoc(targetRef, {
+    reportCount: increment(1)
+  });
 
-  if (type === "comment" && commentId) {
-    await updateDoc(doc(db, "comments", commentId), {
+  //ONLY hide when >= 3 reports
+  if (newCount >= 2) {
+    await updateDoc(targetRef, {
       isHidden: true,
-      isFlagged: true
+      isFlagged: true,
+      approved: null
     });
   }
 }

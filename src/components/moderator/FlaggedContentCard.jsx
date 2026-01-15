@@ -1,4 +1,4 @@
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase-config";
 
@@ -6,14 +6,12 @@ function FlaggedContentCard() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const q = query(
+    const unsub = onSnapshot(
       collection(db, "userReports"),
-      where("approved", "==", null)
+      (snap) => {
+        setCount(snap.size);
+      }
     );
-
-    const unsub = onSnapshot(q, (snap) => {
-      setCount(snap.size);
-    });
 
     return () => unsub();
   }, []);
@@ -22,7 +20,9 @@ function FlaggedContentCard() {
     <div className="admin-card">
       <h3>🚩 Flagged Content</h3>
       <p className="admin-card-number">{count}</p>
-      <p className="admin-card-desc">Posts & comments pending review</p>
+      <p className="admin-card-desc">
+        Posts & comments pending review
+      </p>
     </div>
   );
 }
