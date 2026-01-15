@@ -33,7 +33,7 @@ function ChatDashboard() {
     if (!auth.currentUser) return;
     const q = query(
       collection(db, "chatRequests"),
-      where("status", "==", "ongoing"),
+      where("status", "in", ["ongoing", "pending-notes"]),
       where("counselorId", "==", auth.currentUser.uid)
     );
     return onSnapshot(q, (snapshot) => {

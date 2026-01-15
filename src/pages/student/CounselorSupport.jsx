@@ -105,7 +105,7 @@ function CounselorSupport() {
               </button>
             ) : (
               <div className="loading-profile">
-                <span className="spinner-small"></span> Loading profile...
+                <span className="spinner-small"></span> Loading...
               </div>
             )}
           </div>

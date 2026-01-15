@@ -36,7 +36,7 @@ function StudentChatRoom() {
         // If counselor ends the chat, redirect student
         if (data.status === "completed") {
           toast.info("The counseling session has ended.");
-          navigate("/studenr-page");
+          navigate("/student-page");
         }
       }
     });
@@ -92,7 +92,7 @@ function StudentChatRoom() {
         
         // Update the status to 'completed'
         await updateDoc(requestRef, {
-          status: "completed",
+          status: "pending-notes",
           endedAt: serverTimestamp(),
           endedBy: "student" // Optional: track who ended the session
         });

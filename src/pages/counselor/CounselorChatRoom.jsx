@@ -4,7 +4,9 @@ import {
   collection, query, where, onSnapshot, orderBy, 
   addDoc, serverTimestamp, doc, updateDoc 
 } from "firebase/firestore";
-import { useNavigate, useParams } from "react-router-dom"; // Added useParams
+import { useNavigate, useParams } from "react-router-dom"; 
+import { toast } from "react-toastify";
+import SessionNotes from "../../components/counselor/SessionNotes";
 import "./counselorchatroom.css";
 
 function CounselorChatRoom() {
@@ -13,6 +15,11 @@ function CounselorChatRoom() {
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+
+  const [isNotesOpen, setIsNotesOpen] = useState(false);
+  const [sessionNotes, setSessionNotes] = useState("");
+  const [hasStudentEnded, setHasStudentEnded] = useState(false);
+
   const scrollRef = useRef();
   const navigate = useNavigate();
 
@@ -23,7 +30,7 @@ function CounselorChatRoom() {
 
     const q = query(
       collection(db, "chatRequests"),
-      where("status", "==", "ongoing"),
+      where("status", "in", ["ongoing", "pending-notes"]),
       where("counselorId", "==", user.uid)
     );
 
@@ -36,21 +43,27 @@ function CounselorChatRoom() {
   }, []);
 
   // 2. Sync selectedRequest with the URL requestId
-  useEffect(() => {
-    if (ongoingStudents.length > 0) {
-      if (requestId) {
-        // Find the specific student from the URL
-        const current = ongoingStudents.find(s => s.id === requestId);
-        if (current) {
-          setSelectedRequest(current);
-        }
-      } else {
-        // Default to the first student if no ID in URL
-        setSelectedRequest(ongoingStudents[0]);
-        navigate(`/chat/${ongoingStudents[0].id}`, { replace: true });
+useEffect(() => {
+    if (ongoingStudents.length > 0 && requestId) {
+      const current = ongoingStudents.find(s => s.id === requestId);
+      if (current) {
+        setSelectedRequest(current);
+        setSessionNotes(current.sessionNotes || ""); // Pre-fill notes if they exist
       }
     }
-  }, [requestId, ongoingStudents, navigate]);
+
+    // LISTENER: To detect if student changes status to 'pending-notes'
+    if (requestId) {
+      const unsub = onSnapshot(doc(db, "chatRequests", requestId), (docSnap) => {
+        if (docSnap.exists() && docSnap.data().status === "pending-notes") {
+          setHasStudentEnded(true);
+        } else {
+          setHasStudentEnded(false);
+        }
+      });
+      return () => unsub();
+    }
+  }, [requestId, ongoingStudents]);
 
   // 3. Fetch messages for the SELECTED student
   useEffect(() => {
@@ -96,15 +109,50 @@ function CounselorChatRoom() {
 
   const endSession = async () => {
     if (!selectedRequest) return;
-    const confirmEnd = window.confirm("Are you sure you want to end this session?");
-    if (confirmEnd) {
+    // Instead of immediate complete, we open the notes modal
+    setIsNotesOpen(true);
+  };
+
+  const handleSaveDraft = async () => {
+    if (!sessionNotes.trim()) {
+      toast.warning("Nothing to save.");
+      return;
+    }
+    try {
       await updateDoc(doc(db, "chatRequests", selectedRequest.id), {
-        status: "completed",
-        endedAt: serverTimestamp()
+        sessionNotes: sessionNotes // Only update the notes field
       });
-      setSelectedRequest(null);
+      toast.success("Draft saved!");
+    } catch (error) {
+      toast.error("Error saving draft.");
     }
   };
+
+  const handleFinalSubmit = async () => {
+    if (!sessionNotes.trim()) {
+      toast.warning("Please enter session notes before completing.");
+      return;
+    }
+    
+    // The "Last Chance" Confirmation Message
+    const isReady = window.confirm("Are you sure? Once completed, this session will be archived and you cannot edit the notes again.");
+    
+    if (isReady) {
+      try {
+        await updateDoc(doc(db, "chatRequests", selectedRequest.id), {
+          status: "completed",
+          sessionNotes: sessionNotes, // Saves the final version
+          endedAt: serverTimestamp()
+        });
+        toast.success("Session successfully completed and archived!");
+        setIsNotesOpen(false);
+        navigate("/counselor/chat-dashboard");
+      } catch (error) {
+        console.error(error);
+        toast.error("Error finalizing session.");
+      }
+    }
+  }
 
   return (
     <div className="chat-dashboard-wrapper">
@@ -117,7 +165,7 @@ function CounselorChatRoom() {
           {ongoingStudents.map((student) => (
             <div 
               key={student.id} 
-              className={`student-item ${requestId === student.id ? "active" : ""}`}
+              className={`student-item ${requestId === student.id ? "active" : ""} ${student.status === 'pending-notes' ? 'needs-notes' : ''}`}
               onClick={() => handleSelectStudent(student.id)}
             >
               <div className="student-avatar">
@@ -138,9 +186,14 @@ function CounselorChatRoom() {
             <header className="chat-header">
               <div className="header-user">
                 <h2>{selectedRequest.studentName}</h2>
-                <span className="online-status">Online</span>
+                <span className={`status-tag ${hasStudentEnded ? 'offline' : 'online'}`}>
+                  {hasStudentEnded ? "Disconnected" : "Online"}
+                </span>
               </div>
-              <button className="btn-end-chat" onClick={endSession}>End Session</button>
+              <div className="header-actions">
+                <button className="btn-notes" onClick={() => setIsNotesOpen(true)}>📝 Session Notes</button>
+                {!hasStudentEnded && <button className="btn-end-chat" onClick={() => setIsNotesOpen(true)}>End Session</button>}
+              </div>
             </header>
 
             <div className="messages-display">
@@ -152,22 +205,40 @@ function CounselorChatRoom() {
               <div ref={scrollRef} />
             </div>
 
-            <form onSubmit={handleSendMessage} className="message-input-form">
-              <input 
-                type="text"
-                placeholder="Write something..."
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-              />
-              <button type="submit" className="send-btn">➤</button>
-            </form>
+            {/* --- FIXED BOTTOM NOTICE AREA --- */}
+            <div className="chat-footer-area">
+              {hasStudentEnded ? (
+                <div className="system-notice-bottom" onClick={() => setIsNotesOpen(true)}>
+                   <p>Student <strong>{selectedRequest.studentName}</strong> ended the session.</p>
+                   <span>Click here to complete the <strong>Session Notes</strong> and close the case.</span>
+                </div>
+              ) : (
+                <form onSubmit={handleSendMessage} className="message-input-form">
+                  <input 
+                    type="text"
+                    placeholder="Write something..."
+                    value={newMessage}
+                    onChange={(e) => setNewMessage(e.target.value)}
+                  />
+                  <button type="submit" className="send-btn">➤</button>
+                </form>
+              )}
+            </div>
           </>
         ) : (
-          <div className="empty-state">
-            <p>Select a student to start chatting</p>
-          </div>
+          <div className="empty-state"><p>Select a student to start chatting</p></div>
         )}
       </main>
+
+      <SessionNotes 
+        isOpen={isNotesOpen}
+        onClose={() => setIsNotesOpen(false)}
+        sessionNotes={sessionNotes}
+        setSessionNotes={setSessionNotes}
+        onSave={handleSaveDraft} 
+        onSubmit={handleFinalSubmit}
+        studentName={selectedRequest?.studentName}
+      />
     </div>
   );
 }
