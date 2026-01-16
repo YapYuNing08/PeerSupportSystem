@@ -1,9 +1,29 @@
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { db } from "../../firebase-config";
+
 function WarningMessageCard() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "warnings"),
+      where("sent", "==", false)
+    );
+
+    const unsub = onSnapshot(q, (snap) => {
+      setCount(snap.size);
+    });
+
+    return () => unsub();
+  }, []);
+
   return (
     <div className="admin-card">
       <h3>⚠️ Warning Messages</h3>
+      <p className="admin-card-number">{count}</p>
       <p className="admin-card-desc">
-        Send private warning messages to students
+        Pending warnings not yet sent to students
       </p>
     </div>
   );
