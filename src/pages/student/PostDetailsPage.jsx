@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { db, auth } from "../../firebase-config";
 import {
   doc,
-  getDoc,
   collection,
   addDoc,
   deleteDoc,
@@ -11,12 +10,13 @@ import {
   where,
   orderBy,
   serverTimestamp,
-  onSnapshot
+  onSnapshot,
+  getDoc
 } from "firebase/firestore";
-import StudentLayout from "../../components/layout/StudentLayout"; 
+import StudentLayout from "../../components/layout/StudentLayout";
 import { reportContent } from "../../utils/reportContent";
 import { checkAutoModeration } from "../../utils/checkAutoModeration";
-import "./PostDetailsPage.css"; // 🔹 Standard CSS Import
+import "./PostDetailsPage.css";
 
 const PostDetailsPage = () => {
   const { postId } = useParams();
@@ -30,16 +30,18 @@ const PostDetailsPage = () => {
 
   const currentUser = auth.currentUser;
 
+  /* ================= AVATAR STYLE ================= */
   const getAvatarStyle = (name) => {
     const gradients = [
-      'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)',
-      'linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%)',
-      'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+      "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+      "linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%)",
+      "linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)"
     ];
     const index = name ? name.length % gradients.length : 0;
     return { background: gradients[index] };
   };
 
+  /* ================= POST LISTENER ================= */
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "posts", postId), (snap) => {
       if (snap.exists()) setPost({ id: snap.id, ...snap.data() });
@@ -47,6 +49,7 @@ const PostDetailsPage = () => {
     return () => unsub();
   }, [postId]);
 
+  /* ================= MODERATION REDIRECT ================= */
   useEffect(() => {
     if (post?.isHidden) {
       alert("This post is under moderation.");
@@ -54,6 +57,7 @@ const PostDetailsPage = () => {
     }
   }, [post, navigate]);
 
+  /* ================= COMMENTS LISTENER ================= */
   useEffect(() => {
     const q = query(
       collection(db, "comments"),
@@ -71,6 +75,7 @@ const PostDetailsPage = () => {
     return () => unsub();
   }, [postId]);
 
+  /* ================= ADD COMMENT ================= */
   const handleAddComment = async () => {
     if (!commentText.trim() || !currentUser || !post) return;
 
@@ -80,10 +85,9 @@ const PostDetailsPage = () => {
       if (userSnap.exists()) authorName = userSnap.data().username;
     }
 
-    let isHarmful = await checkAutoModeration(commentText);
-    if (post.approved === true) isHarmful = false;
+    const isHarmful = await checkAutoModeration(commentText);
 
-    const commentRef = await addDoc(collection(db, "comments"), {
+    const ref = await addDoc(collection(db, "comments"), {
       postId,
       forumId: post.forumId,
       content: commentText,
@@ -106,7 +110,7 @@ const PostDetailsPage = () => {
         authorId: currentUser.uid,
         postId,
         forumId: post.forumId,
-        commentId: commentRef.id
+        commentId: ref.id
       });
       alert("Your comment is under moderation.");
     }
@@ -115,13 +119,14 @@ const PostDetailsPage = () => {
     setReplyTo(null);
   };
 
+  /* ================= ACTIONS ================= */
   const handleDelete = async (id) => {
     if (window.confirm("Delete this comment?")) {
       await deleteDoc(doc(db, "comments", id));
     }
   };
 
-  const handleReport = (type, content, targetAuthorId, commentId = null) => {
+  const handleReport = (type, content, authorId, commentId = null) => {
     if (!currentUser) return alert("Please login");
     const reason = prompt(`Why are you reporting this ${type}?`);
     if (!reason) return;
@@ -131,11 +136,12 @@ const PostDetailsPage = () => {
       content,
       reason,
       reporterId: currentUser.uid,
-      authorId: targetAuthorId,
+      authorId,
       postId: post.id,
       forumId: post.forumId,
       commentId
     });
+
     alert(`${type.charAt(0).toUpperCase() + type.slice(1)} reported.`);
   };
 
@@ -146,115 +152,115 @@ const PostDetailsPage = () => {
 
   return (
     <StudentLayout>
-    <div style={s.pageWrapper}>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        .back-circle:hover { background-color: #f1f5f9; transform: scale(1.05); }
-        textarea:focus { border-color: #6366f1 !important; }
-      `}</style>
+      <div className="page-wrapper">
+        <div className="page-container">
 
-      {/* 🔹 Left-aligned Back Button */}
-      <div style={s.navRow}>
-        <button 
-          className="back-circle" 
-          style={s.backBtnCircle} 
-          onClick={() => navigate(`/forum/${post.forumId}`)}
-        >
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <polyline points="15 18 9 12 15 6"></polyline>
-    <div className="page-wrapper">
-      <div className="nav-row">
-        <button className="back-circle" onClick={() => navigate(`/forum/${post.forumId}`)}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-            <path d="M15 18l-6-6 6-6"/>
-          </svg>
-        </button>
-      </div>
-
-      <div className="post-header">
-        <h1 className="post-title">{post.title}</h1>
-        <div className="post-author-row">
-          <div className="avatar" style={{ ...getAvatarStyle(post.authorName), width: '26px', height: '26px', fontSize: '11px' }}>
-            {post.authorName?.[0]}
+          {/* Navigation */}
+          <div className="nav-row">
+            <button className="back-circle" onClick={() => navigate(`/forum/${post.forumId}`)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
           </div>
-          <span className="post-author-name">{post.isAnonymous ? "Anonymous" : post.authorName}</span>
-          <span className="action-link" style={{marginLeft: 'auto', color: '#f87171'}} onClick={() => handleReport('post', post.content, post.authorId)}>🚩 Report</span>
-        </div>
-        <p className="post-content">{post.content}</p>
-      </div>
 
-      <div className="comment-big-box">
-        <div className="box-header">
-          <span>Discussion</span>
-          <span className="comment-count-badge">{comments.length}</span>
-        </div>
-
-        <div className="comments-list">
-          {parentComments.length === 0 && <p style={{ textAlign: "center", color: "#94a3b8", fontSize: "14px" }}>No comments yet.</p>}
-
-          {parentComments.map((c) => (
-            <div key={c.id} className="thread">
-              <div className="comment-line">
-                <div className="avatar" style={getAvatarStyle(c.authorName)}>{c.authorName?.[0]}</div>
-                <div className="bubble-container">
-                  <div className="bubble">
-                    <span className="author-name">{c.isAnonymous ? "Anonymous" : c.authorName}</span>
-                    <span className="text">{c.content}</span>
-                  </div>
-                  <div className="actions">
-                    <span className="action-link" onClick={() => setReplyTo(c.id)}>Reply</span>
-                    <span className="action-link" onClick={() => handleReport('comment', c.content, c.authorId, c.id)}>Report</span>
-                    {currentUser?.uid === c.authorId && (
-                      <span className="action-link" style={{ color: "#f87171" }} onClick={() => handleDelete(c.id)}>Delete</span>
-                    )}
-                  </div>
-                </div>
+          {/* Post Header */}
+          <div className="post-header">
+            <h1 className="post-title">{post.title}</h1>
+            <div className="post-author-row">
+              <div className="avatar" style={getAvatarStyle(post.authorName)}>
+                {post.authorName?.[0] || "A"}
               </div>
+              <span className="post-author-name">
+                {post.isAnonymous ? "Anonymous" : post.authorName}
+              </span>
+              <span className="action-link report" style={{ marginLeft: 'auto' }} onClick={() => handleReport("post", post.content, post.authorId)}>
+                🚩 Report
+              </span>
+            </div>
+            <p className="post-content">{post.content}</p>
+          </div>
 
-              {getReplies(c.id).map((r) => (
-                <div key={r.id} className="reply-line">
-                  <div className="avatar" style={{ ...getAvatarStyle(r.authorName), width: "24px", height: "24px", fontSize: "10px" }}>{r.authorName?.[0]}</div>
-                  <div className="bubble-container">
-                    <div className="bubble" style={{ backgroundColor: "#f8fafc" }}>
-                      <span className="author-name">{r.isAnonymous ? "Anonymous" : r.authorName}</span>
-                      <span className="text">{r.content}</span>
-                    </div>
-                    <div className="actions">
-                        <span className="action-link" onClick={() => handleReport('comment', r.content, r.authorId, r.id)}>Report</span>
-                        {currentUser?.uid === r.authorId && (
-                            <span className="action-link" style={{ color: "#f87171" }} onClick={() => handleDelete(r.id)}>Delete</span>
+          {/* Comments Section */}
+          <div className="comment-big-box">
+            <div className="box-header">
+              <span>Discussion</span>
+              <span className="comment-count-badge">{comments.length}</span>
+            </div>
+
+            <div className="comments-list">
+              {parentComments.length === 0 && <p style={{ textAlign: 'center', color: '#94a3b8', padding: '20px' }}>No comments yet.</p>}
+              
+              {parentComments.map(c => (
+                <div key={c.id} className="thread">
+                  {/* Parent Comment */}
+                  <div className="comment-line">
+                    <div className="avatar" style={getAvatarStyle(c.authorName)}>{c.authorName?.[0]}</div>
+                    <div className="bubble-container">
+                      <div className="bubble">
+                        <span className="author-name">{c.isAnonymous ? "Anonymous" : c.authorName}</span>
+                        <span className="text">{c.content}</span>
+                      </div>
+                      <div className="actions">
+                        <span className="action-link" onClick={() => setReplyTo(c.id)}>Reply</span>
+                        <span className="action-link report" onClick={() => handleReport("comment", c.content, c.authorId, c.id)}>Report</span>
+                        {currentUser?.uid === c.authorId && (
+                          <span className="action-link delete" onClick={() => handleDelete(c.id)}>Delete</span>
                         )}
+                      </div>
                     </div>
                   </div>
+
+                  {/* Replies */}
+                  {getReplies(c.id).map(r => (
+                    <div key={r.id} className="reply-line">
+                      <div className="avatar small" style={getAvatarStyle(r.authorName)}>{r.authorName?.[0]}</div>
+                      <div className="bubble-container">
+                        <div className="bubble reply">
+                          <span className="author-name">{r.isAnonymous ? "Anonymous" : r.authorName}</span>
+                          <span className="text">{r.content}</span>
+                        </div>
+                        <div className="actions">
+                           <span className="action-link report" onClick={() => handleReport("comment", r.content, r.authorId, r.id)}>Report</span>
+                           {currentUser?.uid === r.authorId && (
+                             <span className="action-link delete" onClick={() => handleDelete(r.id)}>Delete</span>
+                           )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               ))}
             </div>
-          ))}
-        </div>
 
-        <div className="input-section">
-          {replyTo && (
-            <div className="reply-indicator">
-              <span>Replying to <b>{comments.find(c => c.id === replyTo)?.authorName}</b></span>
-              <span className="cancel-reply" onClick={() => setReplyTo(null)}>✕</span>
+            {/* Input Area */}
+            <div className="input-section">
+              {replyTo && (
+                <div className="reply-indicator">
+                  <span>Replying to <b>{comments.find(c => c.id === replyTo)?.authorName}</b></span>
+                  <span className="cancel-reply" onClick={() => setReplyTo(null)}>✕</span>
+                </div>
+              )}
+              <div className="input-row">
+                <textarea
+                  className="textarea"
+                  value={commentText}
+                  onChange={e => setCommentText(e.target.value)}
+                  placeholder="Add a comment..."
+                />
+                <button className="send-btn" onClick={handleAddComment}>Send</button>
+              </div>
+              <label className="anon-label">
+                <input
+                  type="checkbox"
+                  checked={isAnonymous}
+                  onChange={e => setIsAnonymous(e.target.checked)}
+                />
+                Post anonymously
+              </label>
             </div>
-          )}
-          <div className="input-row">
-            <textarea
-              className="textarea"
-              placeholder="Add a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
-            />
-            <button className="send-btn" onClick={handleAddComment}>Send</button>
           </div>
-          <label className="anon-label">
-            <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} />
-            Post anonymously
-          </label>
+
         </div>
       </div>
-    </div>
     </StudentLayout>
   );
 };
