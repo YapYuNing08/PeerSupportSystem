@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db, auth } from "../../firebase-config";
+import { useNavigate } from "react-router-dom";
 import {
   collection,
   addDoc,
@@ -15,6 +16,7 @@ function CreateForumPage() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [forums, setForums] = useState([]);
+  const navigate = useNavigate();
 
   // 🔹 Real-time fetch forums
   useEffect(() => {
@@ -62,6 +64,14 @@ function CreateForumPage() {
 
   return (
     <div className="admin-dashboard-container">
+
+      <button 
+          onClick={() => navigate("/admin/admin-dashboard")}
+          className="btn btn-sm btn-outline-danger" 
+          style={{ marginBottom: "10px", backgroundColor: "white" }}
+        >
+          ← Back to Dashboard
+        </button>
 
       {/* 🔹 CREATE FORUM FORM */}
       <div className="form-card">

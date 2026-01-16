@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase-config";
-import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp, getDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp, getDoc, setDoc } from "firebase/firestore";
 import "./WarningMessagePage.css"; // 🔹 Import external styles
 import { useNavigate } from "react-router-dom";
 
@@ -43,6 +43,7 @@ function WarningMessagePage() {
     if (!selected) return;
 
     try {
+      // 1️⃣ Send warning to student
       await addDoc(collection(db, "userWarnings"), {
         userId: selected.authorId,
         authorName: selected.authorName,
@@ -54,20 +55,55 @@ function WarningMessagePage() {
         read: false,
       });
 
+      // 2️⃣ Mark warning as sent
       await updateDoc(doc(db, "warnings", selected.id), {
         sent: true,
         sentAt: serverTimestamp()
       });
 
-      alert("Warning sent to student");
+      // 3️⃣ Get current warning count
+      const statRef = doc(db, "userWarningStats", selected.authorId);
+      const statSnap = await getDoc(statRef);
+
+      let count = 1;
+      if (statSnap.exists()) {
+        count = statSnap.data().count + 1;
+      }
+
+      // 4️⃣ If count reaches 3 → notify admin & reset
+      if (count === 3) {
+        await addDoc(collection(db, "adminNotifications"), {
+          userId: selected.authorId,
+          username: selected.authorName,
+          reason: "Student received 3 warnings",
+          createdAt: serverTimestamp(),
+          handled: false,
+        });
+
+        // reset counter
+        await setDoc(statRef, {
+          count: 0,
+          updatedAt: serverTimestamp(),
+        });
+      } else {
+        // normal increment
+        await setDoc(statRef, {
+          count: count,
+          updatedAt: serverTimestamp(),
+        });
+      }
+
+      alert("Warning sent successfully");
       setSelected(null);
-      fetchWarnings();
       setMessage("");
+      fetchWarnings();
+
     } catch (err) {
       console.error(err);
       alert("Failed to send warning.");
     }
   };
+
 
   const pendingWarnings = warnings.filter(w => !w.sent);
   const sentWarnings = warnings.filter(w => w.sent);

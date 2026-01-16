@@ -31,7 +31,7 @@ function StudentNotificationsPage() {
     <div className="page-wrapper">
       <div className="header">
         <h2 className="title">📢 Notifications</h2>
-        <p className="subtitle">Important updates regarding your posts and community conduct.</p>
+        <p className="subtitle">Important updates regarding your posts and forum conduct.</p>
       </div>
 
       <div className="list-container">
@@ -58,7 +58,7 @@ function StudentNotificationsPage() {
               </div>
 
               <div className="moderator-box">
-                <p className="message-text">{w.moderatorMessage || "Your content has been flagged for a community guidelines violation."}</p>
+                <p className="message-text">{w.moderatorMessage || "Your content has been flagged for a forum guidelines violation."}</p>
               </div>
 
               {(w.content || w.contentText) && (
@@ -69,7 +69,7 @@ function StudentNotificationsPage() {
               )}
 
               <div className="card-footer">
-                <span className="footer-note">Please review our Community Guidelines for more info.</span>
+                <span className="footer-note">Please review our Forum Guidelines for more info.</span>
               </div>
             </div>
           ))

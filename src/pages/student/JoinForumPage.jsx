@@ -101,7 +101,7 @@ function JoinForumPage() {
   return (
     <div className="join-page-wrapper">
       <div className="join-header">
-        <h2 className="join-title">Join a Community</h2>
+        <h2 className="join-title">Join a Forum</h2>
         <p className="join-subtitle">Explore and join at least one forum to get started ✨</p>
       </div>
 
@@ -140,7 +140,7 @@ function JoinForumPage() {
                   className="join-btn btn-active"
                   onClick={() => handleJoinForum(forum)}
                 >
-                  Join Community
+                  Join Forum
                 </button>
               )}
             </div>

@@ -101,7 +101,7 @@ const CreatePostPage = () => {
       {/* 🔹 Header */}
       <div className="header">
         <h1 className="title-text">Create Post</h1>
-        <p className="subtitle">Share your thoughts with the community</p>
+        <p className="subtitle">Share your thoughts with the forum</p>
       </div>
 
       {/* 🔹 Form */}
