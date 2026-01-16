@@ -27,6 +27,7 @@ import WarningMessagePage from "./pages/moderator/WarningMessagePage";
 import AutoModerationPage from "./pages/moderator/AutoModerationPage";
 import CreateForumPage from "./pages/admin/CreateForumPage";
 
+import AdminNotificationsPage from "./pages/admin/AdminNotificationsPage";
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
 import JoinForumPage from "./pages/student/JoinForumPage";
 import MyForumsPage from "./pages/student/MyForumsPage";
@@ -85,6 +86,7 @@ function App() {
           <Route path="/forum/:forumId/new-post" element={<CreatePostPage />} />
           <Route path="/post/:postId" element={<PostDetailsPage />} />
           <Route path="/student/notifications" element={<StudentNotificationsPage />} />
+          <Route path="/admin/notifications" element={<AdminNotificationsPage />}/>
 
         </Routes>
         <ToastContainer />

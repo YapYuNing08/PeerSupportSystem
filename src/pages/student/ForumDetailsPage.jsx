@@ -92,7 +92,7 @@ const ForumDetailsPage = () => {
               </svg>
               <span className="back-text">Back</span>
             </button>
-            <div className="nav-title">{forum?.name || "Community"}</div>
+            <div className="nav-title">{forum?.name || "Forum"}</div>
             <div className="nav-spacer"></div>
           </nav>
 

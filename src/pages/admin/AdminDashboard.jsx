@@ -73,7 +73,19 @@ function AdminDashboard() {
             <p>CREATE FORUM</p>
           </div>
         </div>
-      </div>
+      
+        <div
+            className="admin-card"
+            onClick={() => navigate("/admin/notifications")}
+            style={{ cursor: "pointer" }}
+          >
+            <div className="card-icon">🚨</div>
+            <div className="card-info text-center">
+              <h3>!</h3>
+              <p>ALERT</p>
+            </div>
+          </div>
+        </div>
 
     </div>
   );

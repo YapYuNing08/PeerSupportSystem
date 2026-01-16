@@ -27,7 +27,7 @@ function ModeratorDashboard() {
       {/* 🔹 Header Section matched to Admin Style */}
       <div className="admin-main-header">
         <h1>Moderator Dashboard</h1>
-        <p>Review community flags, issue student warnings, and manage AI filters.</p>
+        <p>Review forum flags, issue student warnings, and manage AI filters.</p>
         <button 
           className="btn-outline-secondary" 
           style={{ marginTop: '15px', padding: '8px 20px', borderRadius: '6px', cursor: 'pointer', background: 'white' }} 
