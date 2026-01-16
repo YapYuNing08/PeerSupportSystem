@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, ReferenceLine } from 'recharts';
 import { format, startOfMonth, endOfMonth, addMonths, getDate, isAfter, getDaysInMonth } from "date-fns";
 import "./MoodAnalysis.css"; 
-import StudentLayout from "../layout/StudentLayout";
+import StudentLayout from "../../components/layout/StudentLayout"; 
 import { useNavigate } from "react-router-dom";
 
 

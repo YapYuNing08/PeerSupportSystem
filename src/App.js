@@ -9,12 +9,11 @@ import {
 
 import Login from "./pages/login";
 import SignUp from "./pages/register";
-import Home from "./pages/home";
 
-// import StudentPage from "./pages/student/studentpage";
+import StudentProfile from "./pages/student/StudentProfile";
 import CounselorSupport from "./pages/student/CounselorSupport";
-import MoodTracker from './components/student/MoodTracker';
-import MoodAnalysis from "./components/student/MoodAnalysis";
+import MoodTracker from './pages/student/MoodTracker';
+import MoodAnalysis from "./pages/student/MoodAnalysis";
 import StudentChatRoom from "./pages/student/StudentChat";
 
 import ChatDashboard from "./pages/counselor/chatDashboard";
@@ -34,6 +33,7 @@ import MyForumsPage from "./pages/student/MyForumsPage";
 import ForumDetailsPage from "./pages/student/ForumDetailsPage";
 import CreatePostPage from "./pages/student/CreatePostPage";
 import PostDetailsPage from "./pages/student/PostDetailsPage";
+import StudentNotificationsPage from "./pages/student/StudentNotificationsPage"; 
 
 import ModeratorDashboard from "./pages/moderatorpage";
 // import CounselorPage from "./pages/counselorpage";
@@ -59,9 +59,9 @@ function App() {
           } />
 
           {/* DASHBOARDS (Full Screen - No auth-inner wrapper) */}
-          <Route path="/home" element={<Home />} />
           <Route path="/admin/admin-dashboard" element={<AdminDashboard />} />
 
+          <Route path="/profile" element={<StudentProfile />} />
           <Route path="/student-page" element={<MoodTracker/>} />
           <Route path="/student/analysis" element={<MoodAnalysis/>} />
           <Route path="/student/counselor-support" element={<CounselorSupport />} />
@@ -84,6 +84,7 @@ function App() {
           <Route path="/forum/:forumId" element={<ForumDetailsPage />} />
           <Route path="/forum/:forumId/new-post" element={<CreatePostPage />} />
           <Route path="/post/:postId" element={<PostDetailsPage />} />
+          <Route path="/student/notifications" element={<StudentNotificationsPage />} />
 
         </Routes>
         <ToastContainer />

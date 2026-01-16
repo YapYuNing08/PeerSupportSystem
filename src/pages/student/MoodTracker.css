@@ -1,22 +1,21 @@
 /* --- GLOBAL CONTAINER --- */
 .app-wrapper {
-  /* This moves the content away from the sidebar (240px) */
   margin-left: 180px; 
   padding: 40px;
   min-height: 100vh;
-  background-color:#E4FFEE; /* Matching your Dashboard background */
+  background-color:#E4FFEE; 
   font-family: 'Fredoka', sans-serif;
   position: relative;
   box-sizing: border-box;
   display: flex;
-  justify-content: center; /* Centers the white box horizontally */
-  align-items: flex-start; /* Keeps it at the top */
+  justify-content: center; 
+  align-items: flex-start; 
 }
 
 .screen-container {
   background: white;
   width: 100%;
-  max-width: 600px; /* Limits the width of the calendar card */
+  max-width: 600px; 
   padding: 30px;
   border-radius: 15px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -28,15 +27,15 @@
 
 @media (max-width: 768px) {
   .app-wrapper {
-    margin-left: 0; /* Sidebar disappears/moves on mobile */
+    margin-left: 0; 
     padding: 20px;
-    margin-bottom: 70px; /* Space for bottom nav */
+    margin-bottom: 70px; 
   }
 
   .screen-container {
     max-width: 100%;
     padding: 20px;
-    padding-bottom: 100px; /* Extra space so Report button doesn't block UI */
+    padding-bottom: 100px; 
   }
 }
 
