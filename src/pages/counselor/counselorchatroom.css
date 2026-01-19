@@ -122,3 +122,33 @@
   font-weight: 600;
 }
 
+.btn-notes {
+  background: #a9d3b8;
+  color: #2f583e;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.system-notice-bottom {
+  background-color: #fff3cd;
+  border: 1px solid #ffeeba;
+  color: #856404;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.system-notice-bottom p {
+  margin: 0 0 5px 0;
+  font-weight: bold;
+}
+
+.system-notice-bottom span {
+  font-size: 0.9rem;
+  text-decoration: underline;
+}

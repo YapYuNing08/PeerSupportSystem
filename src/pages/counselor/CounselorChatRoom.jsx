@@ -20,6 +20,8 @@ function CounselorChatRoom() {
   const [sessionNotes, setSessionNotes] = useState("");
   const [hasStudentEnded, setHasStudentEnded] = useState(false);
 
+  const [history, setHistory] = useState([]);
+
   const scrollRef = useRef();
   const navigate = useNavigate();
 
@@ -64,6 +66,36 @@ useEffect(() => {
       return () => unsub();
     }
   }, [requestId, ongoingStudents]);
+
+  useEffect(() => {
+    // If no student is selected, clear history and stop
+    if (!selectedRequest?.studentId) {
+      setHistory([]);
+      return;
+    }
+
+    // Fetch ALL completed sessions for this student ID
+    // This will show notes from Counselor A, Counselor B, etc.
+    const q = query(
+      collection(db, "chatRequests"),
+      where("studentId", "==", selectedRequest.studentId),
+      where("status", "==", "completed"),
+      orderBy("endedAt", "desc") // Shows newest history first
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const allPastSessions = snapshot.docs.map(doc => ({ 
+        id: doc.id, 
+        ...doc.data() 
+      }));
+      setHistory(allPastSessions);
+    }, (error) => {
+      console.error("Error fetching history:", error);
+      toast.error("Could not load session history.");
+    });
+
+    return () => unsubscribe();
+  }, [selectedRequest?.studentId]); 
 
   // 3. Fetch messages for the SELECTED student
   useEffect(() => {
@@ -238,6 +270,7 @@ useEffect(() => {
         onSave={handleSaveDraft} 
         onSubmit={handleFinalSubmit}
         studentName={selectedRequest?.studentName}
+        history={history}
       />
     </div>
   );

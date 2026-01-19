@@ -1,7 +1,7 @@
 import React from "react";
 import "./sessionNotes.css";
 
-function SessionNotes({ isOpen, onClose, sessionNotes, setSessionNotes, onSave, onSubmit, studentName }) {
+function SessionNotes({ isOpen, onClose, sessionNotes, setSessionNotes, onSave, onSubmit, studentName, history }) {
   if (!isOpen) return null;
 
   return (
@@ -12,13 +12,40 @@ function SessionNotes({ isOpen, onClose, sessionNotes, setSessionNotes, onSave, 
           <button className="btn-close-x" onClick={onClose}>&times;</button>
         </div>
         
-        <textarea
-          className="notes-textarea"
-          placeholder="Record key takeaways, student mood, and recommendations..."
-          value={sessionNotes}
-          onChange={(e) => setSessionNotes(e.target.value)}
-          required
-        />
+        <div className="notes-history-section">
+          <h3>Previous Session History</h3>
+          <div className="history-scroll-area">
+            {history && history.length > 0 ? (
+              history.map((record) => (
+                <div key={record.id} className="history-card">
+                  <div className="history-meta">
+                    {/* Displaying (Date) followed by (Tag) */}
+                    <span className="history-date">
+                      ({record.endedAt?.toDate().toLocaleDateString()})
+                    </span>
+                    <span className="history-tag-label">
+                      ({record.reasonTag || "General"})
+                    </span>
+                  </div>
+                  <p className="history-text">{record.sessionNotes}</p>
+                </div>
+              ))
+            ) : (
+              <p className="no-history-text">No previous session notes found.</p>
+            )}
+          </div>
+        </div>
+
+        <div className="current-notes-section">
+          <label>Current Session Observations</label>
+          <textarea
+            className="notes-textarea"
+            placeholder="Record key takeaways, student mood, and recommendations..."
+            value={sessionNotes}
+            onChange={(e) => setSessionNotes(e.target.value)}
+            required
+          />
+        </div>
         
         <div className="modal-actions">
           {/* Note: changed OnClick to onClick */}
