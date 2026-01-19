@@ -1,0 +1,67 @@
+.daily-note-container {
+    display: flex;
+    justify-content: flex-end; /* Aligns to top right of your calendar area */
+    margin-bottom: 20px;
+    padding-right: 10px;
+}
+
+.minimal-note-card {
+    background: white;
+    border-radius: 50px; /* Circular when closed */
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    max-width: 50px; /* Starts small */
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.minimal-note-card.expanded {
+    max-width: 400px; /* Expands to show text */
+    padding: 10px 20px;
+    border-radius: 15px;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+}
+
+/* Yellow Bulb Styles */
+.bulb-off {
+    color: #ffe868; /* Greyish when not clicked */
+    transition: color 0.3s;
+}
+
+.bulb-on {
+    color: #FFD700; /* Bright Yellow when clicked */
+    filter: drop-shadow(0 0 8px rgba(255, 214, 0, 0.8));
+}
+
+.note-text-area {
+    margin-left: 15px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.note-text-area p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #333;
+    font-style: italic;
+}
+
+.note-text-area span {
+    font-size: 0.7rem;
+    color: #94a3b8;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}

@@ -17,7 +17,7 @@ import MoodAnalysis from "./pages/student/MoodAnalysis";
 import StudentChatRoom from "./pages/student/StudentChat";
 
 import ChatDashboard from "./pages/counselor/chatDashboard";
-import Notes from "./pages/counselor/notes";
+import MotivationalNotes from "./pages/counselor/MotivationalNotes";
 import CounselorChatRoom from "./pages/counselor/CounselorChatRoom";
 
 import AdminDashboard from "./pages/admin/AdminDashboard";
@@ -69,7 +69,7 @@ function App() {
           <Route path="/student/chat/:requestId" element={<StudentChatRoom />} />.
 
           <Route path="/counselor/chat-dashboard" element={<ChatDashboard />} />
-          <Route path="/counselor/notes" element={<Notes />} />
+          <Route path="/counselor/notes" element={<MotivationalNotes />} />
           <Route path="/chat/:requestId" element={<CounselorChatRoom />} />
 
           <Route path="/moderator-dashboard" element={<ModeratorDashboard />} />
