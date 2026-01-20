@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 
 function AdminNotificationsPage() {
   const [notifications, setNotifications] = useState([]);
+  const [suspensionDays, setSuspensionDays] = useState(3); // Default 3 days
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +36,14 @@ function AdminNotificationsPage() {
     return () => unsubscribe();
   }, []);
 
+  // Adjust suspension days
+  const adjustDays = (delta) => {
+    const newDays = suspensionDays + delta;
+    if (newDays >= 1 && newDays <= 30) { // Limit between 1-30 days
+      setSuspensionDays(newDays);
+    }
+  };
+
   //suspend student: actually suspend
   const handleSuspend = async (notificationId, studentId) => {
     console.log("Suspend called with:", { notificationId, studentId });
@@ -43,7 +52,8 @@ function AdminNotificationsPage() {
       return;
     }
 
-    if (!window.confirm("Are you sure you want to SUSPEND this student for 3 days?")) return;
+    const daysText = suspensionDays === 1 ? "day" : "days";
+    if (!window.confirm(`Are you sure you want to SUSPEND this student for ${suspensionDays} ${daysText}?`)) return;
 
       try {
         // First, verify the student document exists
@@ -57,7 +67,7 @@ function AdminNotificationsPage() {
         }
 
         const endDate = new Date();
-        endDate.setDate(endDate.getDate() + 3);
+        endDate.setDate(endDate.getDate() + suspensionDays);
 
         await updateDoc(userRef, {
           status: "suspended",
@@ -69,7 +79,8 @@ function AdminNotificationsPage() {
           handled: true
         });
 
-        toast.success("🔴Student has been suspended for 3 days.");
+        const daysTextSuccess = suspensionDays === 1 ? "day" : "days";
+        toast.success(`🔴Student has been suspended for ${suspensionDays} ${daysTextSuccess}.`);
       } catch (error) {
         console.error("Suspend error:", error);
         if (error.code === "not-found") {
@@ -133,11 +144,56 @@ function AdminNotificationsPage() {
 
             {!n.handled && (
               <div className="button-group">
+                <div style={{ marginBottom: "15px", display: "flex", alignItems: "center", gap: "10px", justifyContent: "center" }}>
+                  <label style={{ fontWeight: "500", fontSize: "14px" }}>Suspension Period:</label>
+                  <button
+                    type="button"
+                    onClick={() => adjustDays(-1)}
+                    disabled={suspensionDays <= 1}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "5px",
+                      border: "1px solid #ddd",
+                      backgroundColor: suspensionDays <= 1 ? "#f0f0f0" : "#fff",
+                      cursor: suspensionDays <= 1 ? "not-allowed" : "pointer",
+                      fontSize: "18px",
+                      fontWeight: "bold"
+                    }}
+                  >
+                    −
+                  </button>
+                  <span style={{ 
+                    minWidth: "40px", 
+                    textAlign: "center", 
+                    fontWeight: "bold",
+                    fontSize: "16px"
+                  }}>
+                    {suspensionDays} {suspensionDays === 1 ? "day" : "days"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => adjustDays(1)}
+                    disabled={suspensionDays >= 30}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      borderRadius: "5px",
+                      border: "1px solid #ddd",
+                      backgroundColor: suspensionDays >= 30 ? "#f0f0f0" : "#fff",
+                      cursor: suspensionDays >= 30 ? "not-allowed" : "pointer",
+                      fontSize: "18px",
+                      fontWeight: "bold"
+                    }}
+                  >
+                    +
+                  </button>
+                </div>
                 <button
                   className="btn-suspend"
                   onClick={() => handleSuspend(n.id, n.studentId || n.userId)}
                 >
-                  🔴 Suspend (3 Days)
+                  🔴 Suspend ({suspensionDays} {suspensionDays === 1 ? "Day" : "Days"})
                 </button>
 
                 <button
