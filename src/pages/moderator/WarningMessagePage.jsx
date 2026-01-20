@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase-config";
 import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp, getDoc, setDoc } from "firebase/firestore";
-import "./WarningMessagePage.css"; // 🔹 Import external styles
+import "./WarningMessagePage.css"; 
 import { useNavigate } from "react-router-dom";
-
 
 function WarningMessagePage() {
   const [warnings, setWarnings] = useState([]);
@@ -73,7 +72,7 @@ function WarningMessagePage() {
       // 4️⃣ If count reaches 3 → notify admin & reset
       if (count === 3) {
         await addDoc(collection(db, "adminNotifications"), {
-          userId: selected.authorId,
+          studentId: selected.authorId,
           username: selected.authorName,
           reason: "Student received 3 warnings",
           createdAt: serverTimestamp(),
