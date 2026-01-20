@@ -67,3 +67,37 @@
   text-align: center;
   color: #94a3b8;
 }
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button-group .btn-suspend {
+  background: #dc2626;
+  color: white;
+}
+
+.button-group .btn-suspend:hover {
+  background: #b91c1c;
+}
+
+.button-group .btn-dismiss {
+  background: #6b7280;
+  color: white;
+}
+
+.button-group .btn-dismiss:hover {
+  background: #4b5563;
+}
