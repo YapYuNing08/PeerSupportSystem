@@ -55,6 +55,24 @@ function Login() {
           return;
         }
 
+        //check for suspended students
+        if (userData.status === "suspended") {
+          const today = new Date();
+          const endDate = new Date(userData.suspensionEnd);
+
+          if (today < endDate) {
+            toast.warning(`⚠️ Forum Access Suspended until ${endDate.toLocaleDateString()}`);
+          } else {
+            //suspension expired, auto unban)
+            const { updateDoc, doc } = require ("firebase/firestore");
+            await updateDoc(doc(db, "users", user.uid), {
+              status: "active",
+              waarningCounts: 0
+            });
+            toast.success("✅ Suspension lifted. Full access restored.");
+          }
+        } 
+
         toast.success("Login Successful!");
         // window.location.href = "/home";
         if (userData.role === "student") {

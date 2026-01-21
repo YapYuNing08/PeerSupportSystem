@@ -79,6 +79,16 @@ const PostDetailsPage = () => {
   const handleAddComment = async () => {
     if (!commentText.trim() || !currentUser || !post) return;
 
+    // Check if user is suspended
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists() && userSnap.data().status === "suspended") {
+      const endDate = new Date(userSnap.data().suspensionEnd).toLocaleDateString();
+      alert(`⛔ You cannot comment while suspended until ${endDate}.`);
+      return;
+    }
+
     let authorName = "Anonymous";
     if (!isAnonymous) {
       const userSnap = await getDoc(doc(db, "users", currentUser.uid));
@@ -126,12 +136,22 @@ const PostDetailsPage = () => {
     }
   };
 
-  const handleReport = (type, content, authorId, commentId = null) => {
+  const handleReport = async (type, content, authorId, commentId = null) => {
     if (!currentUser) return alert("Please login");
+
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists() && userSnap.data().status === "suspended") {
+      const endDate = new Date(userSnap.data().suspensionEnd).toLocaleDateString();
+      alert(`⛔ You cannot report content while suspended until ${endDate}.`);
+      return;
+    }
+
     const reason = prompt(`Why are you reporting this ${type}?`);
     if (!reason) return;
 
-    reportContent({
+    await reportContent({
       type,
       content,
       reason,

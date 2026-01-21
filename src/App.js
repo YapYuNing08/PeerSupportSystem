@@ -29,6 +29,7 @@ import CreateForumPage from "./pages/admin/CreateForumPage";
 
 import AdminNotificationsPage from "./pages/admin/AdminNotificationsPage";
 import TechnicalIssuesPage from "./pages/admin/TechnicalIssuesPage";
+import SuspendedStudentsPage from "./pages/admin/SuspendedStudentsPage";
 import JoinForumPage from "./pages/student/JoinForumPage";
 import MyForumsPage from "./pages/student/MyForumsPage";
 import ForumDetailsPage from "./pages/student/ForumDetailsPage";
@@ -80,6 +81,7 @@ function App() {
           <Route path="/moderator/auto-moderation" element={<AutoModerationPage />} />
           <Route path="/admin/create-forum" element={<CreateForumPage />} />
           <Route path="/admin/technical-issues" element={<TechnicalIssuesPage />} />
+          <Route path="/admin/suspended-students" element={<SuspendedStudentsPage />} />
           <Route path="/join-forum" element={<JoinForumPage />} />
           <Route path="/my-forums" element={<MyForumsPage />} />
           <Route path="/forum/:forumId" element={<ForumDetailsPage />} />
