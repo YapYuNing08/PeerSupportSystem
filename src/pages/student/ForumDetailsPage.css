@@ -1,0 +1,230 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+
+.forum-page-wrapper {
+  background-color: #f8fafc;
+  min-height: 100vh;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.forum-page-container {
+  margin-left: 270px; /* 🔹 Sidebar Width */
+  padding: 0 40px 120px 40px;
+  max-width: 1100px;
+  transition: margin-left 0.2s ease;
+}
+
+/* Navigation */
+.forum-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  position: sticky;
+  top: 0;
+  background-color: rgba(248, 250, 252, 0.85);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.back-btn:hover {
+  color: #6366f1;
+}
+
+.back-text {
+  margin-left: 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.nav-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.01em;
+}
+
+.nav-spacer { width: 40px; }
+
+/* Header */
+.forum-header {
+  text-align: left;
+  padding: 30px 0 40px 0;
+}
+
+.forum-title {
+  font-size: 38px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 12px;
+  letter-spacing: -0.04em;
+}
+
+.forum-description {
+  color: #64748b;
+  font-size: 16px;
+  margin-bottom: 24px;
+  max-width: 650px;
+  line-height: 1.6;
+}
+
+.badge-row {
+  display: flex;
+  gap: 12px;
+}
+
+.pill-badge {
+  background-color: #ffffff;
+  border: 1px solid #f1f5f9;
+  color: #64748b;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.pill-badge.active {
+  color: #6366f1;
+  border-color: #e0e7ff;
+}
+
+/* Grid */
+.masonry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 28px;
+}
+
+/* Post Cards */
+.post-card {
+  background-color: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  height: 240px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #f1f5f9;
+}
+
+.post-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.08);
+  border-color: #6366f1;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 12px 0;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+}
+
+.card-content {
+  font-size: 14px;
+  color: #64748b;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #f8fafc;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  color: #FFF;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.user-name {
+  font-size: 13px;
+  color: #475569;
+  font-weight: 700;
+}
+
+.comment-tag {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* FAB */
+.fab-button {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background-color: #6366f1;
+  color: white;
+  border: none;
+  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.35);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fab-button:hover {
+  transform: scale(1.1);
+}
+
+.empty-state {
+  grid-column: 1/-1;
+  text-align: center;
+  padding: 80px;
+  border: 2px dashed #e2e8f0;
+  border-radius: 24px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .forum-page-container {
+    margin-left: 0;
+    padding: 0 20px 100px 20px;
+  }
+  .masonry-grid {
+    grid-template-columns: 1fr;
+  }
+}

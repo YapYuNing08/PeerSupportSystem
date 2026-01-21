@@ -9,12 +9,11 @@ import {
   serverTimestamp
 } from "firebase/firestore";
 import { toast } from "react-toastify";
-import "./AutoModeration.css";
 import { useNavigate } from "react-router-dom";
+import "./AutoModeration.css"; // 🔹 Import your custom style
 
 function AutoModerationPage() {
   const navigate = useNavigate();
-
   const [keyword, setKeyword] = useState("");
   const [keywords, setKeywords] = useState([]);
 
@@ -46,93 +45,58 @@ function AutoModerationPage() {
   };
 
   const handleDelete = async (id) => {
-    await deleteDoc(doc(db, "moderationKeywords", id));
-    toast.success("Keyword removed");
-    fetchKeywords();
+    if (window.confirm("Are you sure you want to remove this keyword?")) {
+      await deleteDoc(doc(db, "moderationKeywords", id));
+      toast.success("Keyword removed");
+      fetchKeywords();
+    }
   };
 
   return (
-    <div className="container py-4">
-
+    <div className="auto-mod-container">
       {/* Page Header */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <div>
-          <h2 className="fw-bold mb-1">Auto Moderation</h2>
-          <p className="text-muted mb-0">
-            Manage banned words and phrases for automatic content filtering
-          </p>
-          <button
-    className="btn btn-outline-secondary mb-3"
-    onClick={() => navigate("/moderator-dashboard")}
-  >
-    ← Back to Moderator Dashboard
-  </button>
-        </div>
+      <div className="mod-header">
+        <h2>Auto Moderation</h2>
+        <p>Manage banned words and phrases for automatic content filtering</p>
+        <button className="btn-back" onClick={() => navigate("/moderator-dashboard")}>
+          ← Back to Moderator Dashboard
+        </button>
       </div>
 
-      
-
-      <div className="row g-4">
-
+      <div className="mod-grid">
         {/* Add Keyword Card */}
-        <div className="col-md-5">
-          <div className="card shadow-sm border-0">
-            <div className="card-body">
-              <h5 className="card-title fw-semibold mb-3 text-primary">
-                ➕ Add New Keyword
-              </h5>
-
-              <input
-                type="text"
-                className="form-control mb-3"
-                placeholder="e.g. spam, abuse, harassment"
-                value={keyword}
-                onChange={(e) => setKeyword(e.target.value)}
-              />
-
-              <button
-                className="btn btn-primary w-100"
-                onClick={handleAddKeyword}
-              >
-                Add Keyword
-              </button>
-            </div>
-          </div>
+        <div className="mod-card">
+          <h5>➕ Add New Keyword</h5>
+          <input
+            type="text"
+            className="mod-input"
+            placeholder="e.g. spam, abuse, harassment"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+          <button className="btn-submit" onClick={handleAddKeyword}>
+            Add Keyword
+          </button>
         </div>
 
         {/* Keyword List Card */}
-        <div className="col-md-7">
-          <div className="card shadow-sm border-0">
-            <div className="card-body">
-              <h5 className="card-title fw-semibold mb-3">
-                🚫 Banned Keywords
-              </h5>
-
-              {keywords.length === 0 ? (
-                <p className="text-muted">No moderation keywords added.</p>
-              ) : (
-                <ul className="list-group list-group-flush">
-                  {keywords.map((item) => (
-                    <li
-                      key={item.id}
-                      className="list-group-item d-flex justify-content-between align-items-center"
-                    >
-                      <span className="fw-medium">{item.keyword}</span>
-
-                      <button
-                        className="btn btn-outline-danger btn-sm"
-                        onClick={() => handleDelete(item.id)}
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </div>
+        <div className="mod-card">
+          <h5>🚫 Banned Keywords</h5>
+          {keywords.length === 0 ? (
+            <p className="empty-text">No moderation keywords added.</p>
+          ) : (
+            <ul className="keyword-list">
+              {keywords.map((item) => (
+                <li key={item.id} className="keyword-item">
+                  <span>{item.keyword}</span>
+                  <button className="btn-delete" onClick={() => handleDelete(item.id)}>
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-
       </div>
     </div>
   );

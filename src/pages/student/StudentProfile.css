@@ -1,0 +1,374 @@
+/* --- Global Variables for Consistency --- */
+:root {
+  --primary-color: #6c5ce7;
+  --primary-light: #a29bfe;
+  --primary-bg: #f8f9fa;
+  --card-bg: #ffffff;
+  --text-dark: #2d3436;
+  --text-muted: #636e72;
+  --danger-color: #d63031;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --radius-lg: 16px;
+  --radius-md: 12px;
+}
+
+/* --- Main Layout Wrapper --- */
+.profile-wrapper {
+  background-color: var(--primary-bg);
+  min-height: 100vh;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* --- Central Container (Responsive) --- */
+.profile-container {
+  width: 100%;
+  max-width: 600px; /* Limits width on desktop for a clean look */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* --- Header Section --- */
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  margin-bottom: 10px;
+}
+
+.header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.header-action {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  transition: color 0.2s ease;
+}
+
+.header-action:hover {
+  color: var(--primary-color);
+}
+
+.header-icon {
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+/* --- Generic Card Styling --- */
+.profile-card {
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* --- Account Card (User Info) --- */
+.account-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-avatar {
+  width: 70px;
+  height: 70px;
+  background-color: var(--primary-light);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.account-details h2 {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  margin: 0 0 5px 0;
+}
+
+.account-details p {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* --- Banner Cards (Motivational & Counseling) --- */
+.banner-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.banner-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-light);
+}
+
+.banner-text {
+  font-weight: 600;
+  color: var(--text-dark);
+  font-size: 1rem;
+}
+
+.banner-icon {
+  font-size: 1.5rem;
+  color: var(--primary-color);
+}
+
+.counseling-banner {
+  background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+}
+
+.counseling-icon {
+  color: #4f46e5;
+}
+
+/* --- Posts Section --- */
+.posts-section {
+  margin-top: 10px;
+}
+
+.section-title {
+  font-size: 1.2rem;
+  color: var(--text-dark);
+  margin-bottom: 15px;
+  padding-left: 5px;
+  border-left: 4px solid var(--primary-color);
+  line-height: 1.2;
+}
+
+.no-posts-text {
+  text-align: center;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 20px;
+}
+
+/* Scroll Container for Posts */
+.posts-scroll-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 400px; /* Prevents page from getting too long */
+  overflow-y: auto;  /* Allows scrolling inside the list */
+  padding: 5px; /* Space for shadow focus */
+}
+
+/* Custom Scrollbar */
+.posts-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+.posts-scroll-container::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+/* Individual Post Card */
+.post-card {
+  background: var(--card-bg);
+  padding: 15px;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.post-card:hover {
+  transform: translateX(5px); /* Slide effect on hover */
+  border-left-color: var(--primary-color);
+  box-shadow: var(--shadow-md);
+}
+
+.post-title-text {
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.post-footer {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* --- Modal Overlay & Content --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px); /* Modern blur effect */
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+  animation: popIn 0.3s ease;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  color: var(--text-dark);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 25px;
+}
+
+.btn-cancel, .btn-confirm-logout {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-cancel {
+  background-color: #e0e0e0;
+  color: var(--text-dark);
+}
+
+.btn-confirm-logout {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+.btn-cancel:hover, .btn-confirm-logout:hover {
+  opacity: 0.8;
+}
+
+/* --- Animations --- */
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 480px) {
+  .profile-wrapper {
+    padding: 10px;
+  }
+  
+  .profile-header {
+    margin-bottom: 20px;
+  }
+  
+  .header-title {
+    font-size: 1.3rem;
+  }
+
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+  
+  .account-details h2 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Badge Container */
+.post-meta-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+/* Base Badge Style */
+.meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge-icon {
+  font-size: 0.8rem;
+}
+
+/* Specific Badge Colors */
+.forum-badge {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.anon-badge {
+  background-color: #374151; /* Dark Grey */
+  color: white;
+}
+
+.public-badge {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+/* Footer Updates */
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  border-top: 1px solid #eee;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #636e72;
+}
+
+.footer-icon {
+  color: var(--primary-color);
+}
+
+.footer-right {
+  font-style: italic;
+  font-size: 0.8rem;
+}

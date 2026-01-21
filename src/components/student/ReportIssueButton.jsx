@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { auth } from "../../firebase-config";
+import { db } from "../../firebase-config";
+import { getDoc, doc } from "firebase/firestore";
 import { reportIssue } from "../../models/TechnicalIssue";
 import { toast } from "react-toastify";
 
@@ -16,6 +18,17 @@ function ReportIssueButton() {
     // Guard Clause: Ensure user is logged in
     if (!auth.currentUser) {
       toast.error("You must be logged in to report an issue.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    // Check if user is suspended
+    const userRef = doc(db, "users", auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists() && userSnap.data().status === "suspended") {
+      const endDate = new Date(userSnap.data().suspensionEnd).toLocaleDateString();
+      toast.error(`⛔ You cannot report issues while suspended until ${endDate}.`);
       setIsSubmitting(false);
       return;
     }

@@ -18,6 +18,17 @@ function Register() {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (role === "student") {
+      const mmuEmailPattern = /^[a-zA-Z0-9._%+-]+@student\.mmu\.edu\.my$/;
+      if (!mmuEmailPattern.test(email)) {
+        toast.error("Students must use an @student.mmu.edu.my email address.", {
+          position: "top-center"
+        });
+        return; // Stop the registration
+      }
+    }
+    
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -117,7 +128,7 @@ function Register() {
             <input
               type="email"
               className="form-control"
-              placeholder="Enter email"
+              placeholder={role === "student" ? "example@student.mmu.edu.my" : "Enter email"}
               onChange={(e) => setEmail(e.target.value)}
               required
             />

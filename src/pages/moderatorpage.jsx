@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase-config";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
+import "./ModeratorDashboard.css"; // 🔹 Import your CSS file
 
 import FlaggedContentCard from "../components/moderator/FlaggedContentCard";
 import WarningMessageCard from "../components/moderator/WarningMessageCard";
@@ -23,23 +24,30 @@ function ModeratorDashboard() {
 
   return (
     <div className="admin-dashboard-container">
+      {/* 🔹 Header Section matched to Admin Style */}
       <div className="admin-main-header">
         <h1>Moderator Dashboard</h1>
-        <button className="btn btn-danger" onClick={handleLogout}>
-          Logout
+        <p>Review forum flags, issue student warnings, and manage AI filters.</p>
+        <button 
+          className="btn-outline-secondary" 
+          style={{ marginTop: '15px', padding: '8px 20px', borderRadius: '6px', cursor: 'pointer', background: 'white' }} 
+          onClick={handleLogout}
+        >
+          Logout Session
         </button>
       </div>
 
+      {/* 🔹 Grid using the Flex Row style */}
       <div className="admin-cards-row">
-        <div onClick={() => navigate("/moderator/flagged")} className="clickable-card">
+        <div onClick={() => navigate("/moderator/flagged")} className="admin-card">
           <FlaggedContentCard />
         </div>
 
-        <div onClick={() => navigate("/moderator/warnings")} className="clickable-card">
+        <div onClick={() => navigate("/moderator/warnings")} className="admin-card">
           <WarningMessageCard />
         </div>
 
-        <div onClick={() => navigate("/moderator/auto-moderation")} className="clickable-card">
+        <div onClick={() => navigate("/moderator/auto-moderation")} className="admin-card">
           <AutoModerationCard />
         </div>
       </div>
