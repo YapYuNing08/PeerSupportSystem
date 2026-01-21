@@ -12,7 +12,7 @@ import {
   getCountFromServer //for counting replies
 } from "firebase/firestore";
 import { toast } from "react-toastify";
-import { FaBell, FaSignOutAlt, FaStickyNote, FaChalkboardTeacher, FaComment, FaUserSecret } from 'react-icons/fa';
+import { FaBell, FaSignOutAlt, FaStickyNote, FaChalkboardTeacher, FaComment, FaUserSecret, FaChevronRight, FaQuoteLeft } from 'react-icons/fa';
 import RequestChat from "../../components/student/RequestChat.jsx"; 
 import "./StudentProfile.css"; 
 import StudentLayout from "../../components/layout/StudentLayout"; 
@@ -25,6 +25,36 @@ const StudentProfile = () => {
   const [showRequestModal, setShowRequestModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+  const [showNotesModal, setShowNotesModal] = useState(false);
+  const [unlockedNotes, setUnlockedNotes] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchUnlockedNotes = async () => {
+  //     const userId = auth.currentUser?.uid;
+  //     if (!userId) return;
+
+  //     // Use the same key used in DailyNoteCard
+  //     const seenNotesKey = `seenNotes_${userId}`;
+  //     const seenIds = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
+
+  //     if (seenIds.length > 0) {
+  //       try {
+  //         const querySnapshot = await getDocs(collection(db, "motivationalNotes"));
+  //         // Filter the full list to only show what the student has already "unlocked"
+  //         const filtered = querySnapshot.docs
+  //           .map(doc => ({ id: doc.id, ...doc.data() }))
+  //           .filter(note => seenIds.includes(note.id));
+          
+  //         setUnlockedNotes(filtered);
+  //       } catch (error) {
+  //         console.error("Error fetching history:", error);
+  //       }
+  //     }
+  //   };
+
+  //   if (!loading) fetchUnlockedNotes();
+  // }, [loading]);
 
   useEffect(() => {
     let isMounted = true; 
@@ -114,6 +144,23 @@ const StudentProfile = () => {
         console.error("❌ Error fetching Posts:", error);
       }
 
+      // --- 3. FETCH UNLOCKED MOTIVATIONAL NOTES ---
+      try {
+        const seenNotesKey = `seenNotes_${currentUser.uid}`;
+        const seenIds = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
+
+        if (seenIds.length > 0) {
+          const notesSnap = await getDocs(collection(db, "motivationalNotes"));
+          const filtered = notesSnap.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(note => seenIds.includes(note.id));
+          
+          if (isMounted) setUnlockedNotes(filtered);
+        }
+      } catch (error) {
+        console.error("❌ Error fetching Notes History:", error);
+      }
+
       if (isMounted) setLoading(false);
     };
 
@@ -175,10 +222,18 @@ const StudentProfile = () => {
           </div>
         </div>
 
-        <div className="profile-card banner-card" style={{ background: '#e8e6f3' }}>
-          <span className="banner-text">Motivational notes</span>
-          <FaStickyNote className="banner-icon note-icon" />
-        </div>
+          {/* Motivational Notes Banner (Clickable) */}
+          <div 
+            className="profile-card banner-card" 
+            style={{ background: '#e8e6f3', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+            onClick={() => setShowNotesModal(true)}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+              <FaStickyNote className="banner-icon note-icon" />
+              <span className="banner-text">My Motivation Notes</span>
+            </div>
+            <FaChevronRight style={{ color: '#6366f1', opacity: 0.5 }} />
+          </div>       
 
         <section className="posts-section">
           <h3 className="section-title">My Posts</h3>
@@ -241,6 +296,34 @@ const StudentProfile = () => {
 
         <ReportIssueButton />
       </div>
+
+      {/* Motivational Notes History Modal */}
+        {showNotesModal && (
+          <div className="modal-overlay">
+            <div className="modal-content history-modal">
+              <div className="modal-header">
+                <h3>Encouragement History</h3>
+                <button className="close-x" onClick={() => setShowNotesModal(false)}>&times;</button>
+              </div>
+              <div className="history-list">
+                {unlockedNotes.length === 0 ? (
+                  <p style={{ textAlign: 'center', color: '#64748b', padding: '20px' }}>No notes unlocked yet. Click the lightbulb in your Tracker daily!</p>
+                ) : (
+                  unlockedNotes.map((note) => (
+                    <div key={note.id} className="history-item">
+                      <FaQuoteLeft className="quote-icon-mini" />
+                      <p>"{note.content}"</p>
+                      <small>— Counselor Encouragement</small>
+                    </div>
+                  ))
+                )}
+              </div>
+              <div className="modal-actions">
+                <button className="btn-confirm-logout" onClick={() => setShowNotesModal(false)}>Close</button>
+              </div>
+            </div>
+          </div>
+        )}
 
       {showRequestModal && (
         <RequestChat 

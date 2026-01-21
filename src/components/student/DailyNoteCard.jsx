@@ -93,8 +93,8 @@ const DailyNoteCard = () => {
         
         {isOpen && (
           <div className="note-text-area">
-            <p>"{dailyNote.content}"</p>
-            <span>— Counselor Encouragement</span>
+            <p className="note-body">"{dailyNote.content}"</p>
+            <span className="note-footer">— Counselor Encouragement</span>
           </div>
         )}
       </div>
