@@ -31,7 +31,7 @@ function CounselorChatRoom() {
     if (!user) return;
 
     const q = query(
-      collection(db, "chatRequests"),
+      collection(db, "counselingSessions"),
       where("status", "in", ["ongoing", "pending-notes"]),
       where("counselorId", "==", user.uid)
     );
@@ -56,7 +56,7 @@ useEffect(() => {
 
     // LISTENER: To detect if student changes status to 'pending-notes'
     if (requestId) {
-      const unsub = onSnapshot(doc(db, "chatRequests", requestId), (docSnap) => {
+      const unsub = onSnapshot(doc(db, "counselingSessions", requestId), (docSnap) => {
         if (docSnap.exists() && docSnap.data().status === "pending-notes") {
           setHasStudentEnded(true);
         } else {
@@ -77,7 +77,7 @@ useEffect(() => {
     // Fetch ALL completed sessions for this student ID
     // This will show notes from Counselor A, Counselor B, etc.
     const q = query(
-      collection(db, "chatRequests"),
+      collection(db, "counselingSessions"),
       where("studentId", "==", selectedRequest.studentId),
       where("status", "==", "completed"),
       orderBy("endedAt", "desc") // Shows newest history first
@@ -101,7 +101,7 @@ useEffect(() => {
   useEffect(() => {
     if (!selectedRequest?.id) return;
 
-    const messagesRef = collection(db, "chatRequests", selectedRequest.id, "messages");
+    const messagesRef = collection(db, "counselingSessions", selectedRequest.id, "messages");
     const q = query(messagesRef, orderBy("createdAt", "asc"));
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -124,7 +124,7 @@ useEffect(() => {
     e.preventDefault();
     if (newMessage.trim() === "" || !selectedRequest) return;
 
-    const messagesRef = collection(db, "chatRequests", selectedRequest.id, "messages");
+    const messagesRef = collection(db, "counselingSessions", selectedRequest.id, "messages");
     await addDoc(messagesRef, {
       text: newMessage,
       createdAt: serverTimestamp(),
@@ -151,7 +151,7 @@ useEffect(() => {
       return;
     }
     try {
-      await updateDoc(doc(db, "chatRequests", selectedRequest.id), {
+      await updateDoc(doc(db, "counselingSessions", selectedRequest.id), {
         sessionNotes: sessionNotes // Only update the notes field
       });
       toast.success("Draft saved!");
@@ -171,7 +171,7 @@ useEffect(() => {
     
     if (isReady) {
       try {
-        await updateDoc(doc(db, "chatRequests", selectedRequest.id), {
+        await updateDoc(doc(db, "counselingSessions", selectedRequest.id), {
           status: "completed",
           sessionNotes: sessionNotes, // Saves the final version
           endedAt: serverTimestamp()

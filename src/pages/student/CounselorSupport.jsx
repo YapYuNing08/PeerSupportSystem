@@ -43,7 +43,7 @@ function CounselorSupport() {
     if (!user) return;
 
     const q = query(
-      collection(db, "chatRequests"),
+      collection(db, "counselingSessions"),
       where("studentId", "==", user.uid),
       where("status", "in", ["waiting", "ongoing"])
     );
@@ -73,7 +73,7 @@ function CounselorSupport() {
   const handleCancel = async () => {
     if (!currentRequestId) return;
     try {
-      const requestRef = doc(db, "chatRequests", currentRequestId);
+      const requestRef = doc(db, "counselingSessions", currentRequestId);
       await updateDoc(requestRef, {
         status: "cancelled",
         cancelledAt: serverTimestamp()
