@@ -7,7 +7,10 @@ import {
   doc,
   orderBy,
   query,
-  getDoc
+  where,
+  getDoc,
+  addDoc,
+  serverTimestamp
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import "./AdminNotificationsPage.css";
@@ -20,16 +23,14 @@ function AdminNotificationsPage() {
 
   useEffect(() => {
     const q = query(
-      collection(db, "adminNotifications"),
+      collection(db, "notifications"),
+      where("targetRole", "==", "admin"),
+      where("type", "==", "warning_threshold"),
       orderBy("createdAt", "desc")
     );
 
-    const unsubscribe = onSnapshot(q, snapshot => {
-      const list = snapshot.docs.map(d => {
-        const data = { id: d.id, ...d.data() };
-        console.log("Admin notification data:", data);
-        return data;
-      });
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
       setNotifications(list);
     });
 
@@ -46,7 +47,6 @@ function AdminNotificationsPage() {
 
   //suspend student: actually suspend
   const handleSuspend = async (notificationId, studentId) => {
-    console.log("Suspend called with:", { notificationId, studentId });
     if (!studentId) {
       toast.error("Error: Student ID is missing.");
       return;
@@ -74,8 +74,19 @@ function AdminNotificationsPage() {
           suspensionEnd: endDate.toISOString()
         });
 
+        //notify student
+        await addDoc(collection(db, "notifications"), {
+          targetRole: "student",
+          userId: studentId,
+          type: "suspend",
+          message: `Your account has been suspended until ${endDate.toLocaleDateString()}.`,
+          createdAt: serverTimestamp(),
+          read: false,
+          meta: { suspensionEnd: endDate.toISOString() }
+        });
+
         //mark notification as handled
-        await updateDoc(doc(db, "adminNotifications", notificationId), {
+        await updateDoc(doc(db, "notifications", notificationId), {
           handled: true
         });
 
@@ -96,7 +107,7 @@ function AdminNotificationsPage() {
     if (!window.confirm("Close this alert without suspending the student?")) return;
 
     try {
-      await updateDoc(doc(db, "adminNotifications", notificationId), {
+      await updateDoc(doc(db, "notifications", notificationId), {
         handled: true
       });
 
@@ -136,7 +147,7 @@ function AdminNotificationsPage() {
 
             <div className="card-body">
               <p><strong>Student Username:</strong> {n.username}</p>
-              <p><strong>Reason:</strong> {n.reason}</p>
+              <p><strong>Reason:</strong> {n.message || "Student received 3 warnings"}</p>
               <p className="timestamp">
                 {n.createdAt?.toDate?.().toLocaleString()}
               </p>

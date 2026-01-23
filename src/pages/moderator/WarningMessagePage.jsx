@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { db } from "../../firebase-config";
+import { db, auth} from "../../firebase-config";
 import { collection, getDocs, addDoc, updateDoc, doc, serverTimestamp, getDoc, setDoc } from "firebase/firestore";
 import "./WarningMessagePage.css"; 
 import { useNavigate } from "react-router-dom";
@@ -17,7 +17,8 @@ function WarningMessagePage() {
   };
 
   const fetchWarnings = async () => {
-    const snapshot = await getDocs(collection(db, "warnings"));
+    const snapshot = await getDocs(collection(db, "warning"));
+
     const list = await Promise.all(
       snapshot.docs.map(async (d) => {
         const data = d.data();
@@ -25,8 +26,10 @@ function WarningMessagePage() {
         return { id: d.id, ...data, authorName };
       })
     );
+
     setWarnings(list);
   };
+
 
   useEffect(() => {
     fetchWarnings();
@@ -37,81 +40,98 @@ function WarningMessagePage() {
     setMessage("");
   };
 
+
   const handleSend = async () => {
     if (!message.trim()) return alert("Message cannot be empty");
     if (!selected) return;
 
+    // forumId required (your rule)
+    if (!selected.forumId) {
+      alert("Error: forumId is missing in this warning.");
+      return;
+    }
+
     try {
-      // 1️⃣ Send warning to student
-      await addDoc(collection(db, "userWarnings"), {
-        userId: selected.authorId,
-        authorName: selected.authorName,
-        type: selected.type,
-        reason: selected.reason,
-        content: selected.contentText || "",
-        moderatorMessage: message,
-        createdAt: serverTimestamp(),
-        read: false,
+      const studentId = selected.authorId;
+      const studentName = selected.authorName;
+
+      // -----------------------------
+      // 1) Create student notification 
+      // -----------------------------
+      await addDoc(collection(db, "notifications"), {
+        targetRole: "student",
+        userId: studentId,
+        type: "warning",
+        authorName: studentName, // you requested authorName
+        message: message,
+        // optional extra info (safe to keep)
+        forumId: selected.forumId,
+        postId: selected.postId || null,
+        commentId: selected.commentId || null,
+        reason: selected.reason || null,
+        content: selected.content || selected.contentText || "",
+        createdAt: serverTimestamp()
       });
 
-      // 2️⃣ Mark warning as sent
-      await updateDoc(doc(db, "warnings", selected.id), {
-        sent: true,
-        sentAt: serverTimestamp()
+      // -----------------------------
+      // 2) Mark warning as sent (status)
+      // -----------------------------
+      await updateDoc(doc(db, "warning", selected.id), {
+        status: "sent",
+        sentAt: serverTimestamp(),
+        sentBy: auth.currentUser?.uid || null
       });
 
-      // 3️⃣ Get current warning count
-      const statRef = doc(db, "userWarningStats", selected.authorId);
-      const statSnap = await getDoc(statRef);
+      // -----------------------------
+      // 3) Update user warningCount in users
+      // -----------------------------
+      const userRef = doc(db, "users", studentId);
+      const userSnap = await getDoc(userRef);
 
-      let count = 1;
-      if (statSnap.exists()) {
-        count = statSnap.data().count + 1;
-      }
+      const currentCount = userSnap.exists()
+        ? (userSnap.data().warningCount ?? 0)
+        : 0;
 
-      // 4️⃣ If count reaches 3 → notify admin & reset
-      if (count === 3) {
-        await addDoc(collection(db, "adminNotifications"), {
-          studentId: selected.authorId,
-          username: selected.authorName,
-          reason: "Student received 3 warnings",
-          createdAt: serverTimestamp(),
+      const newCount = currentCount + 1;
+
+      await updateDoc(userRef, {
+        warningCount: newCount
+      });
+
+      // -----------------------------
+      // 4) If warningCount reaches 3 -> notify admins (multi-admin)
+      // -----------------------------
+      if (newCount === 3) {
+        await addDoc(collection(db, "notifications"), {
+          targetRole: "admin",
+          type: "warning_threshold",
+          studentId: studentId,
+          username: studentName,
+          message: "Student received 3 warnings",
           handled: false,
-        });
-
-        // reset counter
-        await setDoc(statRef, {
-          count: 0,
-          updatedAt: serverTimestamp(),
-        });
-      } else {
-        // normal increment
-        await setDoc(statRef, {
-          count: count,
-          updatedAt: serverTimestamp(),
+          createdAt: serverTimestamp()
         });
       }
 
-      alert("Warning sent successfully");
+      alert("Warning sent successfully!");
       setSelected(null);
       setMessage("");
       fetchWarnings();
-
     } catch (err) {
       console.error(err);
       alert("Failed to send warning.");
     }
   };
 
-
-  const pendingWarnings = warnings.filter(w => !w.sent);
-  const sentWarnings = warnings.filter(w => w.sent);
+  const pendingWarnings = warnings.filter((w) => w.status !== "sent");
+  const sentWarnings = warnings.filter((w) => w.status === "sent");
 
   return (
     <div className="warning-page-container">
       <button className="btn-back" onClick={() => navigate("/moderator-dashboard")}>
           ← Back to Moderator Dashboard
-        </button>
+      </button>
+      
       <h2 className="warning-main-title">⚠️ Warning Queue</h2>
 
       <div className="warning-layout">
@@ -125,7 +145,8 @@ function WarningMessagePage() {
               {pendingWarnings.map(w => (
                 <li key={w.id}>
                   <button className="warning-select-btn" onClick={() => handleSelect(w)}>
-                    <strong>[{w.type || "Unknown"}]</strong> {w.authorName} - {(w.contentText || "").slice(0, 40)}...
+                    <strong>[{w.type || "Unknown"}]</strong> {w.authorName} -{" "}
+                    {((w.content || w.contentText || "").slice(0, 40))}...
                   </button>
                 </li>
               ))}
@@ -157,10 +178,10 @@ function WarningMessagePage() {
             <div className="warning-detail-row"><strong>Reason:</strong> {selected.reason || "No reason"}</div>
             <div className="warning-detail-row">
                 <strong>Flagged Content:</strong> 
-                <p style={{fontStyle: 'italic', color: '#64748b', marginTop: '8px'}}>"{selected.contentText || ""}"</p>
+                <p style={{fontStyle: 'italic', color: '#64748b', marginTop: '8px'}}>"{ selected.content|| selected.contentText || ""}"</p>
             </div>
 
-            {!selected.sent && (
+            {selected.status !== "sent" && (
               <>
                 <textarea
                   className="warning-textarea"

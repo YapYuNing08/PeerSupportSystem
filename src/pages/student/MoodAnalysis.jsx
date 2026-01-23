@@ -25,6 +25,8 @@ const MoodAnalysis = () => {
   const [showIntervention, setShowIntervention] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const INTERVENTION_DISMISSED_KEY = "moodInterventionDismissed";
+
 
 
   // store the user in state so React knows when they are ready
@@ -113,8 +115,15 @@ const MoodAnalysis = () => {
             if (log.mood <= 2) recentNegatives++; // Mood awful(1) or bad(2)
         });
         // 3. trigger if already have enough recent data AND > 50% are negative
-        const isRecentCrisis = recentLogs.length >= 7 && (recentNegatives / recentLogs.length >= 0.5);
-        setShowIntervention(isRecentCrisis);
+        const isRecentCrisis = 
+           recentLogs.length >= 7 && 
+           (recentNegatives / recentLogs.length >= 0.5);
+        
+        if (!isRecentCrisis) {
+           localStorage.removeItem(INTERVENTION_DISMISSED_KEY);
+        }   
+        const dismissed = localStorage.getItem(INTERVENTION_DISMISSED_KEY) === "true";
+        setShowIntervention(isRecentCrisis && !dismissed);
       } catch (error) {
         console.error("Error fetching mood analytics:", error);
       }
@@ -229,7 +238,7 @@ const MoodAnalysis = () => {
             <p>We've noticed you've been having a tough week. Would you like to request a <b>counseling session</b>?</p>
             <div className="bubble-actions">
               <button className="btn-yes" onClick={() => navigate("/student/counselor-support")}>Yes</button>
-              <button className="btn-no" onClick={() => setShowIntervention(false)}>No, I'm fine ~</button>
+              <button className="btn-no" onClick={() => { localStorage.setItem(INTERVENTION_DISMISSED_KEY, "true"); setShowIntervention(false)}}>No, I'm fine ~</button>
             </div>
           </div>
           <div className="sad-avatar">

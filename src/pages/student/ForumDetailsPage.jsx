@@ -53,7 +53,10 @@ const ForumDetailsPage = () => {
     const unsubscribePosts = onSnapshot(postQuery, (snapshot) => {
       const visiblePosts = snapshot.docs
         .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(post => !post.isHidden);
+        .filter(post =>
+          post.status === "active" || post.status === "approved"
+        );
+
 
       setPosts(visiblePosts);
       setLoading(false);
