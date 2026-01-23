@@ -54,11 +54,11 @@ label {
 .form-control {
   height: 45px;
   border-radius: 10px;
-  margin-left: 6px;
+  /* margin-left: 6px; */
   border: 1px solid #ddd;
   transition: all 0.2s ease;
   margin-bottom: 6px;
-  padding-left: 10px;
+  padding-left: 5px;
 }
 
 .form-control:focus {

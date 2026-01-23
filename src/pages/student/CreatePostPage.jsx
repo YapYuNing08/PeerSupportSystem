@@ -65,9 +65,8 @@ const CreatePostPage = () => {
       authorId: currentUser.uid,
       authorName: isAnonymous ? "Anonymous" : username,
       createdAt: serverTimestamp(),
-      isHidden: isHarmful,
-      isFlagged: isHarmful,
-      approved: isHarmful ? null : true
+      status: isHarmful ? "hidden" : "active",
+      reportCount: 0
     });
 
     // 🚩 AUTO REPORT IF HARMFUL

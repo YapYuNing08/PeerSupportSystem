@@ -17,6 +17,7 @@ function AdminDashboard() {
   const [issues, setIssues] = useState([]);
   const [suspendedCount, setSuspendedCount] = useState(0);
   const navigate = useNavigate(); 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -44,13 +45,15 @@ function AdminDashboard() {
     return () => unsubscribe();
   }, []);
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => setShowLogoutConfirm(true);
+
+  const confirmLogout = async () => {
     try {
       await signOut(auth);
       toast.success("Logged out successfully");
       window.location.href = "/login";
     } catch (error) {
-      toast.error("Logout failed");
+      toast.error("Error logging out");
     }
   };
 
@@ -58,7 +61,7 @@ function AdminDashboard() {
     <div className="admin-dashboard-container">
       <div className="admin-main-header">
         <h1>Admin Dashboard</h1>
-        <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
+        <button className="btn btn-danger" onClick={handleLogoutClick}>Logout</button>
       </div>
 
       <div className="admin-cards-row">
@@ -115,6 +118,19 @@ function AdminDashboard() {
             </div>
           </div>
         </div>
+
+      {showLogoutConfirm && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Log Out</h3>
+            <p>Are you sure you want to log out?</p>
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowLogoutConfirm(false)}>Cancel</button>
+              <button className="btn-confirm-logout" onClick={confirmLogout}>Yes, Log Out</button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

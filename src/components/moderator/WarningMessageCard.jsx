@@ -7,8 +7,8 @@ function WarningMessageCard() {
 
   useEffect(() => {
     const q = query(
-      collection(db, "warnings"),
-      where("sent", "==", false)
+      collection(db, "warning"),
+      where("status", "==", "pending")
     );
 
     const unsub = onSnapshot(q, (snap) => {

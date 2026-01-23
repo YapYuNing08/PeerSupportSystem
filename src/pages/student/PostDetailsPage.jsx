@@ -51,11 +51,13 @@ const PostDetailsPage = () => {
 
   /* ================= MODERATION REDIRECT ================= */
   useEffect(() => {
-    if (post?.isHidden) {
-      alert("This post is under moderation.");
+    if (!post) return;
+
+    if (post.status === "hidden" || post.status === "rejected") {
       navigate(`/forum/${post.forumId}`);
     }
   }, [post, navigate]);
+
 
   /* ================= COMMENTS LISTENER ================= */
   useEffect(() => {
@@ -68,7 +70,7 @@ const PostDetailsPage = () => {
     const unsub = onSnapshot(q, (snapshot) => {
       const list = snapshot.docs
         .map(d => ({ id: d.id, ...d.data() }))
-        .filter(c => !c.isHidden);
+        .filter(c => c.status === "active" || c.status === "approved");
       setComments(list);
     });
 
@@ -106,9 +108,8 @@ const PostDetailsPage = () => {
       authorId: currentUser.uid,
       authorName,
       createdAt: serverTimestamp(),
-      isHidden: isHarmful,
-      isFlagged: isHarmful,
-      approved: isHarmful ? null : true
+      status: isHarmful ? "hidden" : "active",
+      reportCount: 0
     });
 
     if (isHarmful) {
