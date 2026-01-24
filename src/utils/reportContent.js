@@ -57,9 +57,9 @@ export async function reportContent({
   });
 
   //ONLY hide when >= 3 reports
-  if (newCount >= 2) {
-    await updateDoc(targetRef, {
-      status:"hidden"
-    });
-  }
+  // if (newCount >= 2) {
+  //   await updateDoc(targetRef, {
+  //     status:"hidden"
+  //   });
+  // }
 }

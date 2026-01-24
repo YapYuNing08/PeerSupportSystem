@@ -15,7 +15,18 @@ function Register() {
   const [role, setRole] = useState("student"); // Default to student
   const [certLink, setCertLink] = useState("");
   const navigate = useNavigate();
+  const [faculty, setFaculty] = useState("");
 
+  const faculties = [
+    "FCI (Computing & Informatics)",
+    "FAIE (Artificial Intelligence & Engineering)",
+    "FCM (Creative Multimedia)",
+    "FOM (Management)",
+    "FAC (Applied Communication)",
+    "FCA (Cinematic Arts)",
+    "FOL (Law)"
+  ];
+  
   const handleRegister = async (e) => {
     e.preventDefault();
 
@@ -38,6 +49,7 @@ function Register() {
         username,
         email,
         role,
+        faculty: role === "student" ? faculty : null,
         status: role === "counselor" ? "pending" : "approved",
         certLink: role === "counselor" ? certLink : null,
         uid: user.uid,
@@ -122,6 +134,23 @@ function Register() {
               onChange={(e) => setUsername(e.target.value)}
             />
           </div>
+
+          {role == "student" && (
+            <div className="form-row mb-3">
+              <label className="form-label-fixed">Faculty</label>
+              <select 
+                className="form-control" 
+                value={faculty} 
+                onChange={(e) => setFaculty(e.target.value)} 
+                required
+              >
+                <option value="">Select your Faculty</option>
+                {faculties.map((f) => (
+                  <option key={f} value={f}>{f}</option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="form-row mb-3">
             <label className="form-label-fixed">Email address</label>

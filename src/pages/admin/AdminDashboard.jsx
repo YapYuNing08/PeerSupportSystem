@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import PendingApprovalCard from "../../components/admin/PendingApprovalcard";
 import CounselorListCard from "../../components/admin/counselorlistcard";
 import ReportCard from "../../components/admin/reportcard";
+import AddModerator from "../../components/admin/addModeratorcard";
 
 import { getOpenIssues } from "../../models/TechnicalIssue";
 import { db } from "../../firebase-config";
@@ -68,6 +69,7 @@ function AdminDashboard() {
         <PendingApprovalCard />
         <CounselorListCard />
         <ReportCard />
+        <AddModerator/>
 
         <div 
           className="admin-card"

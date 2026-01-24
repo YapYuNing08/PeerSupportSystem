@@ -70,7 +70,7 @@ const ForumDetailsPage = () => {
         onSnapshot(commentQuery, (commentSnap) => {
           const visibleComments = commentSnap.docs
             .map(d => ({ id: d.id, ...d.data() }))
-            .filter(c => !c.isHidden);
+            .filter(c => c.status === "active" || c.status === "approved");
 
           setCommentCounts(prev => ({
             ...prev,

@@ -62,12 +62,41 @@ const FlaggedContentPage = () => {
     return { contentText, contentTitle, forumName };
   };
 
-  // Load reports in real-time
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "reports"), async (snapshot) => {
       const list = await Promise.all(
         snapshot.docs.map(async (d) => {
           const data = d.data();
+
+          //  get target reportCount from post/comment
+          let targetReportCount = 0;
+
+          try {
+            if (data.type === "post" && data.postId) {
+              const postSnap = await getDoc(doc(db, "posts", data.postId));
+              if (postSnap.exists()) {
+                targetReportCount = postSnap.data().reportCount || 0;
+              }
+            }
+
+            if (data.type === "comment" && data.commentId) {
+              const commentSnap = await getDoc(doc(db, "comments", data.commentId));
+              if (commentSnap.exists()) {
+                targetReportCount = commentSnap.data().reportCount || 0;
+              }
+            }
+          } catch (err) {
+            console.error("Error fetching target reportCount:", err);
+          }
+
+          // Only allow:
+          // 1) SYSTEM auto-moderation
+          // 2) user reports when reportCount >= 3
+          const shouldShow =
+            data.reporterId === "SYSTEM" || targetReportCount >= 3;
+
+          if (!shouldShow) return null;
+
           const reporterName = await fetchUserName(data.reporterId);
           const authorName = await fetchUserName(data.authorId);
           const contentData = await fetchContentData(data);
@@ -79,12 +108,16 @@ const FlaggedContentPage = () => {
             authorName,
             contentText: contentData.contentText,
             contentTitle: contentData.contentTitle,
-            forumName: contentData.forumName
+            forumName: contentData.forumName,
+            targetReportCount // optional display
           };
         })
       );
 
-      setReports(list);
+      // remove nulls (reports that shouldn't show)
+      const filtered = list.filter(Boolean);
+
+      setReports(filtered);
       setLoading(false);
     });
 
