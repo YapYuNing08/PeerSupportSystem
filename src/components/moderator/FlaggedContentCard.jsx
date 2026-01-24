@@ -7,7 +7,7 @@ function FlaggedContentCard() {
 
   useEffect(() => {
     const unsub = onSnapshot(
-      collection(db, "userReports"),
+      collection(db, "reports"),
       (snap) => {
         setCount(snap.size);
       }

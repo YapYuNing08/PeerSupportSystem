@@ -53,7 +53,10 @@ const ForumDetailsPage = () => {
     const unsubscribePosts = onSnapshot(postQuery, (snapshot) => {
       const visiblePosts = snapshot.docs
         .map(doc => ({ id: doc.id, ...doc.data() }))
-        .filter(post => !post.isHidden);
+        .filter(post =>
+          post.status === "active" || post.status === "approved"
+        );
+
 
       setPosts(visiblePosts);
       setLoading(false);
@@ -92,7 +95,7 @@ const ForumDetailsPage = () => {
               </svg>
               <span className="back-text">Back</span>
             </button>
-            <div className="nav-title">{forum?.name || "Community"}</div>
+            <div className="nav-title">{forum?.name || "Forum"}</div>
             <div className="nav-spacer"></div>
           </nav>
 

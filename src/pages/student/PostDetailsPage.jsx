@@ -51,11 +51,13 @@ const PostDetailsPage = () => {
 
   /* ================= MODERATION REDIRECT ================= */
   useEffect(() => {
-    if (post?.isHidden) {
-      alert("This post is under moderation.");
+    if (!post) return;
+
+    if (post.status === "hidden" || post.status === "rejected") {
       navigate(`/forum/${post.forumId}`);
     }
   }, [post, navigate]);
+
 
   /* ================= COMMENTS LISTENER ================= */
   useEffect(() => {
@@ -68,7 +70,7 @@ const PostDetailsPage = () => {
     const unsub = onSnapshot(q, (snapshot) => {
       const list = snapshot.docs
         .map(d => ({ id: d.id, ...d.data() }))
-        .filter(c => !c.isHidden);
+        .filter(c => c.status === "active" || c.status === "approved");
       setComments(list);
     });
 
@@ -78,6 +80,16 @@ const PostDetailsPage = () => {
   /* ================= ADD COMMENT ================= */
   const handleAddComment = async () => {
     if (!commentText.trim() || !currentUser || !post) return;
+
+    // Check if user is suspended
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists() && userSnap.data().status === "suspended") {
+      const endDate = new Date(userSnap.data().suspensionEnd).toLocaleDateString();
+      alert(`⛔ You cannot comment while suspended until ${endDate}.`);
+      return;
+    }
 
     let authorName = "Anonymous";
     if (!isAnonymous) {
@@ -96,9 +108,8 @@ const PostDetailsPage = () => {
       authorId: currentUser.uid,
       authorName,
       createdAt: serverTimestamp(),
-      isHidden: isHarmful,
-      isFlagged: isHarmful,
-      approved: isHarmful ? null : true
+      status: isHarmful ? "hidden" : "active",
+      reportCount: 0
     });
 
     if (isHarmful) {
@@ -126,12 +137,22 @@ const PostDetailsPage = () => {
     }
   };
 
-  const handleReport = (type, content, authorId, commentId = null) => {
+  const handleReport = async (type, content, authorId, commentId = null) => {
     if (!currentUser) return alert("Please login");
+
+    const userRef = doc(db, "users", currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists() && userSnap.data().status === "suspended") {
+      const endDate = new Date(userSnap.data().suspensionEnd).toLocaleDateString();
+      alert(`⛔ You cannot report content while suspended until ${endDate}.`);
+      return;
+    }
+
     const reason = prompt(`Why are you reporting this ${type}?`);
     if (!reason) return;
 
-    reportContent({
+    await reportContent({
       type,
       content,
       reason,

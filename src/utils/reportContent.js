@@ -28,11 +28,13 @@ export async function reportContent({
   const targetSnap = await getDoc(targetRef);
   if (!targetSnap.exists()) return;
 
-  const currentCount = targetSnap.data().reportCount || 0;
+  const data = targetSnap.data();
+  const status = data.status || "active";
+  const currentCount = data.reportCount || 0;
   const newCount = currentCount + 1;
 
   //Always save the report
-  await addDoc(collection(db, "userReports"), {
+  await addDoc(collection(db, "reports"), {
     type,
     content,
     reason,
@@ -42,8 +44,12 @@ export async function reportContent({
     forumId: forumId || null,
     commentId: commentId || null,
     createdAt: serverTimestamp(),
-    reportNumber: newCount
+    reportCount: newCount
   });
+
+  if (status === "approved" || status === "rejected") {
+    return;
+  }
 
   //Update report count
   await updateDoc(targetRef, {
@@ -53,9 +59,7 @@ export async function reportContent({
   //ONLY hide when >= 3 reports
   if (newCount >= 2) {
     await updateDoc(targetRef, {
-      isHidden: true,
-      isFlagged: true,
-      approved: null
+      status:"hidden"
     });
   }
 }

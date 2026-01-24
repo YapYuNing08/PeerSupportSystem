@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase-config";
 import { signOut } from "firebase/auth";
@@ -11,8 +11,11 @@ import AutoModerationCard from "../components/moderator/AutoModerationCard";
 
 function ModeratorDashboard() {
   const navigate = useNavigate();
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
-  const handleLogout = async () => {
+  const handleLogoutClick = () => setShowLogoutConfirm(true);
+
+  const confirmLogout = async () => {
     try {
       await signOut(auth);
       toast.success("Logged out successfully");
@@ -27,11 +30,11 @@ function ModeratorDashboard() {
       {/* 🔹 Header Section matched to Admin Style */}
       <div className="admin-main-header">
         <h1>Moderator Dashboard</h1>
-        <p>Review community flags, issue student warnings, and manage AI filters.</p>
+        <p>Review forum flags, issue student warnings, and manage AI filters.</p>
         <button 
           className="btn-outline-secondary" 
           style={{ marginTop: '15px', padding: '8px 20px', borderRadius: '6px', cursor: 'pointer', background: 'white' }} 
-          onClick={handleLogout}
+          onClick={handleLogoutClick}
         >
           Logout Session
         </button>
@@ -51,6 +54,19 @@ function ModeratorDashboard() {
           <AutoModerationCard />
         </div>
       </div>
+
+      {showLogoutConfirm && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Log Out</h3>
+            <p>Are you sure you want to log out?</p>
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowLogoutConfirm(false)}>Cancel</button>
+              <button className="btn-confirm-logout" onClick={confirmLogout}>Yes, Log Out</button>
+            </div>
+          </div>
+        </div>
+      )} 
     </div>
   );
 }

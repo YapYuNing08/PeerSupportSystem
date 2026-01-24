@@ -22,7 +22,7 @@ function RequestChat({ onClose, onSuccess, currentUsername }) {
       const user = auth.currentUser;
       if (!user) return toast.error("User not authenticated.");
 
-      await addDoc(collection(db, "chatRequests"), {
+      await addDoc(collection(db, "counselingSessions"), {
         studentId: user.uid,
         // Use the prop passed from CounselorSupport
         studentName: currentUsername || "Anonymous Student", 

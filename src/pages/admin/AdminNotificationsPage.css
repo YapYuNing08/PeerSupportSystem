@@ -1,0 +1,103 @@
+.admin-page-wrapper {
+  max-width: 900px;
+  margin: auto;
+  padding: 40px;
+}
+
+.admin-title {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.admin-subtitle {
+  color: #64748b;
+  margin-bottom: 30px;
+}
+
+.admin-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+.admin-card.handled {
+  opacity: 0.6;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.badge {
+  background: #dc2626;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.card-body p {
+  margin: 6px 0;
+}
+
+.timestamp {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.handle-btn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+}
+
+.handle-btn:hover {
+  background: #1e40af;
+}
+
+.empty-state {
+  text-align: center;
+  color: #94a3b8;
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.button-group button {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.button-group .btn-suspend {
+  background: #dc2626;
+  color: white;
+}
+
+.button-group .btn-suspend:hover {
+  background: #b91c1c;
+}
+
+.button-group .btn-dismiss {
+  background: #6b7280;
+  color: white;
+}
+
+.button-group .btn-dismiss:hover {
+  background: #4b5563;
+}

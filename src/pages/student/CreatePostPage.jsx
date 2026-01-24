@@ -8,6 +8,7 @@ import {
   doc,
   getDoc
 } from "firebase/firestore";
+import { toast } from "react-toastify";
 import StudentLayout from "../../components/layout/StudentLayout"; 
 import { checkAutoModeration } from "../../utils/checkAutoModeration";
 import { reportContent } from "../../utils/reportContent";
@@ -34,8 +35,20 @@ const CreatePostPage = () => {
     fetchUsername();
   }, []);
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     if (!title.trim() || !content.trim()) return;
+
+    //check if user is suspendded
+    const userRef = doc(db, "users", auth.currentUser.uid);
+    const userSnap = await getDoc(userRef);
+
+    if (userSnap.exists() && userSnap.data().status === "suspended") {
+      const endDate = new Date(userSnap.data().suspensionEnd).toLocaleDateString();
+      toast.error(`⛔ You are suspended from posting until ${endDate}.`);
+      return;
+    }
 
     const currentUser = auth.currentUser;
     if (!currentUser) return;
@@ -52,9 +65,8 @@ const CreatePostPage = () => {
       authorId: currentUser.uid,
       authorName: isAnonymous ? "Anonymous" : username,
       createdAt: serverTimestamp(),
-      isHidden: isHarmful,
-      isFlagged: isHarmful,
-      approved: isHarmful ? null : true
+      status: isHarmful ? "hidden" : "active",
+      reportCount: 0
     });
 
     // 🚩 AUTO REPORT IF HARMFUL
@@ -68,6 +80,9 @@ const CreatePostPage = () => {
         postId: postRef.id,
         forumId
       });
+      toast.warning("⚠️ Your post has been flagged for review by moderators.");
+    } else {
+      toast.success("✅ Post created successfully!");
     }
 
     navigate(`/forum/${forumId}`);
@@ -101,7 +116,7 @@ const CreatePostPage = () => {
       {/* 🔹 Header */}
       <div className="header">
         <h1 className="title-text">Create Post</h1>
-        <p className="subtitle">Share your thoughts with the community</p>
+        <p className="subtitle">Share your thoughts with the forum</p>
       </div>
 
       {/* 🔹 Form */}

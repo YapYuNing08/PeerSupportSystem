@@ -64,7 +64,7 @@ const FlaggedContentPage = () => {
 
   // Load reports in real-time
   useEffect(() => {
-    const unsub = onSnapshot(collection(db, "userReports"), async (snapshot) => {
+    const unsub = onSnapshot(collection(db, "reports"), async (snapshot) => {
       const list = await Promise.all(
         snapshot.docs.map(async (d) => {
           const data = d.data();
@@ -102,15 +102,13 @@ const FlaggedContentPage = () => {
         : doc(db, "comments", report.commentId);
 
       await updateDoc(ref, {
-        isHidden: false,
-        approved: true,
-        isFlagged: false,
+        status: "approved",
         reportCount: 0 // 🔥 reset count
       });
 
       // 2️⃣ Delete ALL reports for this content
       const q = query(
-        collection(db, "userReports"),
+        collection(db, "reports"),
         where("type", "==", report.type),
         report.type === "post"
           ? where("postId", "==", report.postId)
@@ -126,45 +124,74 @@ const FlaggedContentPage = () => {
     }
   };
 
+const handleReject = async (report) => {
+  if (!window.confirm("Reject this content and move it to warning queue?")) return;
 
-  // Reject content → create warning + navigate to warning page
-  const handleReject = async (report) => {
-    if (!window.confirm("Reject this content and move it to warning queue?")) return;
+  try {
+    // 0) Update the content status (works even if your UI still uses isHidden)
+    const ref = report.type === "post"
+      ? doc(db, "posts", report.postId)
+      : doc(db, "comments", report.commentId);
 
-    try {
-      // 1️⃣ Create ONE warning
-      await addDoc(collection(db, "warnings"), {
-        type: report.type,
-        reason: report.reason,
-        contentText: report.contentText,
-        authorId: report.authorId,
-        postId: report.postId || null,
-        commentId: report.commentId || null,
-        forumId: report.forumId || null,
-        createdAt: serverTimestamp(),
-        sent: false
-      });
+    await updateDoc(ref, {
+      status: "rejected",
+    });
 
-      // 2️⃣ Delete ALL reports for this content
-      const q = query(
-        collection(db, "userReports"),
-        where("type", "==", report.type),
-        report.type === "post"
-          ? where("postId", "==", report.postId)
-          : where("commentId", "==", report.commentId)
-      );
+    // 1) Ensure forumId exists (required)
+    let forumId = report.forumId;
 
-      const snap = await getDocs(q);
-      await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+    if (!forumId) {
+      if (report.type === "post" && report.postId) {
+        const postSnap = await getDoc(doc(db, "posts", report.postId));
+        forumId = postSnap.exists() ? postSnap.data().forumId : null;
+      }
 
-      alert("Content rejected and all reports resolved.");
-    } catch (err) {
-      console.error(err);
-      alert("Failed to reject content.");
+      if (report.type === "comment" && report.commentId) {
+        const commentSnap = await getDoc(doc(db, "comments", report.commentId));
+        if (commentSnap.exists()) {
+          const postSnap = await getDoc(doc(db, "posts", commentSnap.data().postId));
+          forumId = postSnap.exists() ? postSnap.data().forumId : null;
+        }
+      }
     }
-  };
 
+    if (!forumId) {
+      alert("Error: forumId could not be determined.");
+      return;
+    }
 
+    // 2A) OLD warning (keep your current system)
+    await addDoc(collection(db, "warning"), {
+      type: report.type,
+      reason: report.reason,
+      contentText: report.contentText,
+      authorId: report.authorId,
+      postId: report.postId || null,
+      commentId: report.commentId || null,
+      forumId: forumId,
+      status: "pending",
+      createdAt: serverTimestamp(),
+      // sent: false
+    });
+
+    // 3) Delete ALL reports (keep your behavior)
+    const q = query(
+      collection(db, "reports"),
+      where("type", "==", report.type),
+      report.type === "post"
+        ? where("postId", "==", report.postId)
+        : where("commentId", "==", report.commentId)
+    );
+
+    const snap = await getDocs(q);
+    await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+
+    alert("Content rejected and moved to warning queue.");
+  } catch (err) {
+    console.error(err);
+    alert("Failed to reject content.");
+  }
+};
 
   return (
     <div className="page-wrapper">

@@ -6,6 +6,7 @@ import {
 import "./MoodTracker.css"; 
 import MyForumsCard from "../../components/student/MyForumsCard";
 import StudentLayout from "../../components/layout/StudentLayout";
+import DailyNoteCard from "../../components/student/DailyNoteCard";
 
 const MoodTracker = () => {
   const [view, setView] = useState("calendar"); 
@@ -241,7 +242,8 @@ const MoodTracker = () => {
     <div className="screen-container">
 
       {/* QUICK ACCESS CARD */}
-      <MyForumsCard />
+      {/* <MyForumsCard /> */}
+      <DailyNoteCard />
 
       <header className="calendar-header">
         <button className="nav-btn" onClick={() => changeMonth(-1)}>←</button>

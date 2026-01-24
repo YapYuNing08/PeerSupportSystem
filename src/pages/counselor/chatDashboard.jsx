@@ -18,7 +18,7 @@ function ChatDashboard() {
 // 1. Listen for Waiting Requests
   useEffect(() => {
     const q = query(
-      collection(db, "chatRequests"), 
+      collection(db, "counselingSessions"), 
       where("status", "==", "waiting"),
       orderBy("priority", "desc"),
       orderBy("createdAt", "asc")
@@ -32,8 +32,8 @@ function ChatDashboard() {
   useEffect(() => {
     if (!auth.currentUser) return;
     const q = query(
-      collection(db, "chatRequests"),
-      where("status", "==", "ongoing"),
+      collection(db, "counselingSessions"),
+      where("status", "in", ["ongoing", "pending-notes"]),
       where("counselorId", "==", auth.currentUser.uid)
     );
     return onSnapshot(q, (snapshot) => {
@@ -47,7 +47,7 @@ function ChatDashboard() {
   useEffect(() => {
     if (!auth.currentUser) return;
     const q = query(
-      collection(db, "chatRequests"),
+      collection(db, "counselingSessions"),
       where("status", "==", "completed"), // or "resolved"
       where("counselorId", "==", auth.currentUser.uid)
     );
@@ -59,7 +59,7 @@ function ChatDashboard() {
 
   const handleAccept = async (requestId) => {
     try {
-      const requestRef = doc(db, "chatRequests", requestId);
+      const requestRef = doc(db, "counselingSessions", requestId);
       await updateDoc(requestRef, {
         status: "ongoing",
         counselorId: auth.currentUser.uid,

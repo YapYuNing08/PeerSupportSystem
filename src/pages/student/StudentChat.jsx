@@ -27,7 +27,7 @@ function StudentChatRoom() {
   useEffect(() => {
     if (!requestId) return;
 
-    const requestRef = doc(db, "chatRequests", requestId);
+    const requestRef = doc(db, "counselingSessions", requestId);
     const unsubscribeStatus = onSnapshot(requestRef, (docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data();
@@ -36,7 +36,7 @@ function StudentChatRoom() {
         // If counselor ends the chat, redirect student
         if (data.status === "completed") {
           toast.info("The counseling session has ended.");
-          navigate("/studenr-page");
+          navigate("/student-page");
         }
       }
     });
@@ -48,7 +48,7 @@ function StudentChatRoom() {
   useEffect(() => {
     if (!requestId) return;
 
-    const messagesRef = collection(db, "chatRequests", requestId, "messages");
+    const messagesRef = collection(db, "counselingSessions", requestId, "messages");
     const q = query(messagesRef, orderBy("createdAt", "asc"));
 
     const unsubscribeMessages = onSnapshot(q, (snapshot) => {
@@ -69,7 +69,7 @@ function StudentChatRoom() {
     if (!newMessage.trim()) return;
 
     try {
-      const messagesRef = collection(db, "chatRequests", requestId, "messages");
+      const messagesRef = collection(db, "counselingSessions", requestId, "messages");
       await addDoc(messagesRef, {
         text: newMessage,
         createdAt: serverTimestamp(),
@@ -88,11 +88,11 @@ function StudentChatRoom() {
     
     if (confirmEnd) {
       try {
-        const requestRef = doc(db, "chatRequests", requestId);
+        const requestRef = doc(db, "counselingSessions", requestId);
         
         // Update the status to 'completed'
         await updateDoc(requestRef, {
-          status: "completed",
+          status: "pending-notes",
           endedAt: serverTimestamp(),
           endedBy: "student" // Optional: track who ended the session
         });

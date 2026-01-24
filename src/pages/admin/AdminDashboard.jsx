@@ -9,11 +9,15 @@ import CounselorListCard from "../../components/admin/counselorlistcard";
 import ReportCard from "../../components/admin/reportcard";
 
 import { getOpenIssues } from "../../models/TechnicalIssue";
+import { db } from "../../firebase-config";
+import { collection, query, where, onSnapshot } from "firebase/firestore";
 import "./AdminDashboard.css";
 
 function AdminDashboard() {
   const [issues, setIssues] = useState([]);
+  const [suspendedCount, setSuspendedCount] = useState(0);
   const navigate = useNavigate(); 
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -27,13 +31,29 @@ function AdminDashboard() {
     fetchIssues();
   }, []);
 
-  const handleLogout = async () => {
+  useEffect(() => {
+    // Listen for suspended students count
+    const q = query(
+      collection(db, "users"),
+      where("status", "==", "suspended")
+    );
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setSuspendedCount(snapshot.size);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogoutClick = () => setShowLogoutConfirm(true);
+
+  const confirmLogout = async () => {
     try {
       await signOut(auth);
       toast.success("Logged out successfully");
       window.location.href = "/login";
     } catch (error) {
-      toast.error("Logout failed");
+      toast.error("Error logging out");
     }
   };
 
@@ -41,7 +61,7 @@ function AdminDashboard() {
     <div className="admin-dashboard-container">
       <div className="admin-main-header">
         <h1>Admin Dashboard</h1>
-        <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
+        <button className="btn btn-danger" onClick={handleLogoutClick}>Logout</button>
       </div>
 
       <div className="admin-cards-row">
@@ -73,7 +93,44 @@ function AdminDashboard() {
             <p>CREATE FORUM</p>
           </div>
         </div>
-      </div>
+      
+        <div
+            className="admin-card"
+            onClick={() => navigate("/admin/notifications")}
+            style={{ cursor: "pointer" }}
+          >
+            <div className="card-icon">🚨</div>
+            <div className="card-info text-center">
+              <h3>!</h3>
+              <p>ALERT</p>
+            </div>
+          </div>
+
+        <div
+            className="admin-card"
+            onClick={() => navigate("/admin/suspended-students")}
+            style={{ cursor: "pointer" }}
+          >
+            <div className="card-icon">🔴</div>
+            <div className="card-info text-center">
+              <h3>{suspendedCount}</h3>
+              <p>SUSPENDED STUDENTS</p>
+            </div>
+          </div>
+        </div>
+
+      {showLogoutConfirm && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Log Out</h3>
+            <p>Are you sure you want to log out?</p>
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowLogoutConfirm(false)}>Cancel</button>
+              <button className="btn-confirm-logout" onClick={confirmLogout}>Yes, Log Out</button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

@@ -86,7 +86,7 @@ const MyForumsPage = () => {
           {/* Guidelines Dropdown Area */}
           {showRules && (
             <div className="guidelines-dropdown">
-              <h3>Community Standards</h3>
+              <h3>Forum Standards</h3>
               <ul className="guidelines-grid">
                 <li>✅ Respectful & constructive</li>
                 <li>✅ Helpful discussions only</li>
@@ -109,8 +109,8 @@ const MyForumsPage = () => {
               <p className="status-text">Loading your forums...</p>
             ) : forums.length === 0 ? (
               <div className="empty-state">
-                <p style={{ fontWeight: 700, fontSize: '18px', marginBottom: '8px' }}>No communities yet</p>
-                <span style={{ color: '#94a3b8' }}>Use a forum code to join your first community!</span>
+                <p style={{ fontWeight: 700, fontSize: '18px', marginBottom: '8px' }}>No forums yet</p>
+                <span style={{ color: '#94a3b8' }}>Use a forum code to join your first forum!</span>
               </div>
             ) : (
               forums.map((forum) => (
