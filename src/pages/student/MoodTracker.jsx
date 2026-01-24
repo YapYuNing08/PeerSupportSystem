@@ -4,7 +4,6 @@ import {
   collection, query, where, doc, setDoc, addDoc, serverTimestamp, onSnapshot 
 } from "firebase/firestore";
 import "./MoodTracker.css"; 
-import MyForumsCard from "../../components/student/MyForumsCard";
 import StudentLayout from "../../components/layout/StudentLayout";
 import DailyNoteCard from "../../components/student/DailyNoteCard";
 
@@ -242,7 +241,6 @@ const MoodTracker = () => {
     <div className="screen-container">
 
       {/* QUICK ACCESS CARD */}
-      {/* <MyForumsCard /> */}
       <DailyNoteCard />
 
       <header className="calendar-header">

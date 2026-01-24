@@ -9,6 +9,7 @@ import RequestChat from "../../components/student/RequestChat";
 import { useNavigate } from "react-router-dom"; // For navigation
 import { toast } from "react-toastify";
 import "./counselorsupport.css";
+import StudentLayout from "../../components/layout/StudentLayout"; 
 
 function CounselorSupport() {
   const [showIntakeForm, setShowIntakeForm] = useState(false);
@@ -85,6 +86,7 @@ function CounselorSupport() {
   };
 
   return (
+    <StudentLayout>
     <div className="counselor-support-page">
       <header className="support-header">
         <h1>Counselor Support</h1>
@@ -144,6 +146,7 @@ function CounselorSupport() {
         )}
       </main>
     </div>
+    </StudentLayout>
   );
 }
 

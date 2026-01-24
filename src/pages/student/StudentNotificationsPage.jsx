@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { db, auth } from "../../firebase-config";
 import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
 import "./StudentNotificationsPage.css"; 
+import StudentLayout from "../../components/layout/StudentLayout"; 
 
 function StudentNotificationsPage() {
   const [notifications, setNotifications] = useState([]);
@@ -38,6 +39,7 @@ function StudentNotificationsPage() {
   };
 
   return (
+    <StudentLayout>
     <div className="page-wrapper">
       <div className="header">
         <h2 className="title">📢 Notifications</h2>
@@ -97,6 +99,7 @@ function StudentNotificationsPage() {
         )}
       </div>
     </div>
+    </StudentLayout>
   );
 }
 

@@ -54,7 +54,7 @@ function ReportIssueButton() {
         className="btn btn-warning shadow"
         style={{
           position: "fixed",
-          bottom: "20px",
+          bottom: "75px",
           right: "20px",
           zIndex: 1000,
           borderRadius: "50px",

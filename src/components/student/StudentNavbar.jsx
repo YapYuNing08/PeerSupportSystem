@@ -27,9 +27,6 @@ function StudentNavbar({ handleLogout }) {
         <li className={location.pathname === "/profile" ? "active" : ""}>
           <Link to="/profile">👤 Profile</Link>
         </li>
-        <li className={location.pathname === "/notifications" ? "active" : ""}>
-          <Link to="/student/notifications">👤 Noti</Link>
-        </li>
       </ul>
     </nav>
   );

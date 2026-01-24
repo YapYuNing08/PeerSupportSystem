@@ -164,6 +164,16 @@ const MoodAnalysis = () => {
       <div className="card chart-card">
         <h3>Mood Flow</h3>
         <div className="chart-wrapper">
+          
+          {/* y-axis  */}
+          <div className="chart-legend-y">
+            {[5, 4, 3, 2, 1].map(level => (
+              <div key={level} className="legend-item">
+                <span className="dot" style={{ backgroundColor: moodConfig[level].color }}/>
+              </div>
+            ))}
+          </div>
+
           {/* calculate month and days */}
           {(() => {
             const totalDays = getDaysInMonth(currentDate);
@@ -204,14 +214,7 @@ const MoodAnalysis = () => {
             );
           })()}
           
-          {/* y-axis  */}
-          <div className="chart-legend-y">
-            {[5, 4, 3, 2, 1].map(level => (
-              <div key={level} className="legend-item">
-                <span className="dot" style={{ backgroundColor: moodConfig[level].color }}/>
-              </div>
-            ))}
-          </div>
+          
 
         </div>
       </div>
