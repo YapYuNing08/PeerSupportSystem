@@ -18,9 +18,9 @@ function CounselorNavbar({ handleLogout }) {
         <li className={location.pathname === "/notes" ? "active" : ""}>
           <Link to="/counselor/notes">✨ Notes</Link>
         </li>
-        <li className={location.pathname === "/profile" ? "active" : ""}>
+        {/* <li className={location.pathname === "/profile" ? "active" : ""}>
           <Link to="/profile">👤 Profile</Link>
-        </li>
+        </li> */}
       </ul>
 
       <div className="nav-footer">
