@@ -29,32 +29,6 @@ const StudentProfile = () => {
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [unlockedNotes, setUnlockedNotes] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchUnlockedNotes = async () => {
-  //     const userId = auth.currentUser?.uid;
-  //     if (!userId) return;
-
-  //     // Use the same key used in DailyNoteCard
-  //     const seenNotesKey = `seenNotes_${userId}`;
-  //     const seenIds = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
-
-  //     if (seenIds.length > 0) {
-  //       try {
-  //         const querySnapshot = await getDocs(collection(db, "motivationalNotes"));
-  //         // Filter the full list to only show what the student has already "unlocked"
-  //         const filtered = querySnapshot.docs
-  //           .map(doc => ({ id: doc.id, ...doc.data() }))
-  //           .filter(note => seenIds.includes(note.id));
-          
-  //         setUnlockedNotes(filtered);
-  //       } catch (error) {
-  //         console.error("Error fetching history:", error);
-  //       }
-  //     }
-  //   };
-
-  //   if (!loading) fetchUnlockedNotes();
-  // }, [loading]);
 
   useEffect(() => {
     let isMounted = true; 
@@ -201,7 +175,11 @@ const StudentProfile = () => {
       <div className="profile-container">
         
         <header className="profile-header">
-          <div className="header-action">
+          <div 
+            className="header-action" 
+            onClick={() => navigate("/student/notifications")}
+            style={{ cursor: "pointer" }}
+          >
             <FaBell className="header-icon" />
             <span>Notification</span>
           </div>
