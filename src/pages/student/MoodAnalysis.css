@@ -1,5 +1,6 @@
 /* --- Variables & General Layout --- */
 :root {
+  --sidebar-offset: 270px;
   --primary-color: #6366f1; /* Indigo matching your sidebar usually */
   --text-dark: #334155;
   --text-gray: #64748b;
@@ -13,12 +14,17 @@
 }
 
 .analysis-container {
+  /* This pushes the content to the right of the nav bar on desktop */
+  margin-left: var(--sidebar-offset); 
   padding: 2rem;
   max-width: 1200px;
-  margin: 0 auto;
+  /* margin-right is optional but helps center content on large screens */
+  margin-right: auto; 
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   color: var(--text-dark);
   animation: fadeIn 0.5s ease-in-out;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 @keyframes fadeIn {
@@ -283,16 +289,20 @@
     flex-direction: row; /* Keep row but adjust sizes if needed */
   }
   
-  .analysis-container {
+ .analysis-container {
+    /* Reset margin because the nav moves to the bottom on mobile */
+    margin-left: 0; 
     padding: 1rem;
+    /* Extra padding at the bottom so content isn't hidden by the bottom bar */
+    padding-bottom: 80px; 
   }
 
-  .intervention-wrapper {
+.intervention-wrapper {
     left: 20px;
     right: 20px;
-    bottom: 20px;
+    bottom: 90px; /* Pushes it above the mobile bottom nav */
   }
-  
+
   .speech-bubble {
     width: 100%;
     max-width: none;

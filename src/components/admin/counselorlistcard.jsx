@@ -6,7 +6,8 @@ function CounselorListCard() {
       <div className="card-icon"></div>
       <div className="card-info text-center">
         <h3>-</h3>
-        <p>Counselor List</p>
+        <p>Counselor &</p>
+        <p>Moderator List</p>
       </div>
     </div>
   );
