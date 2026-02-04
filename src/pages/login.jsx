@@ -4,12 +4,16 @@ import { auth, db } from "../firebase-config";
 import { doc, getDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import "./auth.css";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 function Login() {
   const [isStaffMode, setIsStaffMode] = useState(false);
   const [emailOrId, setEmailOrId] = useState("");
   const [password, setPassword] = useState("");
   const [selectedRole, setSelectedRole] = useState("student");
+  const [showPassword, setShowPassword] = useState(false);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -158,14 +162,25 @@ function Login() {
 
           <div className="form-row mb-3">
             <label className="form-label-fixed">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+
+            <div className="password-wrap">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                placeholder="Enter password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="btn-toggle-pass"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
 
           <div className="d-grid">

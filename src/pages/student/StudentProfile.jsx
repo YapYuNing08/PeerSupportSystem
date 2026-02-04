@@ -280,7 +280,6 @@ const StudentProfile = () => {
             <div className="modal-content history-modal">
               <div className="modal-header">
                 <h3>Encouragement History</h3>
-                <button className="close-x" onClick={() => setShowNotesModal(false)}>&times;</button>
               </div>
               <div className="history-list">
                 {unlockedNotes.length === 0 ? (
@@ -288,7 +287,7 @@ const StudentProfile = () => {
                 ) : (
                   unlockedNotes.map((note) => (
                     <div key={note.id} className="history-item">
-                      <FaQuoteLeft className="quote-icon-mini" />
+                      {/* <FaQuoteLeft className="quote-icon-mini" /> */}
                       <p>"{note.content}"</p>
                       <small>— Counselor Encouragement</small>
                     </div>

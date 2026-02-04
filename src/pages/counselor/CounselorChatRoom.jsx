@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { db, auth } from "../../firebase-config";
 import { 
   collection, query, where, onSnapshot, orderBy, 
-  addDoc, serverTimestamp, doc, updateDoc 
+  addDoc, serverTimestamp, doc, updateDoc, getDoc
 } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom"; 
 import { toast } from "react-toastify";
@@ -122,17 +122,31 @@ useEffect(() => {
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (newMessage.trim() === "" || !selectedRequest) return;
+    if (!newMessage.trim() || !selectedRequest) return;
 
-    const messagesRef = collection(db, "counselingSessions", selectedRequest.id, "messages");
-    await addDoc(messagesRef, {
-      text: newMessage,
-      createdAt: serverTimestamp(),
-      senderId: auth.currentUser.uid,
-      senderName: "Counselor",
-    });
-    setNewMessage("");
+    try {
+      // 1) Get counselor FULL name from users collection
+      const userRef = doc(db, "users", auth.currentUser.uid);
+      const userSnap = await getDoc(userRef);
+      const fullName = userSnap.exists() ? userSnap.data().name : "Counselor";
+
+      // 2) Add message
+      const messagesRef = collection(db, "counselingSessions", selectedRequest.id, "messages");
+
+      await addDoc(messagesRef, {
+        text: newMessage.trim(),
+        createdAt: serverTimestamp(),
+        senderId: auth.currentUser.uid,
+        senderName: fullName, //
+      });
+
+      setNewMessage("");
+    } catch (error) {
+      console.error("Counselor send message error:", error);
+      toast.error("Message failed to send.");
+    }
   };
+
 
   // Navigate when clicking a sidebar item
   const handleSelectStudent = (id) => {
@@ -186,12 +200,29 @@ useEffect(() => {
     }
   }
 
+  const formatTime = (ts) => {
+    if (!ts) return ""; // while waiting serverTimestamp
+    const date = ts.toDate ? ts.toDate() : new Date(ts);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  const formatDate = (ts) => {
+    if (!ts) return "";
+    const d = ts.toDate();
+    return d.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  };
+
+
   return (
     <div className="chat-dashboard-wrapper">
       <aside className="chat-sidebar">
         <div className="sidebar-header">
           <h3>Chat Room</h3>
-          <button className="btn-back" onClick={() => navigate("/counselor/chat-dashboard")}>Dashboard</button>
+          <button className="btn-dashboard" onClick={() => navigate("/counselor/chat-dashboard")}>Dashboard</button>
         </div>
         <div className="student-list">
           {ongoingStudents.map((student) => (
@@ -219,21 +250,50 @@ useEffect(() => {
               <div className="header-user">
                 <h2>{selectedRequest.studentName}</h2>
                 <span className={`status-tag ${hasStudentEnded ? 'offline' : 'online'}`}>
-                  {hasStudentEnded ? "Disconnected" : "Online"}
+                  {hasStudentEnded ? "Disconnected" : "Active"}
                 </span>
               </div>
               <div className="header-actions">
-                <button className="btn-notes" onClick={() => setIsNotesOpen(true)}>📝 Session Notes</button>
+                <button className="btn-notes-icon" onClick={() => setIsNotesOpen(true)} title="Session Notes">📝</button>
+
                 {!hasStudentEnded && <button className="btn-end-chat" onClick={() => setIsNotesOpen(true)}>End Session</button>}
               </div>
             </header>
 
             <div className="messages-display">
-              {messages.map((m) => (
-                <div key={m.id} className={`message-bubble ${m.senderId === auth.currentUser.uid ? "me" : "them"}`}>
-                  <p>{m.text}</p>
-                </div>
-              ))}
+              {messages.map((m, i) => {
+                const isMe = m.senderId === auth.currentUser.uid;
+
+                const prev = messages[i - 1];
+                const showDate =
+                  !prev || formatDate(prev.createdAt) !== formatDate(m.createdAt);
+
+                return (
+                  <React.Fragment key={m.id}>
+                    {showDate && (
+                      <div className="date-divider">
+                        {formatDate(m.createdAt)}
+                      </div>
+                    )}
+
+                    <div className={`message-bubble ${isMe ? "me" : "them"}`}>
+                      {!isMe && (
+                        <div className="msg-meta">
+                          {selectedRequest?.studentName}
+                        </div>
+                      )}
+
+                      <p className="msg-text">{m.text}</p>
+
+                      <div className="msg-time">
+                        {formatTime(m.createdAt)}
+                      </div>
+                    </div>
+                  </React.Fragment>
+                );
+              })}
+
+
               <div ref={scrollRef} />
             </div>
 
@@ -252,7 +312,9 @@ useEffect(() => {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                   />
-                  <button type="submit" className="send-btn">➤</button>
+                <button type="submit" className="student-send-btn" disabled={!newMessage.trim()}>
+                   ➤
+                </button>
                 </form>
               )}
             </div>

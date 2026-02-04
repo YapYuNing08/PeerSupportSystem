@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { db, auth } from "../../firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import { FaLightbulb } from "react-icons/fa"; 
@@ -7,46 +7,57 @@ import "./dailynotecard.css";
 const DailyNoteCard = () => {
   const [dailyNote, setDailyNote] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  const cardRef = useRef(null);
 
   useEffect(() => {
-    const fetchRandomNote = async () => {
-      if (!auth.currentUser) return;
+    // 1. Listen for Auth State to handle the "first login" race condition
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setCurrentUserId(user.uid);
+        fetchRandomNote(user.uid);
+      } else {
+        setDailyNote(null);
+        setCurrentUserId(null);
+      }
+    });
 
-      const userId = auth.currentUser.uid;
+    const fetchRandomNote = async (userId) => {
       const sessionKey = `dailyNoteSession_${userId}`;
       const seenNotesKey = `seenNotes_${userId}`;
       
       const savedSession = JSON.parse(localStorage.getItem(sessionKey));
-      const todayDate = new Date().toDateString(); // Formats as: "Mon Jan 19 2026"
+      const todayDate = new Date().toDateString(); // e.g., "Wed Feb 04 2026"
 
-      // 1. Check if the saved note is from today. If yes, use it and skip fetching.
+      // 2. If a note was already picked today, use it immediately
       if (savedSession && savedSession.dateString === todayDate) {
         setDailyNote(savedSession.note);
         return;
       }
 
       try {
-        // 2. If it's a new day or no session exists, fetch all notes
+        // 3. New day or first time: fetch all notes from Firestore
         const querySnapshot = await getDocs(collection(db, "motivationalNotes"));
         const allNotes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         if (allNotes.length > 0) {
           const seenNotes = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
 
-          // 3. Filter out notes already seen by the student
+          // 4. Filter out notes already seen
           let availableNotes = allNotes.filter(note => !seenNotes.includes(note.id));
 
-          // 4. If all notes have been seen, reset the "seen" list to start over
+          // 5. If everything has been seen, reset the history
           if (availableNotes.length === 0) {
             availableNotes = allNotes;
             localStorage.setItem(seenNotesKey, JSON.stringify([]));
           }
 
-          // 5. Select a random note from the available ones
+          // 6. Pick a random one
           const randomIndex = Math.floor(Math.random() * availableNotes.length);
           const selectedNote = availableNotes[randomIndex];
 
-          // 6. Save the note and current date to the daily session
+          // 7. Save to local storage for the rest of today
           localStorage.setItem(sessionKey, JSON.stringify({
             note: selectedNote,
             dateString: todayDate
@@ -59,16 +70,36 @@ const DailyNoteCard = () => {
       }
     };
 
-    fetchRandomNote();
+    // Cleanup the listener when the component unmounts
+    return () => unsubscribe();
   }, []);
 
-  const handleToggle = () => {
-    setIsOpen(!isOpen);
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // If the card is open AND the clicked element is NOT inside the cardRef
+      if (isOpen && cardRef.current && !cardRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    // Attach listener to the whole document
+    document.addEventListener("mousedown", handleClickOutside);
     
-    // Add the note to the "seen" list when first opened so it won't repeat tomorrow
-    if (!isOpen && dailyNote) {
-      const seenNotesKey = `seenNotes_${auth.currentUser?.uid}`;
+    // Clean up listener
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
+  const handleToggle = () => {
+    const nextState = !isOpen;
+    setIsOpen(nextState);
+    
+    // 8. Add to "seenNotes" only when the student actually opens the bulb
+    if (nextState && dailyNote && currentUserId) {
+      const seenNotesKey = `seenNotes_${currentUserId}`;
       const seenNotes = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
+      
       if (!seenNotes.includes(dailyNote.id)) {
         seenNotes.push(dailyNote.id);
         localStorage.setItem(seenNotesKey, JSON.stringify(seenNotes));
@@ -76,13 +107,16 @@ const DailyNoteCard = () => {
     }
   };
 
+  // Don't render anything if the note hasn't loaded yet
   if (!dailyNote) return null;
 
   return (
     <div className="daily-note-container">
       <div 
+        ref ={cardRef}
         className={`minimal-note-card ${isOpen ? 'expanded' : ''}`} 
         onClick={handleToggle}
+        style={{ cursor: 'pointer' }}
       >
         <div className="icon-wrapper">
           <FaLightbulb 

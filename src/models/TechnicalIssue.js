@@ -11,7 +11,7 @@ export const reportIssue = async (studentID, description, category) => {
       description,
       category,
       status: "Open",
-      adminNotes: "",
+      resolution: "",
       timestamp: new Date()
     });
     return { success: true };

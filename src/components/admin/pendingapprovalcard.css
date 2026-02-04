@@ -1,0 +1,51 @@
+.admin-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 25px 20px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+
+  transition: all 0.2s ease;
+  border: 1px solid transparent;
+
+  min-height: 140px;
+}
+
+/* Hover effect */
+.admin-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+  border-color: #a7f3d0;
+  background: #ecfdf5;
+}
+
+/* Icon */
+.card-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+/* Text container */
+.card-info {
+  text-align: center;
+}
+
+.card-info h3 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #065f46;
+}
+
+.card-info p {
+  margin: 5px 0 0;
+  font-size: 14px;
+  color: #047857;
+  font-weight: 600;
+}

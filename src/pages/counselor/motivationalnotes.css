@@ -209,3 +209,28 @@
     }
     .notes-header h2 { font-size: 24px; }
 }
+
+.note-actions {
+  display: flex;
+  gap: 10px;
+  margin-left: 12px;
+}
+
+.edit-btn, .delete-btn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.edit-btn {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+.delete-btn {
+  background: #fee2e2;
+  color: #b91c1c;
+}

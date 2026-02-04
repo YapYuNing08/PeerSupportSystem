@@ -14,9 +14,18 @@ function AutoModerationCard() {
 
   return (
     <div className="admin-card">
-      <h3>⚙️ Auto-Moderation</h3>
-      <p className="admin-card-number">{count}</p>
-      <p className="admin-card-desc">Active banned keywords</p>
+      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <span style={{ fontSize: "32px" }}>⚙️</span>
+        <strong style={{ fontSize: "23px", color: "#2a4365" }}>
+          Auto-Moderation
+        </strong>
+      </div>
+
+      {/* Number */}
+      <h3 style={{ marginTop: "15px" }}>{count}</h3>
+
+      {/* Description */}
+      <p>Active banned keywords   </p>
     </div>
   );
 }
