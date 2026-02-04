@@ -61,7 +61,9 @@ function AdminDashboard() {
     <div className="admin-dashboard-container">
       <div className="admin-main-header">
         <h1>Admin Dashboard</h1>
-        <button className="btn btn-danger" onClick={handleLogoutClick}>Logout</button>
+        <button className="btn-outline-secondary" 
+        style={{ marginTop: '15px', padding: '8px 20px', borderRadius: '6px', cursor: 'pointer', background: 'white' }} 
+        onClick={handleLogoutClick}>Logout Session</button>
       </div>
 
       <div className="admin-cards-row">

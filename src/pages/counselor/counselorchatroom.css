@@ -39,6 +39,28 @@
 .student-item:hover { background: #f5f7fb; }
 .student-item.active { background: #e7f3ff; border-left: 4px solid #0084ff; }
 
+.student-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.student-name {
+  font-weight: 600;
+}
+
+.last-reason {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.student-info span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 210px; /* adjust if needed */
+}
+
 .student-avatar {
   width: 45px;
   height: 45px;
@@ -68,6 +90,16 @@
   align-items: center;
 }
 
+.btn-dashboard {
+  background: #c0c2c6b9;
+  color: #1f3a5f;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
 .messages-display {
   flex: 1;
   padding: 20px;
@@ -78,7 +110,7 @@
 }
 
 .message-bubble {
-  max-width: 60%;
+  max-width: 80%;
   padding: 10px 15px;
   border-radius: 18px;
   margin-bottom: 8px;
@@ -89,12 +121,14 @@
   align-self: flex-end;
   background: #0084ff;
   color: white;
+  border-bottom-right-radius: 6px;
 }
 
 .message-bubble.them {
   align-self: flex-start;
   background: #e4e6eb;
   color: black;
+  border-bottom-left-radius: 6px;
 }
 
 .message-input-form {
@@ -112,6 +146,12 @@
   outline: none;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .btn-end-chat {
   background: #ffe5e5;
   color: #d32f2f;
@@ -122,14 +162,22 @@
   font-weight: 600;
 }
 
-.btn-notes {
-  background: #a9d3b8;
-  color: #2f583e;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 8px;
+.btn-notes-icon {
+  width: 49px;
+  height: 49px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e6f4ec;
+  border: 1px solid #b7dec9;
+  border-radius: 45%;
   cursor: pointer;
-  font-weight: 600;
+  font-size: 25px;
+  transition: all 0.2s ease;
+}
+
+.btn-notes-icon:active {
+  transform: scale(0.95);
 }
 
 .system-notice-bottom {
@@ -151,4 +199,59 @@
 .system-notice-bottom span {
   font-size: 0.9rem;
   text-decoration: underline;
+}
+
+.msg-meta {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-bottom: 4px;
+  font-weight: 600;
+  text-align: left;
+}
+
+.msg-text {
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.msg-time {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 6px;
+  text-align: right;
+}
+
+.student-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+.status-tag {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.status-tag.online {
+  background: #e7f8ef;
+  color: #1f7a3f;
+}
+
+.status-tag.offline {
+  background: #fdecec;
+  color: #b42318;
+}
+
+.date-divider {
+  align-self: center;
+  margin: 14px 0;
+  font-size: 12px;
+  color: #666;
+  background: #e6e6e6;
+  padding: 4px 12px;
+  border-radius: 999px;
 }

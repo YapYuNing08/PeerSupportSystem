@@ -1,0 +1,105 @@
+.approve-page {
+  background-color: #E4FFEE;
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* Header (Back button + title center) */
+.approve-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.approve-header {
+  font-weight: bold;
+  color: black;
+  margin: 10px 0;
+  font-size: 22px;
+}
+
+/* Back button */
+.btn-back-dashboard {
+  margin-bottom: 10px;
+  background-color: white !important;
+}
+
+
+/* Main card */
+
+.approve-card {
+  background: white;
+  border-radius: 14px;
+  padding: 15px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.05);
+  width: 80%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Table */
+
+.approve-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.approve-table th {
+  text-align: center;
+  padding: 12px;
+  font-size: 13px;
+  color: #64748b;
+  border-bottom: 1px solid #eee;
+}
+
+.approve-table td {
+  text-align: center;
+  padding: 12px;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.approve-table tr:hover {
+  background: #f8fafc;
+}
+
+/* Action buttons */
+
+.btn-approve {
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.btn-approve:hover {
+  background: #16a34a;
+}
+
+.btn-reject {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-reject:hover {
+  background: #dc2626;
+}
+
+/* Certificate link */
+
+.cert-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.cert-link:hover {
+  text-decoration: underline;
+}

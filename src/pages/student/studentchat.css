@@ -97,6 +97,12 @@
   cursor: pointer;
 }
 
+.student-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
 .btn-exit {
   background: none;
   border: 1px solid #cbd5e0;
@@ -114,4 +120,32 @@
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+}
+
+.msg-meta {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.msg-text {
+  white-space: pre-wrap;
+}
+
+.msg-time {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 6px;
+  text-align: right;
+}
+
+.date-divider {
+  align-self: center;
+  margin: 14px 0;
+  font-size: 12px;
+  color: #b3abab;
+  background: #e6e6e6;
+  padding: 4px 12px;
+  border-radius: 999px;
 }

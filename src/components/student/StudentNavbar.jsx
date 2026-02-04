@@ -12,16 +12,16 @@ function StudentNavbar({ handleLogout }) {
       </div>
       
       <ul className="nav-links">
-        <li className={location.pathname === "/tracker" ? "active" : ""}>
+        <li className={location.pathname === "/student-page" ? "active" : ""}>
           <Link to="/student-page">📅 Tracker</Link>
         </li>
-        <li className={location.pathname === "/analysis" ? "active" : ""}>
+        <li className={location.pathname === "/student/analysis" ? "active" : ""}>
           <Link to="/student/analysis">📊 Analysis</Link>
         </li>
-        <li className={location.pathname === "/counselor" ? "active" : ""}>
+        <li className={location.pathname === "/student/counselor-support" ? "active" : ""}>
           <Link to="/student/counselor-support">💬 Counselor</Link>
         </li>
-        <li className={location.pathname === "/forum" ? "active" : ""}>
+        <li className={location.pathname === "/my-forums" ? "active" : ""}>
           <Link to="/my-forums">📢 Forum</Link>
         </li>
         <li className={location.pathname === "/profile" ? "active" : ""}>

@@ -3,6 +3,7 @@ import { db } from "../../firebase-config";
 import { collection, query, where, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "./approvecounselor.css";
 
 function ApproveCounselorPage() {
   const [pendingCounselors, setPendingCounselors] = useState([]);
@@ -55,24 +56,24 @@ function ApproveCounselorPage() {
   if (loading) return <div className="text-center mt-5">Loading...</div>;
 
   return (
-    <div className="container mt-4">
+    <div className="approve-page">
       {/* Navigation Header */}
-      <div className="d-flex align-items-center mb-4">
+      <div className="approve-header">
         <button 
-          className="btn btn-outline-secondary me-3" 
+          className="btn btn-sm btn-outline-danger btn-back-dashboard" 
           onClick={() => navigate("/admin/admin-dashboard")}
         >
           ← Back to Dashboard
         </button>
-        <h2 className="m-0">Counselor Approvals</h2>
+        <h2 >Counselor Approvals</h2>
       </div>
 
-      <div className="card shadow-sm p-4 border-0">
+      <div className="approve-card">
         {pendingCounselors.length === 0 ? (
           <div className="alert alert-info">No pending applications found.</div>
         ) : (
           <div className="table-responsive">
-            <table className="table table-hover align-middle">
+            <table className="approve-table">
               <thead className="table-light">
                 <tr>
                   <th>Name</th>
@@ -94,13 +95,13 @@ function ApproveCounselorPage() {
                     <td>
                       <button 
                         onClick={() => handleApprove(c.id)} 
-                        className="btn btn-success btn-sm me-2"
+                        className="btn-approve"
                       >
                         Approve
                       </button>
                       <button 
                         onClick={() => handleReject(c.id)} 
-                        className="btn btn-danger btn-sm"
+                        className="btn-reject"
                       >
                         Reject
                       </button>

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../firebase-config";
+import { auth } from "../../firebase-config";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
 import "./ModeratorDashboard.css"; // 🔹 Import your CSS file
 
-import FlaggedContentCard from "../components/moderator/FlaggedContentCard";
-import WarningMessageCard from "../components/moderator/WarningMessageCard";
-import AutoModerationCard from "../components/moderator/AutoModerationCard";
+import FlaggedContentCard from "../../components/moderator/FlaggedContentCard";
+import WarningMessageCard from "../../components/moderator/WarningMessageCard";
+import AutoModerationCard from "../../components/moderator/AutoModerationCard";
 
 function ModeratorDashboard() {
   const navigate = useNavigate();
@@ -42,15 +42,15 @@ function ModeratorDashboard() {
 
       {/* 🔹 Grid using the Flex Row style */}
       <div className="admin-cards-row">
-        <div onClick={() => navigate("/moderator/flagged")} className="admin-card">
+        <div onClick={() => navigate("/moderator/flagged")} >
           <FlaggedContentCard />
         </div>
 
-        <div onClick={() => navigate("/moderator/warnings")} className="admin-card">
+        <div onClick={() => navigate("/moderator/warnings")} >
           <WarningMessageCard />
         </div>
 
-        <div onClick={() => navigate("/moderator/auto-moderation")} className="admin-card">
+        <div onClick={() => navigate("/moderator/auto-moderation")} >
           <AutoModerationCard />
         </div>
       </div>

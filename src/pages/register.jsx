@@ -4,6 +4,8 @@ import { auth, db } from "../firebase-config";
 import { doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 
 import "./auth.css";
 
@@ -16,6 +18,8 @@ function Register() {
   const [certLink, setCertLink] = useState("");
   const navigate = useNavigate();
   const [faculty, setFaculty] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const faculties = [
     "FCI (Computing & Informatics)",
@@ -30,6 +34,11 @@ function Register() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match!", { position: "top-center" });
+      return;
+    }
+
     if (role === "student") {
       const mmuEmailPattern = /^[a-zA-Z0-9._%+-]+@student\.mmu\.edu\.my$/;
       if (!mmuEmailPattern.test(email)) {
@@ -37,6 +46,11 @@ function Register() {
           position: "top-center"
         });
         return; // Stop the registration
+      }
+
+        if (!faculty) {
+          toast.error("Please select your faculty.", { position: "top-center" });
+          return;
       }
     }
     
@@ -165,14 +179,48 @@ function Register() {
 
           <div className="form-row mb-3">
             <label className="form-label-fixed">Password</label>
-            <input
-              type="password"
-              className="form-control"
-              placeholder="Enter password"
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+
+            <div className="password-wrap">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                placeholder="Enter password"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="btn-toggle-pass"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
           </div>
+
+          <div className="form-row mb-3">
+            <label className="form-label-fixed">Confirm Password</label>
+
+            <div className="password-wrap">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="form-control"
+                placeholder="Re-enter password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+
+              <button
+                type="button"
+                className="btn-toggle-pass"
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+          </div>
+
 
           {role === "counselor" && (
             <div className="form-row mb-3">

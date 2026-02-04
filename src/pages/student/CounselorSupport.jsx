@@ -141,7 +141,7 @@ function CounselorSupport() {
           <RequestChat 
             onClose={() => setShowIntakeForm(false)} 
             onSuccess={() => setShowIntakeForm(false)} 
-            currentUsername={userData?.username} // Passes the REAL name
+            currentUsername={userData?.name}
           />
         )}
       </main>

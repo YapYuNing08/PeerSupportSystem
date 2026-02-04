@@ -63,7 +63,7 @@ function TechnicalIssuesPage() {
                     <td>{issue.description}</td>
                     <td>
                       <button 
-                        className="btn btn-sm btn-outline-success" 
+                        className="btn btn-sm btn-outline-success" style ={styles.button}
                         onClick={() => handleResolve(issue.id)}
                       >
                         Resolve
@@ -98,6 +98,16 @@ const styles = {
     maxWidth: "1200px",  
     margin: "0 auto", 
     boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+  },
+  button: {
+      background: "#22c55e",
+      color: "white",
+      border: "none",
+      padding: "6px 12px",
+      borderRadius: "6px",
+      fontWeight: "600",
+      cursor: "pointer",
+      marginRight: "8px"
   }
 };
 
