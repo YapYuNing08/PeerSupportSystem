@@ -196,6 +196,24 @@ const StudentProfile = () => {
           </div>
           <div className="account-details">
             <h2>Name: {user?.username || "Student"}</h2>
+            {(user?.warningCount ?? 0) > 0 && (
+              <>
+                <p style={{ marginTop: "4px", color: "#4b5563", fontSize: "0.95rem" }}>
+                  Current warnings:{" "}
+                  <span
+                    style={{
+                      fontWeight: "600",
+                      color: (user?.warningCount ?? 0) >= 3 ? "#b91c1c" : "#92400e",
+                    }}
+                  >
+                    {user?.warningCount ?? 0} / 3
+                  </span>
+                </p>
+                <p style={{ marginTop: "2px", color: "#6b7280", fontSize: "0.8rem" }}>
+                  After 3 warnings, your account may be suspended.
+                </p>
+              </>
+            )}
           </div>
         </div>
 
