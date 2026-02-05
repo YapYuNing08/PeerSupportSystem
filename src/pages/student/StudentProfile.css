@@ -339,14 +339,13 @@
   font-size: 0.8rem;
 }
 
-/* Specific Badge Colors */
 .forum-badge {
   background-color: #e3f2fd;
   color: #1976d2;
 }
 
 .anon-badge {
-  background-color: #374151; /* Dark Grey */
+  background-color: #374151; 
   color: white;
 }
 
@@ -384,7 +383,7 @@
 }
 
 .post-card.post-hidden {
-  background: #fff7ed;            /* soft orange */
+  background: #fff7ed;           
   border: 1px solid #fdba74;
 }
 

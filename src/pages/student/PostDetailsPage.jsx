@@ -49,17 +49,6 @@ const PostDetailsPage = () => {
     return () => unsub();
   }, [postId]);
 
-  /* ================= MODERATION REDIRECT ================= */
-  // useEffect(() => {
-  //   if (!post) return;
-
-  //   if (post.status === "hidden" || post.status === "rejected") {
-  //     navigate(`/forum/${post.forumId}`);
-  //   }
-  // }, [post, navigate]);
-
-
-  /* ================= COMMENTS LISTENER ================= */
   useEffect(() => {
     const q = query(
       collection(db, "comments"),
@@ -77,7 +66,6 @@ const PostDetailsPage = () => {
     return () => unsub();
   }, [postId]);
 
-  /* ================= ADD COMMENT ================= */
   const handleAddComment = async () => {
     if (!commentText.trim() || !currentUser || !post) return;
 
@@ -130,7 +118,6 @@ const PostDetailsPage = () => {
     setReplyTo(null);
   };
 
-  /* ================= ACTIONS ================= */
   const handleDelete = async (id) => {
     if (window.confirm("Delete this comment?")) {
       await deleteDoc(doc(db, "comments", id));

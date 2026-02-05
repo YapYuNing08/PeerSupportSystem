@@ -21,7 +21,6 @@ function Login() {
       let loginEmail = emailOrId;
       
       if(isStaffMode) {
-        // Fixed: Use backticks for template literals
         loginEmail = emailOrId.includes("@") ? emailOrId : `${emailOrId}@system.com`;
       }
 

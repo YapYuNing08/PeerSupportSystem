@@ -14,7 +14,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const [name, setFullName] = useState("");
   const [username, setUsername] = useState("");
-  const [role, setRole] = useState("student"); // Default to student
+  const [role, setRole] = useState("student"); 
   const [certLink, setCertLink] = useState("");
   const navigate = useNavigate();
   const [faculty, setFaculty] = useState("");
@@ -53,7 +53,7 @@ function Register() {
         toast.error("Students must use an @student.mmu.edu.my email address.", {
           position: "top-center"
         });
-        return; // Stop the registration
+        return; 
       }
 
         if (!faculty) {
@@ -78,7 +78,6 @@ function Register() {
         createdAt: new Date(),
       };
 
-      // 3. Save to "users" collection in Firestore
       await setDoc(doc(db, "users", user.uid), userData);
 
       console.log("User Registered in Firestore!");
@@ -236,7 +235,7 @@ function Register() {
             </div>
           )}
 
-          {/* Terms at bottom + checkbox */}
+          {/* Terms + checkbox */}
           <div className="terms-box">
             <p className="terms-title">Terms and Conditions</p>
             <ol className="terms-list">
