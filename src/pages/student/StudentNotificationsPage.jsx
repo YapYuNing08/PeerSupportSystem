@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { db, auth } from "../../firebase-config";
-import { collection, query, where, onSnapshot, orderBy } from "firebase/firestore";
+import { collection, query, where, onSnapshot, orderBy, writeBatch, doc } from "firebase/firestore";
 import "./StudentNotificationsPage.css"; 
 import StudentLayout from "../../components/layout/StudentLayout"; 
 
@@ -18,11 +18,26 @@ function StudentNotificationsPage() {
       orderBy("createdAt", "desc")
     );
 
-    const unsubscribe = onSnapshot(q, snapshot => {
-      const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
       // Sort by date (newest first)
       const sorted = list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
       setNotifications(sorted);
+
+      // Mark unread notifications as read when this page is opened
+      const unreadDocs = snapshot.docs.filter((d) => d.data().read !== true);
+      if (unreadDocs.length > 0) {
+        const batch = writeBatch(db);
+        unreadDocs.forEach((d) => {
+          batch.update(doc(db, "notifications", d.id), { read: true });
+        });
+        try {
+          await batch.commit();
+        } catch (e) {
+          // Non-blocking: still show notifications even if marking read fails
+          console.error("Failed to mark notifications as read:", e);
+        }
+      }
     });
 
     return () => unsubscribe();
