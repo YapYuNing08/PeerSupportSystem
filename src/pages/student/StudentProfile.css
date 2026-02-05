@@ -339,14 +339,13 @@
   font-size: 0.8rem;
 }
 
-/* Specific Badge Colors */
 .forum-badge {
   background-color: #e3f2fd;
   color: #1976d2;
 }
 
 .anon-badge {
-  background-color: #374151; /* Dark Grey */
+  background-color: #374151; 
   color: white;
 }
 
@@ -381,4 +380,20 @@
 .footer-right {
   font-style: italic;
   font-size: 0.8rem;
+}
+
+.post-card.post-hidden {
+  background: #fff7ed;           
+  border: 1px solid #fdba74;
+}
+
+.hidden-pill {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #ffedd5;
+  color: #9a3412;
 }

@@ -49,17 +49,6 @@ const PostDetailsPage = () => {
     return () => unsub();
   }, [postId]);
 
-  /* ================= MODERATION REDIRECT ================= */
-  useEffect(() => {
-    if (!post) return;
-
-    if (post.status === "hidden" || post.status === "rejected") {
-      navigate(`/forum/${post.forumId}`);
-    }
-  }, [post, navigate]);
-
-
-  /* ================= COMMENTS LISTENER ================= */
   useEffect(() => {
     const q = query(
       collection(db, "comments"),
@@ -77,7 +66,6 @@ const PostDetailsPage = () => {
     return () => unsub();
   }, [postId]);
 
-  /* ================= ADD COMMENT ================= */
   const handleAddComment = async () => {
     if (!commentText.trim() || !currentUser || !post) return;
 
@@ -130,7 +118,6 @@ const PostDetailsPage = () => {
     setReplyTo(null);
   };
 
-  /* ================= ACTIONS ================= */
   const handleDelete = async (id) => {
     if (window.confirm("Delete this comment?")) {
       await deleteDoc(doc(db, "comments", id));
@@ -170,6 +157,27 @@ const PostDetailsPage = () => {
   const getReplies = (id) => comments.filter(c => c.parentCommentId === id);
 
   if (!post) return <div className="loader">Loading conversation...</div>;
+
+  // If post is hidden, show "Under Review" page (author can't view content)
+  if (post.status === "hidden") {
+    return (
+      <StudentLayout>
+        <div className="review-page-wrapper">
+          <button className="review-back" onClick={() => navigate(`/forum/${post.forumId}`)}>
+            ← Back
+          </button>
+
+          <div className="review-card">
+            <div className="spinner">⏳</div>
+            <h2>Your post is under review</h2>
+            <p>
+              This post is temporarily hidden while a moderator reviews it.
+            </p>
+          </div>
+        </div>
+      </StudentLayout>
+    );
+  }
 
   return (
     <StudentLayout>

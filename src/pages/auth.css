@@ -9,7 +9,7 @@
 
 .auth-inner {
   width: 100%;
-  max-width: 520px;
+  max-width: 550px;
   background: #ffffff;
   box-shadow: 0px 20px 60px rgba(0, 0, 0, 0.15);
   padding: 20px 50px;
@@ -281,3 +281,36 @@ select.form-control {
   color: #000;
 }
 
+.terms-box {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border: 1px solid #eee;
+  background: #fafafa;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #444;
+}
+
+.terms-title {
+  margin: 0 0 8px 0;
+  font-weight: 700;
+  font-size: 13px;
+  color: #222;
+}
+
+.terms-list {
+  margin: 0 0 10px 18px;
+  padding: 0;
+  line-height: 1.4;
+}
+
+.terms-check {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  cursor: pointer;
+}
+
+.terms-check input {
+  margin-top: 3px;
+}
