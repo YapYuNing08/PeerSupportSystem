@@ -20,6 +20,7 @@ function Register() {
   const [faculty, setFaculty] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [agreeTerms, setAgreeTerms] = useState(false);
 
   const faculties = [
     "FCI (Computing & Informatics)",
@@ -33,6 +34,13 @@ function Register() {
   
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (!agreeTerms) {
+      toast.error("Please agree to the Terms & Conditions before registering.", {
+        position: "top-center"
+      });
+      return;
+    }
 
     if (password !== confirmPassword) {
       toast.error("Passwords do not match!", { position: "top-center" });
@@ -221,13 +229,46 @@ function Register() {
             </div>
           </div>
 
-
           {role === "counselor" && (
             <div className="form-row mb-3">
               <label className="form-label-fixed">Certificate Link</label>
               <input type="url" className="form-control" placeholder="https://..." onChange={(e) => setCertLink(e.target.value)} required />
             </div>
           )}
+
+          {/* Terms at bottom + checkbox */}
+          <div className="terms-box">
+            <p className="terms-title">Terms and Conditions</p>
+            <ol className="terms-list">
+              <li>
+                <strong>Privacy and Data Protection:</strong> Your personal
+                information is protected and will only be used for peer support
+                and system operation purposes.
+              </li>
+              <li>
+                <strong>Responsible Use:</strong> Users must communicate
+                respectfully. Harassment, harmful content, or misuse is
+                prohibited.
+              </li>
+              <li>
+                <strong>Account Management:</strong> Administrators reserve the
+                right to suspend or terminate accounts that violate platform
+                policies.
+              </li>
+            </ol>
+
+            <label className="terms-check">
+              <input
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+              />
+              <span>
+                I have read and agree to the Terms & Conditions and Privacy
+                Policy.
+              </span>
+            </label>
+          </div>
 
           <div className="d-grid">
             <button type="submit" className="btn btn-primary">

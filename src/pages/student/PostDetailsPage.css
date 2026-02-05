@@ -260,3 +260,50 @@
     max-width: none !important;
   }
 }
+
+.review-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 16px;
+}
+
+.review-back {
+  align-self: flex-start;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 18px;
+  color: #111;
+}
+
+.review-card {
+  width: 100%;
+  max-width: 500px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  border: 1px solid #f1f5f9;
+}
+
+.review-card h2 {
+  font-size: 18px;
+  margin: 0 0 8px 0;
+  padding-top: 20px;
+}
+
+.review-card p {
+  margin: 0;
+  padding-top: 10px;
+  font-size: 13px;
+  color: #64748b;
+  line-height: 1.5;
+}
+.spinner {
+  font-size: 30px;
+  animation: rotate 2s linear infinite;
+}

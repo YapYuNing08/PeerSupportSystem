@@ -1,0 +1,275 @@
+/* =========================
+   CompletedList Modal (FULL)
+   ========================= */
+
+/* Overlay */
+.waiting-list-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Modal box */
+.waiting-list-content {
+  width: 750px;
+  max-width: 95vw;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  max-height: 85vh;
+}
+
+/* Header */
+.overlay-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafafa;
+}
+
+.overlay-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.back-link {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2a4365;
+  padding: 6px 0;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.close-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
+  padding: 0 6px;
+  color: #444;
+}
+
+.close-btn:hover {
+  color: #111;
+}
+
+/* =========================
+   LIST VIEW
+   ========================= */
+
+.requests-scroll-area {
+  padding: 16px;
+  overflow-y: auto;
+  max-height: calc(85vh - 56px);
+  box-sizing: border-box;
+}
+
+.empty-msg {
+  margin: 0;
+  padding: 18px;
+  color: #777;
+  text-align: center;
+}
+
+/* Card */
+.completed-session-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 16px;
+  padding: 18px;
+  border: 1px solid #eee;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  background: #fff;
+  transition: 0.15s ease;
+}
+
+.completed-session-item:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+}
+
+/* Left content */
+.session-info-main {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* Row 1: name + tag + date */
+.name-date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Name + tag group */
+.name-tag-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.name-tag-wrap strong {
+  font-size: 16px;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+/* Date on the right */
+.date-text {
+  font-size: 12px;
+  color: #666;
+  white-space: nowrap;
+}
+
+/* Tag beside name */
+.reason-tag-small {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Notes below name */
+.notes-preview {
+  margin: 0;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.4;
+  white-space: nowrap;      /* safe clamp replacement */
+  overflow: hidden;
+  text-overflow: ellipsis;  /* show ... */
+  max-width: 100%;
+}
+
+/* Button */
+.view-chat-btn {
+  background: #243a5e;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  height: fit-content;
+  align-self: center;
+  white-space: nowrap;
+}
+
+.view-chat-btn:hover {
+  opacity: 0.9;
+}
+
+/* =========================
+   HISTORY VIEW (CHAT ONLY)
+   ========================= */
+
+.history-detail-view {
+  width: 100%;
+  height: calc(85vh - 56px);
+  box-sizing: border-box;
+}
+
+/* Chat container */
+.history-chat-log {
+  height: 100%;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+/* Chat bubble base */
+.msg-bubble-hist {
+  max-width: 520px;     /* FIX: prevent too large */
+  width: fit-content;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  background: #f3f4f6;
+  align-self: flex-start;
+  word-break: break-word;
+}
+
+.msg-bubble-hist.me {
+  background: #e0f2fe;
+  border-color: #bae6fd;
+  align-self: flex-end;
+}
+
+/* sender name */
+.msg-bubble-hist small {
+  display: block;
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+/* message text */
+.msg-bubble-hist p {
+  margin: 0;
+  font-size: 14px;
+  color: #222;
+  white-space: pre-wrap;
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 820px) {
+  .waiting-list-content {
+    width: 98vw;
+    max-width: 98vw;
+  }
+
+  .completed-session-item {
+    grid-template-columns: 1fr;
+  }
+
+  .view-chat-btn {
+    width: 100%;
+  }
+
+  .name-tag-wrap strong {
+    max-width: 180px;
+  }
+
+  .msg-bubble-hist {
+    max-width: 88%;
+  }
+}

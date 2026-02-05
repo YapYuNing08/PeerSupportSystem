@@ -111,7 +111,12 @@ const StudentProfile = () => {
                 };
             }));
 
-            setPosts(enrichedPosts);
+            const visibleMyPosts = enrichedPosts.filter(
+              (p) => p.status === "active" || p.status === "approved" || p.status === "hidden"
+            );
+
+            setPosts(visibleMyPosts);
+
         }
       } catch (error) {
         console.error("Error fetching Posts:", error);
@@ -223,13 +228,22 @@ const StudentProfile = () => {
               {posts.map((post) => (
                 <div 
                   key={post.id} 
-                  className="post-card" 
-                  onClick={() => navigate(`/post/${post.id}`)}
+                  className={`post-card ${post.status === "hidden" ? "post-hidden" : ""}`}
+                  onClick={() => {
+                    if (post.status === "hidden") {
+                      toast.info("Your post is under review by moderator.", { position: "top-center" });
+                    }
+                    navigate(`/post/${post.id}`);
+                  }}
                 >
                   {/* post title */}
                   <p className="post-title-text">
                     {post.title.length > 50 ? post.title.substring(0, 50) + "..." : post.title}
                   </p>
+
+                  {post.status === "hidden" && (
+                    <div className="hidden-pill">Under Review</div>
+                  )}
 
                   {/* Post details badges */}
                   <div className="post-meta-badges">

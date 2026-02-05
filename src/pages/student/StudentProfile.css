@@ -372,3 +372,19 @@
   font-style: italic;
   font-size: 0.8rem;
 }
+
+.post-card.post-hidden {
+  background: #fff7ed;            /* soft orange */
+  border: 1px solid #fdba74;
+}
+
+.hidden-pill {
+  display: inline-block;
+  margin-top: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #ffedd5;
+  color: #9a3412;
+}

@@ -6,6 +6,8 @@ import {
   addDoc,
   query,
   where,
+  doc,
+  getDoc
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -15,11 +17,18 @@ function JoinForumPage() {
   const [forums, setForums] = useState([]);
   const [joinedForumIds, setJoinedForumIds] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [myFacultyCode, setMyFacultyCode] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+
+        const userSnap = await getDoc(doc(db, "users", auth.currentUser.uid));
+        const facultyStr = userSnap.exists() ? userSnap.data().faculty : null; // "FCI (Computing & Informatics)"
+        const facultyCode = facultyStr ? facultyStr.split(" ")[0] : null; // => "FCI"
+        setMyFacultyCode(facultyCode);
+
         const forumSnap = await getDocs(collection(db, "forums"));
         const memberQuery = query(
           collection(db, "forumMembers"),
@@ -45,8 +54,30 @@ function JoinForumPage() {
             };
           })
         );
+ 
+        // show student faculty forum
+        const filteredForums = forumsWithCount.filter((f) => {
+          // optional: hide inactive forums
+          if (f.isActive === false) return false;
 
-        setForums(forumsWithCount);
+          // general forums (or old forums without "type")
+          if (!f.type || f.type === "general") return true;
+
+          // faculty forums: only show student's faculty
+          if (f.type === "faculty") {
+            return facultyCode && f.facultyCode === facultyCode;
+          }
+
+          return true;
+        });
+
+        filteredForums.sort((a, b) => {
+          if (a.type === "faculty") return -1;
+          if (b.type === "faculty") return 1;
+          return 0;
+        });
+
+        setForums(filteredForums);
         setLoading(false);
       } catch (error) {
         console.error(error);

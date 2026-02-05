@@ -17,6 +17,10 @@ function CreateForumPage() {
   const [description, setDescription] = useState("");
   const [forums, setForums] = useState([]);
   const navigate = useNavigate();
+  const [type, setType] = useState("general"); 
+  const [facultyCode, setFacultyCode] = useState("");
+  const facultyCodes = ["FCI", "FAIE", "FCM", "FOM", "FAC", "FCA", "FOL"];
+
 
   // 🔹 Real-time fetch forums
   useEffect(() => {
@@ -49,6 +53,8 @@ function CreateForumPage() {
       await addDoc(collection(db, "forums"), {
         name,
         description,
+        type, // "general" or "faculty"
+        facultyCode: type === "faculty" ? facultyCode : null,
         createdBy: auth.currentUser.uid,
         createdAt: serverTimestamp(),
         isActive: true,
@@ -92,6 +98,21 @@ function CreateForumPage() {
             onChange={(e) => setDescription(e.target.value)}
             required
           />
+
+          <select value={type} onChange={(e) => setType(e.target.value)} required>
+            <option value="general">General Forum</option>
+            <option value="faculty">Faculty Forum</option>
+          </select>
+
+          {type === "faculty" && (
+            <select value={facultyCode} onChange={(e) => setFacultyCode(e.target.value)} required>
+              <option value="">Select Faculty Code</option>
+              {facultyCodes.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+            </select>
+          )}
+
 
           <button type="submit" className="btn btn-primary">
             Create Forum
