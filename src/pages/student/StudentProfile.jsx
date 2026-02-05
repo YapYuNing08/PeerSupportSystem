@@ -9,6 +9,7 @@ import {
   where, 
   getDocs, 
   orderBy,
+  onSnapshot,
   getCountFromServer //for counting replies
 } from "firebase/firestore";
 import { toast } from "react-toastify";
@@ -28,7 +29,30 @@ const StudentProfile = () => {
 
   const [showNotesModal, setShowNotesModal] = useState(false);
   const [unlockedNotes, setUnlockedNotes] = useState([]);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
 
+  // Live unread notification count for profile header badge
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+
+    const q = query(
+      collection(db, "notifications"),
+      where("targetRole", "==", "student"),
+      where("userId", "==", currentUser.uid),
+      orderBy("createdAt", "desc")
+    );
+
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const unread = snap.docs.reduce((acc, d) => {
+        const data = d.data();
+        return data.read === true ? acc : acc + 1;
+      }, 0);
+      setUnreadNotifCount(unread);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   useEffect(() => {
     let isMounted = true; 
@@ -176,12 +200,19 @@ const StudentProfile = () => {
         
         <header className="profile-header">
           <div 
-            className="header-action" 
+            className="header-action header-action-notification" 
             onClick={() => navigate("/student/notifications")}
             style={{ cursor: "pointer" }}
           >
-            <FaBell className="header-icon" />
-            <span>Notification</span>
+            <span className="header-action-inner">
+              <FaBell className="header-icon" />
+              <span>Notification</span>
+              {unreadNotifCount > 0 && (
+                <span className="profile-notif-badge">
+                  {unreadNotifCount > 99 ? "99+" : unreadNotifCount}
+                </span>
+              )}
+            </span>
           </div>
           <h1 className="header-title">My Profile</h1>
           <div className="header-action" onClick={handleLogoutClick}>
