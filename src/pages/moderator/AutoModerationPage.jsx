@@ -10,25 +10,25 @@ import {
 } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import "./AutoModeration.css"; // 🔹 Import your custom style
+import "./AutoModeration.css"; 
 
 function AutoModerationPage() {
   const navigate = useNavigate();
-  const [keyword, setKeyword] = useState("");
-  const [keywords, setKeywords] = useState([]);
+  const [keyword, setKeyword] = useState("");  //store the input value
+  const [keywords, setKeywords] = useState([]); //store all banned keyword
 
   const keywordsRef = collection(db, "moderationKeywords");
 
   const fetchKeywords = async () => {
-    const snapshot = await getDocs(keywordsRef);
+    const snapshot = await getDocs(keywordsRef); //fetch all document
     setKeywords(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
   };
 
   useEffect(() => {
     fetchKeywords();
-  }, []);
+  }, []); //[]no re-run
 
-  const handleAddKeyword = async () => {
+  const handleAddKeyword = async () => {  //trigger when add keyword
     if (!keyword.trim()) {
       toast.error("Keyword cannot be empty");
       return;
@@ -71,8 +71,8 @@ function AutoModerationPage() {
             type="text"
             className="mod-input"
             placeholder="e.g. spam, abuse, harassment"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            value={keyword}  //value = state
+            onChange={(e) => setKeyword(e.target.value)} //onchange update state
           />
           <button className="btn-submit" onClick={handleAddKeyword}>
             Add Keyword

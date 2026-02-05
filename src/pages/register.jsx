@@ -99,7 +99,7 @@ function Register() {
       <div className="auth-inner">
         <form onSubmit={handleRegister}>
           <h3>Create Account</h3>
-          <p className="auth-subtitle">Join the peer support system</p>
+          <p className="auth-subtitle">Join the SoftSpace peer support system</p>
 
           <div className="mb-4">
             <label className="form-label">I am a:</label>

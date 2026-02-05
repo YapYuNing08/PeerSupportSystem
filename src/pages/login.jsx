@@ -109,7 +109,7 @@ function Login() {
         {/* FORM WRAPPER: Handles "Enter" Key automatically */}
         <form onSubmit={handleSubmit}>
           
-          <h3>{isStaffMode ? "Staff Portal" : "Welcome Back"}</h3>
+          <h3>{isStaffMode ? "Staff Portal" : "Welcome Back To SoftSpace"}</h3>
           <p className="auth-subtitle">
             {isStaffMode ? "Management Login" : "Login to continue"}
           </p>

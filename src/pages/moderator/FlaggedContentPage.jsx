@@ -62,6 +62,7 @@ const FlaggedContentPage = () => {
     return { contentText, contentTitle, forumName };
   };
 
+  //report create/delete/change, function run again
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "reports"), async (snapshot) => {
       const list = await Promise.all(
@@ -93,7 +94,7 @@ const FlaggedContentPage = () => {
           // 1) SYSTEM auto-moderation
           // 2) user reports when reportCount >= 3
           const shouldShow =
-            data.reporterId === "SYSTEM" || targetReportCount >= 3;
+            data.reporterId === "SYSTEM" || targetReportCount >= 2;
 
           if (!shouldShow) return null;
 
@@ -129,17 +130,17 @@ const FlaggedContentPage = () => {
     if (!window.confirm("Approve this content? It will be visible to students.")) return;
 
     try {
-      // 1️⃣ Unhide content
+      // Unhide content
       const ref = report.type === "post"
         ? doc(db, "posts", report.postId)
         : doc(db, "comments", report.commentId);
 
       await updateDoc(ref, {
         status: "approved",
-        reportCount: 0 // 🔥 reset count
+        reportCount: 0 // reset count
       });
 
-      // 2️⃣ Delete ALL reports for this content
+      // Delete ALL reports for this content
       const q = query(
         collection(db, "reports"),
         where("type", "==", report.type),

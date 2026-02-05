@@ -55,9 +55,8 @@ function WarningMessagePage() {
       const studentId = selected.authorId;
       const studentName = selected.authorName;
 
-      // -----------------------------
+     
       // 1) Create student notification 
-      // -----------------------------
       await addDoc(collection(db, "notifications"), {
         targetRole: "student",
         userId: studentId,
@@ -73,18 +72,16 @@ function WarningMessagePage() {
         createdAt: serverTimestamp()
       });
 
-      // -----------------------------
+
       // 2) Mark warning as sent (status)
-      // -----------------------------
       await updateDoc(doc(db, "warning", selected.id), {
         status: "sent",
         sentAt: serverTimestamp(),
         sentBy: auth.currentUser?.uid || null
       });
 
-      // -----------------------------
+
       // 3) Update user warningCount in users
-      // -----------------------------
       const userRef = doc(db, "users", studentId);
       const userSnap = await getDoc(userRef);
 
@@ -98,9 +95,8 @@ function WarningMessagePage() {
         warningCount: newCount
       });
 
-      // -----------------------------
+
       // 4) If warningCount reaches 3 -> notify admins (multi-admin)
-      // -----------------------------
       if (newCount === 3) {
         await addDoc(collection(db, "notifications"), {
           targetRole: "admin",
