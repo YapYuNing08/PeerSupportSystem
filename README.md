@@ -1,70 +1,71 @@
-# Getting Started with Create React App
+USER GUIDE
+1.1 Student User Guide
+1.1.1 Create Account and Join Forums
+Step 1: Open the Digital Peer Support System and click on the Sign Up button.
+Step 2: Select "Student" as your account type.
+Step 3: Fill in your registration details:
+Full Name
+Username
+Faculty
+Student Email
+Password
+Confirm Password
+Step 4: Select at least one forum based on your interests (e.g., Academic Support, Mental Health, Hobbies).
+Step 5: Click "Create Account" and you'll receive a confirmation message: "Account created successfully!"
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+1.1.2 Login to System
+Step 1: On the login page, select "Student" role.
+Step 2: Enter your school email and password.
+Step 3: Click "Login" to access your student dashboard.
 
-## Available Scripts
+1.1.3 Join Additional Forums
+Step 1: Navigate to the "Forums" section from the sidebar menu.
+Step 2: View your currently joined forums.
+Step 3: Click "Join New Forum" button.
+Step 4: Browse the list of available forums.
+Step 5: Select a forum you want to join and click "Join Forum".
+Step 6: Confirmation message appears: "You have successfully joined this forum."
 
-In the project directory, you can run:
+1.1.4 Create Posts and Comments
+Step 1: Open a forum from your joined forums list.
+Step 2: Click "Create Post" button.
+Step 3: Enter your post title and content.
+Step 4: Toggle "Post as Anonymous" switch if you want to remain anonymous.
+Step 5: Click "Submit" to publish your post.
+Step 6: To comment on existing posts, click on the post and use the comment box below.
 
-### `npm start`
+1.1.5 Record Daily Mood
+Step 1: Navigate to "Mood Tracker" from the sidebar.
+Step 2: View the mood calendar.
+Step 3: Click "Record for Today" button.
+Step 4: Select your mood level (1-5):
+😡 Awful (1)
+😞 Bad (2)
+😐 Neutral (3)
+🙂 Good (4)
+🤩 Great (5)
+Step 5: Optionally add a short note about your day.
+Step 6: Click "Save" to record your mood entry.
+Step 7: Confirmation message appears: "Mood entry saved successfully."
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+1.1.6 View Mood Analysis
+Step 1: From the Mood Tracker page, click on "Mood Analysis" tab.
+Step 2: View your mood trend graph showing daily mood levels over time.
+Step 3: Review mood statistics showing percentage distribution of each mood type.
+Step 4: If the system detects concerning patterns (>50% negative moods in 7 days), a well-being alert notification will appear.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+1.1.7 Request Counseling Session
+Step 1: Navigate to "Counselor Support" from the sidebar.
+Step 2: Click "Request Counseling Session" button.
+Step 3: Select the main reason for your request from the available tags:
+Safety Concern
+Academic Pressure
+Family Issue
+Loneliness
+General Advice
+Step 4: Click "Submit Request".
+Step 5: Your request is added to the pending list with priority based on your selected reason.
+Step 6: Wait for a counselor to accept your request. You can view the status as "Pending".
+Step 7: Once accepted, the status changes to "Accepted" and the chat room opens.
+Step 8: Communicate with the counselor through the chat interface.
+Step 9: Either you or the counselor can end the session when the conversation is complete.
