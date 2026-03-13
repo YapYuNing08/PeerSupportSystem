@@ -27,10 +27,10 @@ function WarningMessageCard() {
         </strong>
       </div>
 
-      {/* Number */}
+      {/* number */}
       <h3 style={{ marginTop: "15px" }}>{count}</h3>
 
-      {/* Description */}
+      {/* description */}
       <p>Pending warnings not yet sent</p>
     </div>
   );

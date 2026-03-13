@@ -22,7 +22,7 @@ function CreateForumPage() {
   const facultyCodes = ["FCI", "FAIE", "FCM", "FOM", "FAC", "FCA", "FOL"];
 
 
-  // 🔹 Real-time fetch forums
+  // real-time fetch forums
   useEffect(() => {
     const q = query(
       collection(db, "forums"),
@@ -40,7 +40,7 @@ function CreateForumPage() {
     return () => unsubscribe();
   }, []);
 
-  // 🔹 Create forum
+  // create forum
   const handleCreateForum = async (e) => {
     e.preventDefault();
 
@@ -79,7 +79,7 @@ function CreateForumPage() {
           ← Back to Dashboard
         </button>
 
-      {/* 🔹 CREATE FORUM FORM */}
+      {/* create forum form */}
       <div className="form-card">
         <h2>Create New Forum</h2>
 
@@ -120,7 +120,7 @@ function CreateForumPage() {
         </form>
       </div>
 
-      {/* 🔹 FORUM LIST */}
+      {/* forum list */}
       <div className="forum-list">
         <h3>Existing Forums</h3>
 

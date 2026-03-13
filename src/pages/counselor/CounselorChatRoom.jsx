@@ -10,7 +10,7 @@ import SessionNotes from "../../components/counselor/SessionNotes";
 import "./counselorchatroom.css";
 
 function CounselorChatRoom() {
-  const { requestId } = useParams(); // Get ID from URL (/chat/:requestId)
+  const { requestId } = useParams(); // get ID from URL (/chat/:requestId)
   const [ongoingStudents, setOngoingStudents] = useState([]);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -25,7 +25,7 @@ function CounselorChatRoom() {
   const scrollRef = useRef();
   const navigate = useNavigate();
 
-  // 1. Fetch all ongoing students (Sidebar)
+  // 1. fetch all ongoing students
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -44,17 +44,17 @@ function CounselorChatRoom() {
     return () => unsubscribe();
   }, []);
 
-  // 2. Sync selectedRequest with the URL requestId
+  // 2. sync selectedRequest with the URL requestId
 useEffect(() => {
     if (ongoingStudents.length > 0 && requestId) {
       const current = ongoingStudents.find(s => s.id === requestId);
       if (current) {
         setSelectedRequest(current);
-        setSessionNotes(current.sessionNotes || ""); // Pre-fill notes if they exist
+        setSessionNotes(current.sessionNotes || ""); // pre-fill notes if they exist
       }
     }
 
-    // LISTENER: To detect if student changes status to 'pending-notes'
+    // detect if student changes status to 'pending-notes'
     if (requestId) {
       const unsub = onSnapshot(doc(db, "counselingSessions", requestId), (docSnap) => {
         if (docSnap.exists() && docSnap.data().status === "pending-notes") {
@@ -68,19 +68,19 @@ useEffect(() => {
   }, [requestId, ongoingStudents]);
 
   useEffect(() => {
-    // If no student is selected, clear history and stop
+    // if no student is selected, clear history and stop
     if (!selectedRequest?.studentId) {
       setHistory([]);
       return;
     }
 
-    // Fetch ALL completed sessions for this student ID
-    // This will show notes from Counselor A, Counselor B, etc.
+    // fetch ALL completed sessions for this student ID
+    // show notes from Counselor A, Counselor B, etc.
     const q = query(
       collection(db, "counselingSessions"),
       where("studentId", "==", selectedRequest.studentId),
       where("status", "==", "completed"),
-      orderBy("endedAt", "desc") // Shows newest history first
+      orderBy("endedAt", "desc") // shows newest history first
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -97,7 +97,7 @@ useEffect(() => {
     return () => unsubscribe();
   }, [selectedRequest?.studentId]); 
 
-  // 3. Fetch messages for the SELECTED student
+  // 3. fetch messages for the SELECTED student
   useEffect(() => {
     if (!selectedRequest?.id) return;
 
@@ -115,7 +115,7 @@ useEffect(() => {
     return () => unsubscribe();
   }, [selectedRequest]);
 
-  // 4. Auto-scroll
+  // 4. auto-scroll
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -125,12 +125,12 @@ useEffect(() => {
     if (!newMessage.trim() || !selectedRequest) return;
 
     try {
-      // 1) Get counselor FULL name from users collection
+      // 1) get counselor FULL name from users collection
       const userRef = doc(db, "users", auth.currentUser.uid);
       const userSnap = await getDoc(userRef);
       const fullName = userSnap.exists() ? userSnap.data().name : "Counselor";
 
-      // 2) Add message
+      // 2) add message
       const messagesRef = collection(db, "counselingSessions", selectedRequest.id, "messages");
 
       await addDoc(messagesRef, {
@@ -148,14 +148,14 @@ useEffect(() => {
   };
 
 
-  // Navigate when clicking a sidebar item
+  // navigate when clicking a sidebar item
   const handleSelectStudent = (id) => {
     navigate(`/chat/${id}`);
   };
 
   const endSession = async () => {
     if (!selectedRequest) return;
-    // Instead of immediate complete, we open the notes modal
+    // instead of immediate complete, we open the notes modal
     setIsNotesOpen(true);
   };
 
@@ -166,7 +166,7 @@ useEffect(() => {
     }
     try {
       await updateDoc(doc(db, "counselingSessions", selectedRequest.id), {
-        sessionNotes: sessionNotes // Only update the notes field
+        sessionNotes: sessionNotes // only update the notes field
       });
       toast.success("Draft saved!");
     } catch (error) {
@@ -180,14 +180,14 @@ useEffect(() => {
       return;
     }
     
-    // The "Last Chance" Confirmation Message
+    // the "Last Chance" confirmation message
     const isReady = window.confirm("Are you sure? Once completed, this session will be archived and you cannot edit the notes again.");
     
     if (isReady) {
       try {
         await updateDoc(doc(db, "counselingSessions", selectedRequest.id), {
           status: "completed",
-          sessionNotes: sessionNotes, // Saves the final version
+          sessionNotes: sessionNotes, // saves the final version
           endedAt: serverTimestamp()
         });
         toast.success("Session successfully completed and archived!");
@@ -297,7 +297,6 @@ useEffect(() => {
               <div ref={scrollRef} />
             </div>
 
-            {/* --- FIXED BOTTOM NOTICE AREA --- */}
             <div className="chat-footer-area">
               {hasStudentEnded ? (
                 <div className="system-notice-bottom" onClick={() => setIsNotesOpen(true)}>

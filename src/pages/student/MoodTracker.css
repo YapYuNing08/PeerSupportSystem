@@ -1,4 +1,4 @@
-/* --- GLOBAL CONTAINER --- */
+
 .app-wrapper {
   margin-left: 180px; 
   padding: 40px;
@@ -46,14 +46,12 @@
   z-index: 1000;
 }
 
-/* Headers */
 h3 {
   font-size: 1.1rem;
   margin-bottom: 10px;
   color: #333;
 }
 
-/* Back Button */
 .back-btn {
   background: none;
   border: none;
@@ -69,9 +67,6 @@ h3 {
 }
 
 
-
-
-/* Header with Month Name and Arrows */
 .calendar-header {
   display: flex;
   justify-content: space-between;
@@ -103,7 +98,6 @@ h3 {
   color: #000;
 }
 
-/* Weekday Labels (Sun, Mon, Tue...) */
 .weekdays-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -118,58 +112,54 @@ h3 {
   letter-spacing: 1px;
 }
 
-/* The Grid of Days */
 .days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  row-gap: 15px;    /* Space vertically */
-  column-gap: 5px;  /* Space horizontally */
+  row-gap: 15px;    
+  column-gap: 5px;  
 }
 
-/* Individual Day Circle */
+
 .calendar-day {
-  aspect-ratio: 1; /* Forces it to be a perfect square/circle */
+  aspect-ratio: 1; 
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
-  background-color: #E8E8E8; /* Light grey for empty days */
+  background-color: #E8E8E8; 
   font-size: 0.9rem;
   font-weight: 500;
   color: #777;
   margin: 0 auto;
-  width: 85%; /* Sizing relative to the grid cell */
+  width: 85%; 
   cursor: default;
   transition: transform 0.2s ease;
 }
 
-/* Invisible placeholder days */
+
 .calendar-day.empty {
   background-color: transparent;
 }
 
-/* Days with a Mood Record */
+
 .calendar-day.has-mood {
   color: white; 
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  border: 2px solid transparent; /* Keeps sizing consistent */
-  cursor: pointer; /* Suggests it's clickable (for future features) */
+  border: 2px solid transparent; 
+  cursor: pointer; 
 }
 
 .calendar-day.has-mood:hover {
-  transform: scale(1.1); /* Pop effect on hover */
+  transform: scale(1.1); 
 }
 
 .calendar-emoji {
   font-size: 1.2rem;
-  margin-top: 2px; /* Visual alignment fix */
+  margin-top: 2px; 
 }
 
-/* =========================================
-   EXISTING INPUT/FORM STYLES
-   ========================================= */
 
-/* --- MOOD SELECTOR --- */
+/* mood selector */
 .mood-selector {
   display: flex;
   justify-content: space-between;
@@ -200,7 +190,7 @@ h3 {
   box-shadow: 0 4px 10px rgba(0,0,0,0.2);
 }
 
-/* --- EMOTIONS GRID --- */
+/* emotion grid */
 .emotion-grid {
   display: grid;
   grid-template-columns: 1fr 1fr; 
@@ -210,11 +200,6 @@ h3 {
   border-radius: 12px;
 }
 
-/* @media (min-width: 768px) {
-  .emotion-grid {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
-} */
 
 .checkbox-container {
   display: flex;
@@ -231,7 +216,6 @@ h3 {
   height: 18px;
 }
 
-/* --- TEXT AREA --- */
 textarea {
   width: 100%;
   height: 100px;
@@ -249,7 +233,6 @@ textarea:focus {
   border-color: #AEEEEE;
 }
 
-/* --- BUTTONS --- */
 .floating-action-btn {
   background-color: #333;
   color: white;
@@ -290,7 +273,6 @@ textarea:focus {
   cursor: not-allowed;
 }
 
-/* --- NAVIGATION BAR --- */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -305,10 +287,3 @@ textarea:focus {
   box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
 }
 
-/* @media (min-width: 768px) {
-  .bottom-nav {
-    position: absolute;
-    width: 100%;
-    border-radius: 0 0 20px 20px;
-  }
-} */

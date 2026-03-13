@@ -13,15 +13,15 @@ function AddModerator() {
   const handleAddModerator = async (e) => {
     e.preventDefault();
     
-    // We create the email based on your login logic: ID@system.com
+    // create the email based on login logic: ID@system.com
     const moderatorEmail = `${staffId}@system.com`;
 
     try {
-      // 1. Create the user in Firebase Auth
+      // 1. create the user in firebase auth
       const userCredential = await createUserWithEmailAndPassword(auth, moderatorEmail, password);
       const user = userCredential.user;
 
-      // 2. Save the moderator details to Firestore
+      // 2. save the moderator details to firestore
       await setDoc(doc(db, "users", user.uid), {
         name: name,
         staffId: staffId,
@@ -34,7 +34,7 @@ function AddModerator() {
       toast.success(`Moderator ${staffId} created successfully!`);
       setShowModal(false);
       
-      // Reset fields
+      // reset fields
       setStaffId("");
       setPassword("");
       setName("");
@@ -49,7 +49,6 @@ function AddModerator() {
       <div className="admin-card" onClick={() => setShowModal(true)} style={{ cursor: "pointer" }}>
         <div className="card-icon">👤+</div>
         <div className="card-info text-center">
-          {/* <h3>ADD</h3> */}
           <p>MODERATOR</p>
         </div>
       </div>

@@ -45,8 +45,6 @@
   color: #888;
 }
 
-/* ===== Dropdown (Forum Type & Faculty Code) ===== */
-
 .form-card select {
   width: 100%;
   padding: 12px;
@@ -59,13 +57,11 @@
   cursor: pointer;
 }
 
-/* Focus effect (same feel as inputs) */
 .form-card select:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
 }
 
-/* Optional: make dropdown arrow nicer on modern browsers */
 .form-card select {
   appearance: none;
   background-image:
@@ -80,12 +76,10 @@
   background-repeat: no-repeat;
 }
 
-/* Button spacing tweak */
 .form-card button {
   margin-top: 6px;
 }
 
-/* Faculty select subtle indent (visual hierarchy) */
 .form-card select + select {
   margin-top: -4px;
 }

@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import "./studentchat.css";
 
 function StudentChatRoom() {
-  const { requestId } = useParams(); // Gets ID from /student/chat/:requestId
+  const { requestId } = useParams(); // gets ID from /student/chat/:requestId
   const navigate = useNavigate();
   const scrollRef = useRef();
 
@@ -24,7 +24,7 @@ function StudentChatRoom() {
   const [newMessage, setNewMessage] = useState("");
   const [sessionData, setSessionData] = useState(null);
 
-  // 1. Listen for Session Status (Auto-close if counselor ends chat)
+  // 1. listen for session status (auto-close if counselor ends chat)
   useEffect(() => {
     if (!requestId) return;
 
@@ -34,7 +34,7 @@ function StudentChatRoom() {
         const data = docSnap.data();
         setSessionData(data);
 
-        // If counselor ends the chat, redirect student
+        // if counselor ends the chat, redirect student
         if (data.status === "completed") {
           toast.info("The counseling session has ended.");
           navigate("/student-page");
@@ -45,7 +45,7 @@ function StudentChatRoom() {
     return () => unsubscribeStatus();
   }, [requestId, navigate]);
 
-  // 2. Listen for Messages in real-time
+  // 2. listen for messages in real-time
   useEffect(() => {
     if (!requestId) return;
 
@@ -60,7 +60,7 @@ function StudentChatRoom() {
     return () => unsubscribeMessages();
   }, [requestId]);
 
-  // 3. Auto-scroll to bottom on new message
+  // 3. auto-scroll to bottom on new message
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
@@ -70,12 +70,12 @@ function StudentChatRoom() {
     if (!newMessage.trim()) return;
 
     try {
-      // 1) Get student's FULL name from users collection
+      // 1) get student's FULL name from users collection
       const userRef = doc(db, "users", auth.currentUser.uid);
       const userSnap = await getDoc(userRef);
       const fullName = userSnap.exists() ? userSnap.data().name : "Student";
 
-      // 2) Add message
+      // 2) add message
       const messagesRef = collection(db, "counselingSessions", requestId, "messages");
 
       await addDoc(messagesRef, {
@@ -93,22 +93,22 @@ function StudentChatRoom() {
   };
 
   const endSession = async () => {
-    // Confirm with the student before closing
+    // confirm with the student before closing
     const confirmEnd = window.confirm("Are you sure you want to end this counseling session?");
     
     if (confirmEnd) {
       try {
         const requestRef = doc(db, "counselingSessions", requestId);
         
-        // Update the status to 'completed'
+        // update the status to 'completed'
         await updateDoc(requestRef, {
           status: "pending-notes",
           endedAt: serverTimestamp(),
-          endedBy: "student" // Optional: track who ended the session
+          endedBy: "student" // track who ended the session
         });
 
         toast.success("Session ended.");
-        navigate("/student-page"); // Redirect to the support landing page
+        navigate("/student-page"); // redirect to the support landing page
       } catch (error) {
         console.error("Error ending chat:", error);
         toast.error("Failed to end the session. Please try again.");

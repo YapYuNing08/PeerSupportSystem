@@ -8,7 +8,7 @@ function CompletedList({ isOpen, onClose, sessions }) {
   const [historyMessages, setHistoryMessages] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch messages only when a session is selected
+  // fetch messages only when a session is selected
   useEffect(() => {
     if (!selectedSession) return;
 
@@ -42,7 +42,7 @@ function CompletedList({ isOpen, onClose, sessions }) {
   return (
     <div className="waiting-list-overlay">
       <div className={`waiting-list-content ${selectedSession ? "wide-view" : ""}`}>
-        {/* --- HEADER --- */}
+        {/* header*/}
         <div className="overlay-header">
           {selectedSession ? (
             <button className="back-link" onClick={() => setSelectedSession(null)}>
@@ -56,7 +56,7 @@ function CompletedList({ isOpen, onClose, sessions }) {
           </button>
         </div>
 
-        {/* --- VIEW 1: THE LIST --- */}
+        {/* view 1: the list */}
         {!selectedSession ? (
           <div className="requests-scroll-area">
             {sessions.length === 0 ? (
@@ -83,7 +83,7 @@ function CompletedList({ isOpen, onClose, sessions }) {
                     </p>
                   </div>
 
-                  {/* Button only for view history */}
+                  {/* button only for view history */}
                   <button
                     type="button"
                     className="view-chat-btn"
@@ -96,7 +96,7 @@ function CompletedList({ isOpen, onClose, sessions }) {
             )}
           </div>
         ) : (
-          /* --- VIEW 2: THE CHAT HISTORY & NOTES --- */
+          /* view 2: chat history and notes */
           <div className="history-detail-view">
             <div className="history-chat-log">
               {loading ? (

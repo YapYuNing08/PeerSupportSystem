@@ -45,7 +45,7 @@ function WarningMessagePage() {
     if (!message.trim()) return alert("Message cannot be empty");
     if (!selected) return;
 
-    // forumId required (your rule)
+    // forumId required
     if (!selected.forumId) {
       alert("Error: forumId is missing in this warning.");
       return;
@@ -56,14 +56,13 @@ function WarningMessagePage() {
       const studentName = selected.authorName;
 
      
-      // 1) Create student notification 
+      // 1) create student notification 
       await addDoc(collection(db, "notifications"), {
         targetRole: "student",
         userId: studentId,
         type: "warning",
-        authorName: studentName, // you requested authorName
+        authorName: studentName, 
         message: message,
-        // optional extra info (safe to keep)
         forumId: selected.forumId,
         postId: selected.postId || null,
         commentId: selected.commentId || null,
@@ -73,7 +72,7 @@ function WarningMessagePage() {
       });
 
 
-      // 2) Mark warning as sent (status)
+      // 2) mark warning as sent (status)
       await updateDoc(doc(db, "warning", selected.id), {
         status: "sent",
         sentAt: serverTimestamp(),
@@ -81,7 +80,7 @@ function WarningMessagePage() {
       });
 
 
-      // 3) Update user warningCount in users
+      // 3) update user warningCount in users
       const userRef = doc(db, "users", studentId);
       const userSnap = await getDoc(userRef);
 
@@ -96,7 +95,7 @@ function WarningMessagePage() {
       });
 
 
-      // 4) If warningCount reaches 3 -> notify admins (multi-admin)
+      // 4) if warningCount reaches 3 -> notify admins (multi-admin)
       if (newCount === 3) {
         await addDoc(collection(db, "notifications"), {
           targetRole: "admin",
@@ -131,7 +130,6 @@ function WarningMessagePage() {
       <h2 className="warning-main-title">⚠️ Warning Queue</h2>
 
       <div className="warning-layout">
-        {/* Left Column */}
         <div className="warning-list-column">
           <h3>Pending Warnings</h3>
           {pendingWarnings.length === 0 ? (
@@ -165,7 +163,6 @@ function WarningMessagePage() {
           )}
         </div>
 
-        {/* Right Column */}
         {selected && (
           <div className="warning-details-column">
             <h3>Warning Details</h3>

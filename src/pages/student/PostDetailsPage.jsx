@@ -30,7 +30,7 @@ const PostDetailsPage = () => {
 
   const currentUser = auth.currentUser;
 
-  /* ================= AVATAR STYLE ================= */
+  /* avatar styles */
   const getAvatarStyle = (name) => {
     const gradients = [
       "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
@@ -41,7 +41,7 @@ const PostDetailsPage = () => {
     return { background: gradients[index] };
   };
 
-  /* ================= POST LISTENER ================= */
+
   useEffect(() => {
     const unsub = onSnapshot(doc(db, "posts", postId), (snap) => {
       if (snap.exists()) setPost({ id: snap.id, ...snap.data() });
@@ -69,7 +69,7 @@ const PostDetailsPage = () => {
   const handleAddComment = async () => {
     if (!commentText.trim() || !currentUser || !post) return;
 
-    // Check if user is suspended
+    // check if user is suspended
     const userRef = doc(db, "users", currentUser.uid);
     const userSnap = await getDoc(userRef);
 
@@ -158,7 +158,7 @@ const PostDetailsPage = () => {
 
   if (!post) return <div className="loader">Loading conversation...</div>;
 
-  // If post is hidden, show "Under Review" page (author can't view content)
+  // if post is hidden, show "Under Review" page (author can't view content)
   if (post.status === "hidden") {
     return (
       <StudentLayout>

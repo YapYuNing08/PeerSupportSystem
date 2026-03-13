@@ -20,11 +20,11 @@ function StudentNotificationsPage() {
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
       const list = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }));
-      // Sort by date (newest first)
+      // sort by date (newest first)
       const sorted = list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
       setNotifications(sorted);
 
-      // Mark unread notifications as read when this page is opened
+      // mark unread notifications as read when this page is opened
       const unreadDocs = snapshot.docs.filter((d) => d.data().read !== true);
       if (unreadDocs.length > 0) {
         const batch = writeBatch(db);
@@ -34,7 +34,7 @@ function StudentNotificationsPage() {
         try {
           await batch.commit();
         } catch (e) {
-          // Non-blocking: still show notifications even if marking read fails
+          // non-blocking: still show notifications even if marking read fails
           console.error("Failed to mark notifications as read:", e);
         }
       }

@@ -24,7 +24,7 @@ function RequestChat({ onClose, onSuccess, currentUsername }) {
 
       await addDoc(collection(db, "counselingSessions"), {
         studentId: user.uid,
-        // Use the prop passed from CounselorSupport
+        // use the prop passed from CounselorSupport
         studentName: currentUsername || "Anonymous Student", 
         reasonTag: selectedTag,
         priority: priorityMap[selectedTag] || 1,

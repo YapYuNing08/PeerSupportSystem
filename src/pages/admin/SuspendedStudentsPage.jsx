@@ -18,7 +18,7 @@ function SuspendedStudentsPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Query for all suspended students
+    // query for all suspended students
     const q = query(
       collection(db, "users"),
       where("status", "==", "suspended")
@@ -35,7 +35,7 @@ function SuspendedStudentsPage() {
     return () => unsubscribe();
   }, []);
 
-  // Adjust suspension days for a specific student
+  // adjust suspension days for a specific student
   const adjustSuspensionDays = async (studentId, delta) => {
     try {
       const userRef = doc(db, "users", studentId);
@@ -50,17 +50,17 @@ function SuspendedStudentsPage() {
       const currentEndDate = new Date(userData.suspensionEnd);
       const today = new Date();
       
-      // Calculate remaining days
+      // calculate remaining days
       const remainingDays = Math.ceil((currentEndDate - today) / (1000 * 60 * 60 * 24));
       const newRemainingDays = remainingDays + delta;
 
-      // Prevent negative days (can't extend past today)
+      // prevent negative days (can't extend past today)
       if (newRemainingDays < 0) {
         toast.error("Cannot reduce suspension below 0 days.");
         return;
       }
 
-      // Update suspension end date
+      // update suspension end date
       const newEndDate = new Date();
       newEndDate.setDate(newEndDate.getDate() + newRemainingDays);
 
@@ -77,7 +77,7 @@ function SuspendedStudentsPage() {
     }
   };
 
-  // Calculate remaining suspension days
+  // calculate remaining suspension days
   const getRemainingDays = (suspensionEnd) => {
     const endDate = new Date(suspensionEnd);
     const today = new Date();
@@ -86,7 +86,7 @@ function SuspendedStudentsPage() {
     return diffDays > 0 ? diffDays : 0;
   };
 
-  // Format date for display
+  // format date for display
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

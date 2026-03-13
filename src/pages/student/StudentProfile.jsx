@@ -13,7 +13,7 @@ import {
   getCountFromServer //for counting replies
 } from "firebase/firestore";
 import { toast } from "react-toastify";
-import { FaBell, FaSignOutAlt, FaStickyNote, FaChalkboardTeacher, FaComment, FaUserSecret, FaChevronRight, FaQuoteLeft } from 'react-icons/fa';
+import { FaBell, FaSignOutAlt, FaStickyNote, FaChalkboardTeacher, FaComment, FaUserSecret, FaChevronRight } from 'react-icons/fa';
 import RequestChat from "../../components/student/RequestChat.jsx"; 
 import "./StudentProfile.css"; 
 import StudentLayout from "../../components/layout/StudentLayout"; 
@@ -31,7 +31,7 @@ const StudentProfile = () => {
   const [unlockedNotes, setUnlockedNotes] = useState([]);
   const [unreadNotifCount, setUnreadNotifCount] = useState(0);
 
-  // Live unread notification count for profile header badge
+  // live unread notification count for profile header badge
   useEffect(() => {
     const currentUser = auth.currentUser;
     if (!currentUser) return;
@@ -146,7 +146,7 @@ const StudentProfile = () => {
         console.error("Error fetching Posts:", error);
       }
 
-      // --- 3. FETCH UNLOCKED MOTIVATIONAL NOTES ---
+      // fetch unlocked motivational notes
       try {
         const seenNotesKey = `seenNotes_${currentUser.uid}`;
         const seenIds = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
@@ -184,7 +184,7 @@ const StudentProfile = () => {
     }
   };
 
-  // Helper function for date format dd/mm/yyyy
+  // helper function for date format dd/mm/yyyy
   const formatDate = (timestamp) => {
     if (!timestamp) return "Just now";
     const date = new Date(timestamp.seconds * 1000);
@@ -253,7 +253,7 @@ const StudentProfile = () => {
           </div>
         </div>
 
-          {/* Motivational Notes Banner (Clickable) */}
+          {/* motivational notes banner */}
           <div 
             className="profile-card banner-card" 
             style={{ background: '#e8e6f3', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
@@ -294,13 +294,13 @@ const StudentProfile = () => {
                     <div className="hidden-pill">Under Review</div>
                   )}
 
-                  {/* Post details badges */}
+                  {/* post details badges */}
                   <div className="post-meta-badges">
-                    {/* 1. Forum name badge */}
+                    {/* 1. forum name badge */}
                     <span className="meta-badge forum-badge">
                         <p>📢</p>{post.forumName}
                     </span>
-                    {/* 2. Anonymous badge (only if true) */}
+                    {/* 2. anonymous badge (only if true) */}
                     {post.isAnonymous ? (
                         <span className="meta-badge anon-badge">
                             <FaUserSecret className="badge-icon" /> Anonymous
@@ -337,7 +337,7 @@ const StudentProfile = () => {
         <ReportIssueButton />
       </div>
 
-      {/* Motivational Notes History Modal */}
+      {/* motivational notes history modal */}
         {showNotesModal && (
           <div className="modal-overlay">
             <div className="modal-content history-modal">
@@ -350,7 +350,6 @@ const StudentProfile = () => {
                 ) : (
                   unlockedNotes.map((note) => (
                     <div key={note.id} className="history-item">
-                      {/* <FaQuoteLeft className="quote-icon-mini" /> */}
                       <p>"{note.content}"</p>
                       <small>— Counselor Encouragement</small>
                     </div>

@@ -235,7 +235,7 @@ function Register() {
             </div>
           )}
 
-          {/* Terms + checkbox */}
+          {/* terms + checkbox */}
           <div className="terms-box">
             <p className="terms-title">Terms and Conditions</p>
             <ol className="terms-list">

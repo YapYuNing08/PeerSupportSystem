@@ -35,7 +35,7 @@ function ApproveCounselorPage() {
     try {
       await updateDoc(doc(db, "users", userId), { status: "approved" });
       toast.success("Counselor approved!");
-      fetchPending(); // Refresh list
+      fetchPending(); // refresh list
     } catch (error) {
       toast.error("Approval failed");
     }
@@ -46,7 +46,7 @@ function ApproveCounselorPage() {
       try {
         await deleteDoc(doc(db, "users", userId));
         toast.warn("Application removed.");
-        fetchPending(); // Refresh list
+        fetchPending(); // refresh list
       } catch (error) {
         toast.error("Rejection failed");
       }
@@ -57,7 +57,7 @@ function ApproveCounselorPage() {
 
   return (
     <div className="approve-page">
-      {/* Navigation Header */}
+      {/* navigation header */}
       <div className="approve-header">
         <button 
           className="btn btn-sm btn-outline-danger btn-back-dashboard" 

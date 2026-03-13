@@ -41,7 +41,7 @@ function StudentNavbar({ handleLogout }) {
       );
 
       unsubNotifications = onSnapshot(q, (snap) => {
-        // Treat missing "read" as unread (backwards compatible)
+        // treat missing "read" as unread (backwards compatible)
         const unread = snap.docs.reduce((acc, d) => {
           const data = d.data();
           return data.read === true ? acc : acc + 1;
@@ -49,7 +49,7 @@ function StudentNavbar({ handleLogout }) {
         setUnreadCount(unread);
       });
 
-      // Check for mood intervention alert
+      // check for mood intervention alert
       const checkMoodAlert = async () => {
         try {
           const currentDate = new Date();
@@ -99,7 +99,7 @@ function StudentNavbar({ handleLogout }) {
       };
 
       checkMoodAlert();
-      // Re-check every 30 seconds to catch new mood logs
+      // re-check every 30 seconds to catch new mood logs
       moodCheckInterval = setInterval(checkMoodAlert, 30000);
     });
 

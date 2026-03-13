@@ -32,7 +32,7 @@ function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    // Listen for suspended students count
+    // listen for suspended students count
     const q = query(
       collection(db, "users"),
       where("status", "==", "suspended")

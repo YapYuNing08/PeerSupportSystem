@@ -11,10 +11,10 @@ function FlaggedContentCard() {
         snap.docs.map(async (d) => {
           const data = d.data();
 
-          // ✅ SYSTEM always appears
+          // SYSTEM always appears
           if (data.reporterId === "SYSTEM") return true;
 
-          // ✅ Otherwise: only appear if target reportCount >= 3
+          // otherwise: only appear if target reportCount >= 3
           try {
             if (data.type === "post" && data.postId) {
               const postSnap = await getDoc(doc(db, "posts", data.postId));
@@ -49,10 +49,10 @@ function FlaggedContentCard() {
         </strong>
       </div>
 
-      {/* Number */}
+      {/* number */}
       <h3 style={{ marginTop: "15px" }}>{count}</h3>
 
-      {/* Description */}
+      {/* description */}
       <p>Posts & comments pending review </p>
     </div>
   );

@@ -1,4 +1,3 @@
-/* DESKTOP SIDEBAR */
 .side-nav {
   position: fixed;
   top: 0;
@@ -18,7 +17,7 @@
 .nav-links {
   list-style: none;
   padding: 0;
-  flex: 1; /* Pushes footer to the bottom */
+  flex: 1; 
 }
 
 .nav-links li a {
@@ -38,12 +37,11 @@
 
 .nav-footer { padding: 20px; border-top: 1px solid #eee; }
 
-/* The Logout Button */
 .logout-btn {
   width: 100%;
   padding: 12px;
-  background-color: #ffeded; /* Very light red background */
-  color: #e53e3e;          /* Bold red text for the action */
+  background-color: #ffeded; 
+  color: #e53e3e;          
   border: 1px solid #fed7d7;
   border-radius: 10px;
   font-weight: 600;
@@ -56,7 +54,7 @@
   gap: 8px;
 }
 
-/* Hover State */
+
 .logout-btn:hover {
   background-color: #e53e3e;
   color: #ffffff;
@@ -64,7 +62,6 @@
   transform: translateY(-1px);
 }
 
-/* Active/Press State */
 .logout-btn:active {
   transform: translateY(0);
 }
@@ -82,7 +79,7 @@
     border-top: 1px solid #ddd;
   }
 
-  .nav-header, .nav-footer { display: none; } /* Hide logo & logout button on mobile bar */
+  .nav-header, .nav-footer { display: none; } /* hide logo and logout button on mobile bar */
 
   .nav-links {
     display: flex;

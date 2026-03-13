@@ -9,7 +9,6 @@ import {
   getDoc
 } from "firebase/firestore";
 import { toast } from "react-toastify";
-import StudentLayout from "../../components/layout/StudentLayout"; 
 import { checkAutoModeration } from "../../utils/checkAutoModeration";
 import { reportContent } from "../../utils/reportContent";
 import "./CreatePostPage.css";
@@ -40,7 +39,6 @@ const CreatePostPage = () => {
 
     if (!title.trim() || !content.trim()) return;
 
-    //check if user is suspendded
     const userRef = doc(db, "users", auth.currentUser.uid);
     const userSnap = await getDoc(userRef);
 
@@ -53,10 +51,10 @@ const CreatePostPage = () => {
     const currentUser = auth.currentUser;
     if (!currentUser) return;
 
-    // 🔍 AUTO MODERATION CHECK
+    // auto moderation check
     const isHarmful = await checkAutoModeration(`${title} ${content}`);
 
-    // 📝 CREATE POST
+    // create post
     const postRef = await addDoc(collection(db, "posts"), {
       forumId,
       title,
@@ -69,7 +67,7 @@ const CreatePostPage = () => {
       reportCount: 0
     });
 
-    // 🚩 AUTO REPORT IF HARMFUL
+    // auto report of harmful
     if (isHarmful) {
       await reportContent({
         type: "post",
@@ -82,7 +80,7 @@ const CreatePostPage = () => {
       });
       toast.warning("⚠️ Your post has been flagged for review by moderators.");
     } else {
-      toast.success("✅ Post created successfully!");
+      toast.success("Post created successfully!");
     }
 
     navigate(`/forum/${forumId}`);
@@ -92,7 +90,7 @@ const CreatePostPage = () => {
 
   return (
     <div className="page-wrapper">
-      {/* 🔹 Back Button */}
+      {/* back button */}
       <div className="nav-row">
         <button
           className="back-circle"
@@ -113,13 +111,13 @@ const CreatePostPage = () => {
         </button>
       </div>
 
-      {/* 🔹 Header */}
+      {/* header */}
       <div className="header">
         <h1 className="title-text">Create Post</h1>
         <p className="subtitle">Share your thoughts with the forum</p>
       </div>
 
-      {/* 🔹 Form */}
+      {/* form */}
       <div className="form-box">
         <input
           placeholder="Give your post a title..."

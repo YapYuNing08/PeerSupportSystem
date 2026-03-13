@@ -8,7 +8,7 @@
 }
 
 .page-container {
-  width: calc(100vw - 270px) !important;  /* force fill screen minus sidebar */
+  width: calc(100vw - 270px) !important; 
   max-width: none !important;
   box-sizing: border-box;
 }
@@ -19,7 +19,6 @@
   color: #64748b;
 }
 
-/* Navigation */
 .nav-row {
   margin-bottom: 24px;
 }
@@ -44,7 +43,6 @@
   transform: scale(1.05);
 }
 
-/* Post Header Section */
 .post-header {
   margin-bottom: 32px;
   padding: 0 8px;
@@ -78,7 +76,6 @@
   margin-bottom: 16px;
 }
 
-/* The Big Box (Comments Container) */
 .comment-big-box {
   background-color: #ffffff;
   border-radius: 28px;
@@ -114,7 +111,6 @@
   overflow-y: auto;
 }
 
-/* Bubbles & Threads */
 .thread {
   margin-bottom: 24px;
 }
@@ -173,8 +169,8 @@
   font-size: 14px;
   color: #475569;
   line-height: 1.5;
-  word-break: normal;     /* ✅ important */
-  white-space: normal;   /* ✅ default wrapping */
+  word-break: normal;    
+  white-space: normal;   
 }
 /* Actions */
 .actions {
@@ -253,7 +249,7 @@
   cursor: pointer;
 }
 
-/* Mobile Responsiveness */
+/* mobile  */
 @media (max-width: 768px) {
   .page-container {
     width: 100vw !important;

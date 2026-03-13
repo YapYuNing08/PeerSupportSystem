@@ -283,24 +283,21 @@
   color: var(--text-dark);
 }
 
-/* Responsive Tweaks */
 @media (max-width: 768px) {
   .chart-wrapper {
-    flex-direction: row; /* Keep row but adjust sizes if needed */
+    flex-direction: row; /* keep row but adjust sizes if needed */
   }
   
  .analysis-container {
-    /* Reset margin because the nav moves to the bottom on mobile */
     margin-left: 0; 
     padding: 1rem;
-    /* Extra padding at the bottom so content isn't hidden by the bottom bar */
     padding-bottom: 80px; 
   }
 
 .intervention-wrapper {
     left: 20px;
     right: 20px;
-    bottom: 90px; /* Pushes it above the mobile bottom nav */
+    bottom: 90px; 
   }
 
   .speech-bubble {

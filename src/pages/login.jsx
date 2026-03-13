@@ -31,21 +31,18 @@ function Login() {
       if (userDoc.exists()) {
         const userData = userDoc.data();
 
-        // Check if Staff is trying to use User login
         if (!isStaffMode && (userData.role === "admin" || userData.role === "moderator")) {
           await auth.signOut();
           toast.error("Please use the Staff Login link below.");
           return;
         }
 
-        // Check if User is trying to use Staff login
         if (isStaffMode && (userData.role !== "admin" && userData.role !== "moderator")) {
           await auth.signOut();
           toast.error("This ID is not registered as Staff.");
           return;
         }
 
-        // Only check selectedRole if NOT in staff mode
         if (!isStaffMode && userData.role !== selectedRole) {
           await auth.signOut();
           toast.error(`This account is not registered as a ${selectedRole}.`);
@@ -58,7 +55,6 @@ function Login() {
           return;
         }
 
-        //check for suspended students
         if (userData.status === "suspended") {
           const today = new Date();
           const endDate = new Date(userData.suspensionEnd);
@@ -66,7 +62,6 @@ function Login() {
           if (today < endDate) {
             toast.warning(`⚠️ Forum Access Suspended until ${endDate.toLocaleDateString()}`);
           } else {
-            //suspension expired, auto unban)
             const { updateDoc, doc } = require ("firebase/firestore");
             await updateDoc(doc(db, "users", user.uid), {
               status: "active",
@@ -77,9 +72,8 @@ function Login() {
         } 
 
         toast.success("Login Successful!");
-        // window.location.href = "/home";
         if (userData.role === "student") {
-          window.location.href = "/student-page"; // <--- Student goes to Mood Tracker
+          window.location.href = "/student-page";
         } 
         else if (userData.role === "counselor") {
           window.location.href = "/counselor/chat-dashboard";
@@ -91,7 +85,7 @@ function Login() {
           window.location.href = "/moderator-dashboard";
         } 
         else {
-          window.location.href = "/home"; // Fallback
+          window.location.href = "/home"; 
         }
         
       } else {
@@ -106,7 +100,7 @@ function Login() {
   return (
     <div className="auth-wrapper">
       <div className="auth-inner">
-        {/* FORM WRAPPER: Handles "Enter" Key automatically */}
+        {/* handles "Enter" Key automatically */}
         <form onSubmit={handleSubmit}>
           
           <h3>{isStaffMode ? "Staff Portal" : "Welcome Back To SoftSpace"}</h3>
@@ -183,7 +177,6 @@ function Login() {
           </div>
 
           <div className="d-grid">
-            {/* type="submit" fires the form's onSubmit event */}
             <button type="submit" className="btn btn-primary">
               Login
             </button>
@@ -199,7 +192,6 @@ function Login() {
             <p className="staff-text">
               {isStaffMode ? "Not a staff member?" : "Are you an Admin or Moderator?"}
             </p>
-            {/* type="button" prevents this specific button from submitting the form */}
             <button 
               type="button" 
               className="staff-toggle-btn" 

@@ -6,31 +6,31 @@
 }
 
 .student-chat-header {
-  position: relative; /* Essential for absolute centering */
-  height: 70px; /* Fixed height helps stability */
+  position: relative; 
+  height: 70px;
   padding: 0 40px;
   background: white;
   display: flex;
-  justify-content: space-between; /* Pushes left and right sections apart */
+  justify-content: space-between; 
   align-items: center;
   border-bottom: 1px solid #ddd;
-  z-index: 10; /* Ensures it stays below the Toast message if needed */
+  z-index: 10; 
 }
 
 .header-center-absolute {
   position: absolute;
   left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%); /* Perfectly centers the element */
+  transform: translate(-50%, -50%); 
   display: flex;
   align-items: center;
   gap: 10px;
-  pointer-events: none; /* Allows clicks to pass through if a toast overlaps it */
+  pointer-events: none; 
 }
 
 .header-center-absolute h2 {
   margin: 0;
-  white-space: nowrap; /* Prevents title from wrapping */
+  white-space: nowrap;
 }
 
 

@@ -48,7 +48,6 @@ function ReportIssueButton() {
 
   return (
     <>
-      {/* 1. The Floating Button */}
       <button 
         onClick={() => setIsOpen(true)}
         className="btn btn-warning shadow"

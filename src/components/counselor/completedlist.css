@@ -1,8 +1,4 @@
-/* =========================
-   CompletedList Modal (FULL)
-   ========================= */
 
-/* Overlay */
 .waiting-list-overlay {
   position: fixed;
   inset: 0;
@@ -15,7 +11,6 @@
   box-sizing: border-box;
 }
 
-/* Modal box */
 .waiting-list-content {
   width: 750px;
   max-width: 95vw;
@@ -28,7 +23,6 @@
   max-height: 85vh;
 }
 
-/* Header */
 .overlay-header {
   padding: 14px 18px;
   border-bottom: 1px solid #eee;
@@ -73,9 +67,6 @@
   color: #111;
 }
 
-/* =========================
-   LIST VIEW
-   ========================= */
 
 .requests-scroll-area {
   padding: 16px;
@@ -91,7 +82,7 @@
   text-align: center;
 }
 
-/* Card */
+/* card */
 .completed-session-item {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -110,7 +101,7 @@
   transform: translateY(-1px);
 }
 
-/* Left content */
+/* left content */
 .session-info-main {
   display: flex;
   flex-direction: column;
@@ -126,7 +117,7 @@
   gap: 12px;
 }
 
-/* Name + tag group */
+/* name + tag group */
 .name-tag-wrap {
   display: flex;
   align-items: center;
@@ -143,14 +134,14 @@
   max-width: 260px;
 }
 
-/* Date on the right */
+/* date on the right */
 .date-text {
   font-size: 12px;
   color: #666;
   white-space: nowrap;
 }
 
-/* Tag beside name */
+/* tag beside name */
 .reason-tag-small {
   padding: 5px 12px;
   border-radius: 999px;
@@ -161,7 +152,7 @@
   white-space: nowrap;
 }
 
-/* Notes below name */
+/* notes below name */
 .notes-preview {
   margin: 0;
   color: #555;
@@ -173,7 +164,6 @@
   max-width: 100%;
 }
 
-/* Button */
 .view-chat-btn {
   background: #243a5e;
   color: white;
@@ -202,7 +192,7 @@
   box-sizing: border-box;
 }
 
-/* Chat container */
+/* chat container */
 .history-chat-log {
   height: 100%;
   padding: 20px;
@@ -214,9 +204,9 @@
   box-sizing: border-box;
 }
 
-/* Chat bubble base */
+/* chat bubble base */
 .msg-bubble-hist {
-  max-width: 520px;     /* FIX: prevent too large */
+  max-width: 520px;     
   width: fit-content;
   padding: 10px 12px;
   border-radius: 12px;

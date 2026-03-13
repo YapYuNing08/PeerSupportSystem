@@ -12,7 +12,7 @@ const DailyNoteCard = () => {
   const cardRef = useRef(null);
 
   useEffect(() => {
-    // 1. Listen for Auth State to handle the "first login" race condition
+    // 1. listen for auth state 
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setCurrentUserId(user.uid);
@@ -30,34 +30,34 @@ const DailyNoteCard = () => {
       const savedSession = JSON.parse(localStorage.getItem(sessionKey));
       const todayDate = new Date().toDateString(); // e.g., "Wed Feb 04 2026"
 
-      // 2. If a note was already picked today, use it immediately
+      // 2. if a note was already picked today, use it immediately
       if (savedSession && savedSession.dateString === todayDate) {
         setDailyNote(savedSession.note);
         return;
       }
 
       try {
-        // 3. New day or first time: fetch all notes from Firestore
+        // 3. new day or first time: fetch all notes from Firestore
         const querySnapshot = await getDocs(collection(db, "motivationalNotes"));
         const allNotes = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
         if (allNotes.length > 0) {
           const seenNotes = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
 
-          // 4. Filter out notes already seen
+          // 4. filter out notes already seen
           let availableNotes = allNotes.filter(note => !seenNotes.includes(note.id));
 
-          // 5. If everything has been seen, reset the history
+          // 5. if everything has been seen, reset the history
           if (availableNotes.length === 0) {
             availableNotes = allNotes;
             localStorage.setItem(seenNotesKey, JSON.stringify([]));
           }
 
-          // 6. Pick a random one
+          // 6. pick a random one
           const randomIndex = Math.floor(Math.random() * availableNotes.length);
           const selectedNote = availableNotes[randomIndex];
 
-          // 7. Save to local storage for the rest of today
+          // 7. save to local storage for the rest of today
           localStorage.setItem(sessionKey, JSON.stringify({
             note: selectedNote,
             dateString: todayDate
@@ -70,22 +70,22 @@ const DailyNoteCard = () => {
       }
     };
 
-    // Cleanup the listener when the component unmounts
+    // cleanup the listener when the component unmounts
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // If the card is open AND the clicked element is NOT inside the cardRef
+      // if the card is open AND the clicked element is NOT inside the cardRef
       if (isOpen && cardRef.current && !cardRef.current.contains(event.target)) {
         setIsOpen(false);
       }
     };
 
-    // Attach listener to the whole document
+    // attach listener to the whole document
     document.addEventListener("mousedown", handleClickOutside);
     
-    // Clean up listener
+    // clean up listener
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
@@ -95,7 +95,7 @@ const DailyNoteCard = () => {
     const nextState = !isOpen;
     setIsOpen(nextState);
     
-    // 8. Add to "seenNotes" only when the student actually opens the bulb
+    // 8. add to "seenNotes" only when the student actually opens the bulb
     if (nextState && dailyNote && currentUserId) {
       const seenNotesKey = `seenNotes_${currentUserId}`;
       const seenNotes = JSON.parse(localStorage.getItem(seenNotesKey) || "[]");
@@ -107,7 +107,7 @@ const DailyNoteCard = () => {
     }
   };
 
-  // Don't render anything if the note hasn't loaded yet
+  // don't render anything if the note hasn't loaded yet
   if (!dailyNote) return null;
 
   return (

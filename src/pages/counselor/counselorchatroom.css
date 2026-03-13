@@ -1,11 +1,10 @@
-/* CounselorChatRoom.css */
+
 .chat-dashboard-wrapper {
   display: flex;
   height: 100vh;
   background-color: #f0f2f5;
 }
 
-/* Sidebar Styling */
 .chat-sidebar {
   width: 320px;
   background: white;
@@ -58,7 +57,7 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 210px; /* adjust if needed */
+  max-width: 210px; 
 }
 
 .student-avatar {
@@ -74,7 +73,6 @@
   margin-right: 12px;
 }
 
-/* Chat Main Area */
 .chat-main-area {
   flex: 1;
   display: flex;

@@ -33,7 +33,7 @@ export async function reportContent({
   const currentCount = data.reportCount || 0;
   const newCount = currentCount + 1;
 
-  //Always save the report
+  // always save the report
   await addDoc(collection(db, "reports"), {
     type,
     content,
@@ -51,7 +51,7 @@ export async function reportContent({
     return;
   }
 
-  //Update report count
+  // update report count
   await updateDoc(targetRef, {
     reportCount: increment(1)
   });

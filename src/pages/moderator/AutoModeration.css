@@ -1,4 +1,3 @@
-/* AutoModerationPage.css */
 @import url("https://fonts.googleapis.com/css?family=Fira+Sans:400,500,600,700");
 
 .auto-mod-container {
@@ -12,7 +11,6 @@
   font-family: "Fira Sans", sans-serif;
 }
 
-/* Header Section */
 .mod-header {
   background-color: #90cdf4;
   color: #2a4365;
@@ -38,7 +36,7 @@
   opacity: 0.9;
 }
 
-/* Back Button Style */
+
 .btn-back {
   border: 1px solid #f8bbd0;
   color: #ad1457;
@@ -55,7 +53,6 @@
   border-color: #c2185b;
 }
 
-/* Grid Layout */
 .mod-grid {
   display: flex;
   flex-direction: row;
@@ -66,7 +63,6 @@
   flex-wrap: wrap;
 }
 
-/* Card Styling */
 .mod-card {
   flex: 1;
   min-width: 320px;
@@ -93,7 +89,6 @@
   letter-spacing: 1px;
 }
 
-/* Input Fields */
 .mod-input {
   width: 100%;
   padding: 14px;
@@ -109,7 +104,6 @@
   border-color: #2b6cb0;
 }
 
-/* Action Buttons */
 .btn-submit {
   background-color: #2b6cb0;
   color: white;
@@ -125,7 +119,6 @@
   background-color: #2a4365;
 }
 
-/* Banned List Styling */
 .keyword-list {
   list-style: none;
   padding: 0;

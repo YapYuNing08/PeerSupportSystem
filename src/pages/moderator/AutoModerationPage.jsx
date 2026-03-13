@@ -54,7 +54,6 @@ function AutoModerationPage() {
 
   return (
     <div className="auto-mod-container">
-      {/* Page Header */}
       <div className="mod-header">
         <h2>Auto Moderation</h2>
         <p>Manage banned words and phrases for automatic content filtering</p>
@@ -64,7 +63,7 @@ function AutoModerationPage() {
       </div>
 
       <div className="mod-grid">
-        {/* Add Keyword Card */}
+        {/* add keyword card */}
         <div className="mod-card">
           <h5>➕ Add New Keyword</h5>
           <input
@@ -79,7 +78,7 @@ function AutoModerationPage() {
           </button>
         </div>
 
-        {/* Keyword List Card */}
+        {/* keyword list card */}
         <div className="mod-card">
           <h5>🚫 Banned Keywords</h5>
           {keywords.length === 0 ? (

@@ -6,7 +6,7 @@ import {
   doc, getDoc, updateDoc, serverTimestamp 
 } from "firebase/firestore";
 import RequestChat from "../../components/student/RequestChat";
-import { useNavigate } from "react-router-dom"; // For navigation
+import { useNavigate } from "react-router-dom"; 
 import { toast } from "react-toastify";
 import "./counselorsupport.css";
 import StudentLayout from "../../components/layout/StudentLayout"; 
@@ -15,17 +15,17 @@ function CounselorSupport() {
   const [showIntakeForm, setShowIntakeForm] = useState(false);
   const [requestStatus, setRequestStatus] = useState("none"); 
   const [currentRequestId, setCurrentRequestId] = useState(null);
-  const [userData, setUserData] = useState(null); // Initialized to null to avoid default "Student" name
+  const [userData, setUserData] = useState(null); 
   const navigate = useNavigate();
 
-  // 1. Listen for Auth State & Fetch Firestore User Data
+  // 1. listen for auth state & fetch user data
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
           const userDoc = await getDoc(doc(db, "users", user.uid));
           if (userDoc.exists()) {
-            setUserData(userDoc.data()); // Successfully found user's real name
+            setUserData(userDoc.data()); 
           } else {
             console.error("No user profile found in Firestore.");
           }
@@ -38,7 +38,7 @@ function CounselorSupport() {
     return () => unsubscribeAuth();
   }, []);
 
-  // 2. Listen for real-time changes to the student's request status
+  // 2. listen for real-time changes to the student's request status
   useEffect(() => {
     const user = auth.currentUser;
     if (!user) return;
@@ -57,7 +57,7 @@ function CounselorSupport() {
         setRequestStatus(status === "waiting" ? "pending" : "ongoing");
         setCurrentRequestId(requestData.id);
 
-        // Auto-navigate to chat if the counselor has accepted
+        // auto-navigate to chat if the counselor has accepted
         if (status === "ongoing") {
           toast.success("Counselor is ready! Redirecting...");
           navigate(`/student/chat/${requestData.id}`);
@@ -94,13 +94,11 @@ function CounselorSupport() {
       </header>
 
       <main className="support-content">
-        {/* VIEW: No Active Request */}
         {requestStatus === "none" && (
           <div className="request-hero-card">
             <h3>Need to Talk? 💬</h3>
             <p>Select a reason and we'll match you with a counselor.</p>
             
-            {/* Prevent clicking until user profile data is loaded */}
             {userData ? (
               <button className="btn-request" onClick={() => setShowIntakeForm(true)}>
                 Request Counseling Session
@@ -113,7 +111,7 @@ function CounselorSupport() {
           </div>
         )}
 
-        {/* VIEW: Waiting for Counselor */}
+        {/* view: waiting for counselor */}
         {requestStatus === "pending" && (
           <div className="status-container">
             <div className="status-indicator pending">
@@ -124,7 +122,7 @@ function CounselorSupport() {
           </div>
         )}
 
-        {/* VIEW: Chat is Active (In case auto-navigate fails) */}
+        {/* view: chat is active (in case auto-navigate fails) */}
         {requestStatus === "ongoing" && (
           <div className="status-container">
             <div className="status-indicator active">
@@ -136,7 +134,7 @@ function CounselorSupport() {
           </div>
         )}
 
-        {/* POPUP: Intake Form */}
+        {/* popup: intake form */}
         {showIntakeForm && (
           <RequestChat 
             onClose={() => setShowIntakeForm(false)} 

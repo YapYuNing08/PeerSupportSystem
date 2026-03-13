@@ -1,4 +1,3 @@
-/* Sidebar Modal Overlay */
 .notes-modal-overlay {
   position: fixed;
   top: 0;
@@ -7,18 +6,17 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.4);
   display: flex;
-  justify-content: flex-end; /* Slide in from right */
+  justify-content: flex-end; /* slide in from right */
   z-index: 1000;
 }
 
-/* Modal Content Container */
 .notes-modal-content {
   width: 400px;
   height: 100%;
   background: white;
   padding: 25px;
   display: flex;
-  flex-direction: column; /* Stack sections vertically */
+  flex-direction: column; /* stack sections vertically */
   box-shadow: -2px 0 10px rgba(0,0,0,0.1);
   animation: slideIn 0.3s ease-out;
 }
@@ -33,7 +31,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
-  flex-shrink: 0; /* Prevents header from shrinking */
+  flex-shrink: 0; 
 }
 
 .notes-header h2 {
@@ -41,11 +39,11 @@
   font-size: 1.4rem;
 }
 
-/* --- 1. PREVIOUS HISTORY SECTION (TOP) --- */
+/* previous history section (top) */
 .notes-history-section {
   display: flex;
   flex-direction: column;
-  max-height: 60%; /* Keeps history to top portion */
+  max-height: 60%; /* keeps history to top portion */
   margin-bottom: 20px;
   border-bottom: 2px solid #f0f2f5;
   padding-bottom: 15px;
@@ -103,9 +101,9 @@
   font-style: italic;
 }
 
-/* --- 2. CURRENT NOTES SECTION (MIDDLE) --- */
+/* current notes section (middle) */
 .current-notes-section {
-  flex-grow: 1; /* Takes up remaining space */
+  flex-grow: 1; /* takes up remaining space */
   display: flex;
   flex-direction: column;
   margin-bottom: 20px;
@@ -120,7 +118,7 @@
 
 .notes-textarea {
   width: 100%;
-  height: 100%; /* Fills the flex-grow space */
+  height: 100%; /* fills the flex-grow space */
   min-height: 150px;
   padding: 15px;
   border: 1px solid #ccd0d5;
@@ -137,11 +135,11 @@
   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
 }
 
-/* --- 3. BUTTON ACTIONS (BOTTOM) --- */
+/* button actions (bottom) */
 .modal-actions {
   display: flex;
   gap: 12px;
-  flex-shrink: 0; /* Keeps buttons at bottom */
+  flex-shrink: 0; 
 }
 
 .btn-save-draft {

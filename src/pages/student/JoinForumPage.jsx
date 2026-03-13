@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import "./JoinForumPage.css"; // 🔹 Import the new CSS file
+import "./JoinForumPage.css"; 
 
 function JoinForumPage() {
   const [forums, setForums] = useState([]);
@@ -57,7 +57,7 @@ function JoinForumPage() {
  
         // show student faculty forum
         const filteredForums = forumsWithCount.filter((f) => {
-          // optional: hide inactive forums
+          // hide inactive forums
           if (f.isActive === false) return false;
 
           // general forums (or old forums without "type")

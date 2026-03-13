@@ -4,7 +4,7 @@ import "./waitinglist.css";
 function WaitingList({ isOpen, onClose, requests, onAccept }) {
   if (!isOpen) return null;
 
-  // Helper function to calculate "time ago"
+  // calculate "time ago"
   const getRelativeTime = (timestamp) => {
     if (!timestamp) return "Just now";
     

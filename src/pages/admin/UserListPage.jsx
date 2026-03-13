@@ -11,7 +11,7 @@ function UserListPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If your users collection doesn't have createdAt, remove orderBy
+    // if your users collection doesn't have createdAt, remove orderBy
     const q = query(collection(db, "users"), orderBy("createdAt", "desc"));
 
     const unsub = onSnapshot(

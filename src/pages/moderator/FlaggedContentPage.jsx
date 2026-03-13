@@ -125,12 +125,12 @@ const FlaggedContentPage = () => {
     return () => unsub();
   }, []);
 
-  // Approve content
+  // approve content
   const handleApprove = async (report) => {
     if (!window.confirm("Approve this content? It will be visible to students.")) return;
 
     try {
-      // Unhide content
+      // unhide content
       const ref = report.type === "post"
         ? doc(db, "posts", report.postId)
         : doc(db, "comments", report.commentId);
@@ -140,7 +140,7 @@ const FlaggedContentPage = () => {
         reportCount: 0 // reset count
       });
 
-      // Delete ALL reports for this content
+      // delete ALL reports for this content
       const q = query(
         collection(db, "reports"),
         where("type", "==", report.type),
@@ -171,7 +171,7 @@ const handleReject = async (report) => {
       status: "rejected",
     });
 
-    // 1) Ensure forumId exists (required)
+    // 1) ensure forumId exists (required)
     let forumId = report.forumId;
 
     if (!forumId) {

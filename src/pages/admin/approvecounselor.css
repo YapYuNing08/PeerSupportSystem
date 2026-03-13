@@ -4,7 +4,6 @@
   padding: 40px 20px;
 }
 
-/* Header (Back button + title center) */
 .approve-header {
   text-align: center;
   margin-bottom: 30px;
@@ -17,14 +16,10 @@
   font-size: 22px;
 }
 
-/* Back button */
 .btn-back-dashboard {
   margin-bottom: 10px;
   background-color: white !important;
 }
-
-
-/* Main card */
 
 .approve-card {
   background: white;
@@ -35,8 +30,6 @@
   max-width: 1100px;
   margin: 0 auto;
 }
-
-/* Table */
 
 .approve-table {
   width: 100%;
@@ -61,7 +54,6 @@
   background: #f8fafc;
 }
 
-/* Action buttons */
 
 .btn-approve {
   background: #22c55e;
@@ -92,7 +84,7 @@
   background: #dc2626;
 }
 
-/* Certificate link */
+/* certificate link */
 
 .cert-link {
   color: #2563eb;

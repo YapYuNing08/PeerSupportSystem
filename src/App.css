@@ -38,18 +38,18 @@
 
 } 
 
-/* Pushes content to the right when Navbar is visible */
+
 .main-content-with-nav {
-  margin-left: 270px; /* Width of your sidebar */
+  margin-left: 270px;
   min-height: 100vh;
   padding: 20px;
-  background-color: #FAF9F6; /* Optional: Light background for dashboard */
+  background-color: #FAF9F6; 
 }
 
-/* Mobile Adjustment */
+/* mobile  */
 @media (max-width: 768px) {
   .main-content-with-nav {
     margin-left: 0;
-    padding-bottom: 80px; /* Space for bottom nav */
+    padding-bottom: 80px; 
   }
 }

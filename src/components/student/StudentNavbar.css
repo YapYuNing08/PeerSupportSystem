@@ -18,7 +18,7 @@
 .nav-links {
   list-style: none;
   padding: 0;
-  flex: 1; /* Pushes footer to the bottom */
+  flex: 1; 
 }
 
 .nav-links li a {
@@ -81,14 +81,13 @@
   }
 }
 
-/* Active & Hover States */
+/* active & hover tates */
 .nav-links li.active a, .nav-links li a:hover {
   background-color: #E4FFEE;
   color: #256F46;
   border-right: 4px solid #3CB371;
 }
 
-/* MOBILE BOTTOM BAR */
 @media (max-width: 768px) {
   .side-nav {
     width: 100%;
@@ -99,18 +98,17 @@
     padding: 0;
     border-right: none;
     border-top: 1px solid #ddd;
-    /* Fix for scrolling/overlay issues on mobile */
     background-color: white; 
   }
 
-  .nav-header, .nav-footer { display: none; } /* Hide logo & logout button on mobile bar */
+  .nav-header, .nav-footer { display: none; } 
 
   .nav-links {
     display: flex;
     width: 100%;
     justify-content: space-around;
     align-items: center;
-    margin: 0; /* Reset margin */
+    margin: 0; 
   }
 
   .nav-links li { 
@@ -119,8 +117,8 @@
   }
   
   .nav-links li a {
-    padding: 10px 5px; /* Reduce padding for mobile */
-    font-size: 0.8rem; /* Make text slightly smaller to fit 5 items */
+    padding: 10px 5px; 
+    font-size: 0.8rem; 
     justify-content: center;
   }
 
@@ -149,7 +147,7 @@
   .nav-links li.active a { 
     border-right: none; 
     border-top: 4px solid #3CB371; 
-    background-color: transparent; /* Clean look for mobile */
+    background-color: transparent; 
     color: #3CB371;
   }
 }

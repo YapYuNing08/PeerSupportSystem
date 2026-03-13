@@ -37,10 +37,10 @@ function AdminNotificationsPage() {
     return () => unsubscribe();
   }, []);
 
-  // Adjust suspension days
+  // adjust suspension days
   const adjustDays = (delta) => {
     const newDays = suspensionDays + delta;
-    if (newDays >= 1 && newDays <= 30) { // Limit between 1-30 days
+    if (newDays >= 1 && newDays <= 30) { // limit between 1-30 days
       setSuspensionDays(newDays);
     }
   };
@@ -56,7 +56,7 @@ function AdminNotificationsPage() {
     if (!window.confirm(`Are you sure you want to SUSPEND this student for ${suspensionDays} ${daysText}?`)) return;
 
       try {
-        // First, verify the student document exists
+        // verify the student document exists
         const userRef = doc(db, "users", studentId);
         const userSnap = await getDoc(userRef);
         

@@ -33,14 +33,14 @@ const StudentLayout = ({ children }) => {
 
       if (now < end) return;
 
-      // Reactivate user
+      // reactivate user
       await updateDoc(userRef, {
         status: "active",
         suspensionEnd: null,
         warningCount: 0
       });
 
-      // Notify studen
+      // notify student
       await addDoc(collection(db, "notifications"), {
         targetRole: "student",
         userId: user.uid,
@@ -50,7 +50,7 @@ const StudentLayout = ({ children }) => {
         read: false
       });
 
-      // Notify admins
+      // notify admins
       await addDoc(collection(db, "notifications"), {
         targetRole: "admin",
         type: "reactivate",

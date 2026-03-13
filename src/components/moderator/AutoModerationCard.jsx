@@ -21,10 +21,10 @@ function AutoModerationCard() {
         </strong>
       </div>
 
-      {/* Number */}
+      {/* number */}
       <h3 style={{ marginTop: "15px" }}>{count}</h3>
 
-      {/* Description */}
+      {/* description */}
       <p>Active banned keywords   </p>
     </div>
   );

@@ -24,7 +24,7 @@ function MotivationalNotes() {
   const [editNoteId, setEditNoteId] = useState(null);
   const [editText, setEditText] = useState("");
 
-  // Listen for ALL notes from ALL counselors
+  // listen for ALL notes from ALL counselors
   useEffect(() => {
     const q = query(
       collection(db, "motivationalNotes"),
@@ -40,7 +40,7 @@ function MotivationalNotes() {
   }, []);
 
   const handleSave = async () => {
-    // Alternate Flow 4a: Counselor leaves the text box empty
+    // if counselor leaves the text box empty
     if (!newNote.trim()) {
       toast.error("Note cannot be empty."); 
       return;
@@ -48,7 +48,7 @@ function MotivationalNotes() {
 
     setLoading(true);
     try {
-      // Store the note with author details for the collective view
+      // store the note with author details for the collective view
       await addDoc(collection(db, "motivationalNotes"), {
         content: newNote,
         counselorId: auth.currentUser.uid,
@@ -58,7 +58,7 @@ function MotivationalNotes() {
 
       toast.success("Note posted successfully!");
       setNewNote("");
-      setIsModalOpen(false); // Close modal after saving
+      setIsModalOpen(false); // close modal after saving
     } catch (error) {
       console.error("Error saving note:", error);
       toast.error("Failed to save note.");
@@ -129,7 +129,7 @@ function MotivationalNotes() {
           </button>
         </header>
 
-        {/* Display list or empty state based on system storage */}
+        {/* display list or empty state based on system storage */}
         {notes.length === 0 ? (
           <div className="empty-state">
             <p>No motivational notes found in the system.</p>
@@ -142,12 +142,11 @@ function MotivationalNotes() {
                 <p className="note-content">"{note.content}"</p>
 
                 <div className="note-footer">
-                  {/* <span className="note-author">By {note.authorName}</span> */}
                   <span className="note-date">
                     {note.createdAt?.toDate ? note.createdAt.toDate().toLocaleDateString() : ""}
                   </span>
 
-                  {/* ADDED: Edit / Delete */}
+                  {/* edit / delete */}
                   <div className="note-actions">
                     <button className="edit-btn" onClick={() => openEditModal(note)}>
                       Edit
@@ -162,11 +161,11 @@ function MotivationalNotes() {
           </div>
         )}
 
-        {/* Modal for adding/editing notes */}
+        {/* modal for adding/editing notes */}
         {isModalOpen && (
           <div className="modal-overlay">
             <div className="modal-content">
-              {/* ADDED: inline title/subtitle for add vs edit */}
+              {/* inline title/subtitle for add vs edit */}
               <h3>{editNoteId ? "Edit Motivational Note" : "New Motivational Note"}</h3>
               <p className="modal-subtitle">
                 {editNoteId
@@ -174,7 +173,7 @@ function MotivationalNotes() {
                   : "Write a supportive note to be shown to students."}
               </p>
 
-              {/* ADDED: textarea switches between newNote / editText */}
+              {/* textarea switches between newNote / editText */}
               <textarea
                 rows="5"
                 placeholder="Type your message here..."
@@ -185,7 +184,7 @@ function MotivationalNotes() {
               />
 
               <div className="modal-actions">
-                {/* ADDED: cancel resets edit state too */}
+                {/* cancel resets edit state too */}
                 <button
                   className="cancel-btn"
                   onClick={() => {
@@ -197,7 +196,7 @@ function MotivationalNotes() {
                   Cancel
                 </button>
 
-                {/* ADDED: save button switches between save/update */}
+                {/* save button switches between save/update */}
                 <button
                   className="save-note-btn"
                   onClick={editNoteId ? handleUpdate : handleSave}

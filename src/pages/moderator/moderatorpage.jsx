@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { auth } from "../../firebase-config";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
-import "./ModeratorDashboard.css"; // 🔹 Import your CSS file
+import "./ModeratorDashboard.css"; 
 
 import FlaggedContentCard from "../../components/moderator/FlaggedContentCard";
 import WarningMessageCard from "../../components/moderator/WarningMessageCard";
@@ -27,7 +27,6 @@ function ModeratorDashboard() {
 
   return (
     <div className="admin-dashboard-container">
-      {/* 🔹 Header Section matched to Admin Style */}
       <div className="admin-main-header">
         <h1>Moderator Dashboard</h1>
         <p>Review forum flags, issue student warnings, and manage AI filters.</p>
@@ -40,7 +39,6 @@ function ModeratorDashboard() {
         </button>
       </div>
 
-      {/* 🔹 Grid using the Flex Row style */}
       <div className="admin-cards-row">
         <div onClick={() => navigate("/moderator/flagged")} >
           <FlaggedContentCard />

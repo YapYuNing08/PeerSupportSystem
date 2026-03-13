@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-/* --- Container Layout --- */
+
 .notes-container {
-    margin-left: 270px; /* 🔹 Match Sidebar Width */
+    margin-left: 270px; 
     padding: 48px 40px;
     max-width: 1400px;
     font-family: 'Plus Jakarta Sans', sans-serif;
@@ -24,9 +24,9 @@
     letter-spacing: -0.04em;
 }
 
-/* --- Add Button --- */
+
 .add-note-btn {
-    background-color: #6366f1; /* Your Indigo Theme */
+    background-color: #6366f1; 
     color: white;
     padding: 12px 24px;
     border: none;
@@ -44,7 +44,6 @@
     box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4);
 }
 
-/* --- Notes Grid --- */
 .notes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -94,14 +93,14 @@
     letter-spacing: 0.05em;
 }
 
-/* --- Modal Styling --- */
+
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(15, 23, 42, 0.6); /* Deeper Slate overlay */
+    background: rgba(15, 23, 42, 0.6); 
     backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
@@ -191,7 +190,7 @@
     transition: all 0.3s;
 }
 
-/* --- Empty State --- */
+
 .empty-state {
     text-align: center;
     padding: 80px 40px;
@@ -201,7 +200,7 @@
     border: 2px dashed #e2e8f0;
 }
 
-/* --- Mobile --- */
+/* mobile */
 @media (max-width: 768px) {
     .notes-container {
         margin-left: 0 !important;

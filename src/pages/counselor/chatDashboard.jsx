@@ -22,7 +22,7 @@ function ChatDashboard() {
   const [activities, setActivities] = useState([]);
   const navigate = useNavigate();
 
-// 1. Listen for Waiting Requests
+// 1. listen for waiting requests
   useEffect(() => {
     const q = query(
       collection(db, "counselingSessions"), 
@@ -35,7 +35,7 @@ function ChatDashboard() {
     });
   }, []);
 
-  // 2. Listen for Ongoing Chats for THIS counselor
+  // 2. listen for Ongoing Chats for THIS counselor
   useEffect(() => {
     if (!auth.currentUser) return;
     const q = query(
@@ -50,7 +50,7 @@ function ChatDashboard() {
 
   const [completedCount, setCompletedCount] = useState(0);
 
-  // 3. Listen for Completed Chats for THIS counselor
+  // 3. listen for Completed Chats for THIS counselor
   useEffect(() => {
     if (!auth.currentUser) return;
     const q = query(
@@ -83,7 +83,7 @@ function ChatDashboard() {
     }
   };
 
-  // 4. Activity Feed Logic (The "Notification" style feed)
+  // 4. activity feed logic (The "Notification" style feed)
   useEffect(() => {
     const q = query(
       collection(db, "counselingSessions"),
@@ -97,7 +97,7 @@ function ChatDashboard() {
         let actionText = "";
         let type = "";
 
-        // Determine notification text based on status
+        // determine notification text based on status
         if (data.status === "waiting") {
           actionText = "requested a chat session";
           type = "request";
@@ -194,22 +194,10 @@ function ChatDashboard() {
           onClose={() => setIsCompletedOpen(false)}
           sessions={completedSessions}
           onViewChat={(session) => {
-            // You can navigate to a history page or open another modal here
+            // can navigate to a history page or open another modal here
             setSelectedHistoryChat(session); 
           }}
         />
-
-        
-        {/* <section className="urgency-container">
-          <div className="section-header">
-            <h2>Urgent Chat Requests</h2>
-            <p>Priority based on student mood alerts</p>
-          </div>
-
-          <div className="urgency-list-placeholder">
-            <p className="empty-msg">No active requests at the moment.</p>
-          </div>
-        </section> */}
       </main>
     </CounselorLayout>
   );

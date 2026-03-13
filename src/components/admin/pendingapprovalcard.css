@@ -17,7 +17,6 @@
   min-height: 140px;
 }
 
-/* Hover effect */
 .admin-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 18px rgba(0,0,0,0.08);
@@ -25,13 +24,11 @@
   background: #ecfdf5;
 }
 
-/* Icon */
 .card-icon {
   font-size: 32px;
   margin-bottom: 10px;
 }
 
-/* Text container */
 .card-info {
   text-align: center;
 }

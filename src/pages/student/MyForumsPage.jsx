@@ -64,7 +64,6 @@ const MyForumsPage = () => {
       <div className="my-forums-page-wrapper">
         <div className="page-container">
           
-          {/* Header Row */}
           <div className="header-row">
             <div className="header-section">
               <h1 className="title-text">My Forums</h1>
@@ -83,7 +82,7 @@ const MyForumsPage = () => {
             </button>
           </div>
 
-          {/* Guidelines Dropdown Area */}
+          {/* guidelines dropdown area */}
           {showRules && (
             <div className="guidelines-dropdown">
               <h3>Forum Standards</h3>
@@ -98,12 +97,10 @@ const MyForumsPage = () => {
             </div>
           )}
 
-          {/* Join Forum Area */}
           <div className="action-section">
             <JoinForumCard />
           </div>
 
-          {/* Forum Grid */}
           <div className="forum-grid">
             {loading ? (
               <p className="status-text">Loading your forums...</p>
